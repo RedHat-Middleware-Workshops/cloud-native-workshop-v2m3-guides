@@ -1,9 +1,12 @@
 ## Lab2 - Service Visualization and Monitoring
 
-**1. Examine Kiali**
+####1. Examine Kiali
 
+---
 
-**2. Examine Service Graph**
+####2. Examine Service Graph
+
+---
 
 The Servicegraph service is an example service that provides endpoints for generating and visualizing a graph of services within a mesh. It exposes the following endpoints:
 
@@ -28,7 +31,9 @@ how many requests per second each service receives.
 As you add and remove services over time in your projects, you can use this to verify the connections between services and provides
 a high-level telemetry showing the rate at which services are accessed.
 
-**3. Generating application load**
+####3. Generating application load
+
+---
 
 To get a better idea of the power of metrics, let's setup an endless loop that will continually access
 the application and generate load. We'll open up a separate terminal just for this purpose. Execute this command:
@@ -43,7 +48,9 @@ This command will endlessly access the application and report the HTTP status re
 
 With this application load running, metrics will become much more interesting in the next few steps.
 
-**4. Querying Metrics with Prometheus**
+####4. Querying Metrics with Prometheus
+
+---
 
 [Prometheus](https://prometheus.io/) exposes an endpoint serving generated metric values. The Prometheus
 add-on is a Prometheus server that comes pre-configured to scrape Mixer endpoints
@@ -77,7 +84,9 @@ Other expressions to try:
 There are many, many different queries you can perform to extract the data you need. Consult the
 [Prometheus documentation](https://prometheus.io/docs) for more detail.
 
-**5. Visualizing Metrics with Grafana**
+####5. Visualizing Metrics with Grafana
+
+---
 
 As the number of services and interactions grows in your application, this style of metrics may be a bit
 overwhelming. [Grafana](https://grafana.com/) provides a visual representation of many available Prometheus
@@ -112,7 +121,9 @@ As a developer, you can get quite a bit of information from these metrics withou
 itself. Let's use our new tools in the next section to see the real power of Istio to diagnose and fix issues in
 applications and make them more resilient and robust.
 
-**6. Request Routing**
+####6. Request Routing
+
+---
 
 In this step, we will learn how to configure dynamic request routing based on weights and HTTP headers.
 
@@ -138,7 +149,9 @@ If your application already provides some defensive measures (e.g. using [Netfli
 Istio is completely transparent to the application. A failure response returned by Istio would not be
 distinguishable from a failure response returned by the upstream service to which the call was made.
 
-**7. Service Versions**
+####7. Service Versions
+
+---
 
 Istio introduces the concept of a service version, which is a finer-grained way to subdivide
 service instances by versions (`v1`, `v2`) or environment (`staging`, `prod`). These variants are not
@@ -151,7 +164,10 @@ provide additional control over traffic between services.
 
 As illustrated in the figure above, clients of a service have no knowledge of different versions of the service. They can continue to access the services using the hostname/IP address of the service. The Envoy sidecar/proxy intercepts and forwards all requests/responses between the client and the service.
 
-**8. RouteRule objects**
+####8. RouteRule objects
+
+---
+
 In addition to the usual OpenShift object types like `BuildConfig`, `DeploymentConfig`, `Service` and `Route`,
 you also have new object types installed as part of Istio like `RouteRule`. Adding these objects to the running
 OpenShift cluster is how you configure routing rules for Istio.
@@ -214,7 +230,9 @@ Scroll down to the `ratings` service and notice that the requests coming from th
 
 ![Versions]({% image_path ratings-stopped.png %})
 
-**9. A/B Testing with Istio**
+####9. A/B Testing with Istio
+
+---
 
 Lets enable the ratings service for a test user named “jason” by routing `productpage` traffic to `reviews:v2`, but only for our test user. Execute:
 
@@ -252,4 +270,4 @@ Grafana dashboard if you refresh quickly 5-10 times while logged in as the test 
 
 ![Ratings for Test User]({% image_path ratings-testuser.png %})
 
-## Congratulations!
+#####Congratulations!

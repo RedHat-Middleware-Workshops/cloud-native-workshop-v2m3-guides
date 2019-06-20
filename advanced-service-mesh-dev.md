@@ -46,7 +46,9 @@ increased network latency, or an overloaded upstream service. Aborts are crash f
 mimic failures in upstream services. Aborts usually manifest in the form of HTTP error codes,
 or TCP connection failures.
 
-**1. Inject a fault**
+####1. Inject a fault
+
+---
 
 To test our application microservices for resiliency, we will inject a 7 second delay between the
 `reviews:v2` and `ratings` microservices, for user `jason`. This will be a simulated bug in the code which
@@ -89,7 +91,9 @@ You will see and feel that the webpage loads in about 6 seconds:
 
 The reviews section will show: **Sorry, product reviews are currently unavailable for this book**:
 
-**2. Use tracing to identify the bug**
+####2. Use tracing to identify the bug
+
+---
 
 The reason that the entire reviews service has failed is because our BookInfo application has
 a bug. The timeout between the `productpage` and `reviews` service is less (3s times 2 retries == 6s total)
@@ -107,7 +111,9 @@ and then confirm that the `productpage` returns its response without any errors.
 However, we already have this fix running in `v3` of the reviews service, so we can simply fix the
 problem by migrating all traffic to `reviews:v3`. We'll do this in the next step!
 
-**3. Traffic Shifting**
+####3. Traffic Shifting
+
+---
 
 This step shows you how to gradually migrate traffic from an old to new version of a service.
 With Istio, we can migrate the traffic in a gradual fashion by using a sequence of rules with
@@ -147,7 +153,9 @@ clicking on `productpage.istio-system-v1 -> v1 : 200`. This shows a graph of all
 
 ![no traffic 2]({% image_path ratings-no-traffic-v2.png %})
 
-**4. Migrate users to v3**
+####4. Migrate users to v3
+
+---
 
 To start the process, let's send half (50%) of the users to our new `v3` version with the fix, to do a canary test.
 Execute the following command which replaces the `reviews-default` rule with a new rule:
@@ -212,13 +220,12 @@ the two versions of the reviews service to scale up and down independently, with
 traffic distribution between them. For more about version routing with autoscaling, check out
 [Canary Deployments using Istio](https://istio.io/blog/canary-deployments-using-istio.html).
 
----
-
 In the next step, we will explore circuit breaking, which is useful for avoiding cascading failures
 and overloaded microservices, giving the system a chance to recover and minimize downtime.
 
+####5. Enable Circuit Breaker
 
-**5. Enable Circuit Breaker**
+---
 
 In this step, you will configure an Istio Circuit Breaker to protect the calls from `reviews` to `ratings` service.
 If the `ratings` service gets overloaded due to call volume, Istio (in conjunction with Kubernetes) will limit
@@ -286,7 +293,9 @@ here to check the
 [Istio spec](https://istio.io/docs/reference/config/traffic-rules/destination-policies.html#istio.proxy.v1.config.CircuitBreaker.SimpleCircuitBreakerPolicy)
 for more details on what each configuration parameter does.
 
-**6. Overload the service**
+####6. Overload the service
+
+---
 
 Let's use some simple `curl` commands to send multiple concurrent requests to our application, and witness the
 circuit breaker kicking in opening the circuit.
@@ -321,13 +330,17 @@ Below that, in the **Service Mesh** section of the dashboard observe that the se
 
 That's the circuit breaker in action, limiting the number of requests to the service. In practice your limits would be much higher
 
-**7. Stop overloading**
+####7. Stop overloading
+
+---
 
 Before moving on, stop the traffic generator by clicking here to stop them:
 
 `for i in {1..10} ; do kill %${i} ; done`
 
-**8. Pod Ejection**
+####8. Pod Ejection
+
+---
 
 In addition to limiting the traffic, Istio can also forcibly eject pods out of service if they are running slowly
 or not at all. To see this, let's deploy a pod that doesn't work (has a bug).
@@ -451,7 +464,9 @@ different customers based on policy and contractual requirements
 * [Christian Posta's Blog on Envoy and Circuit Breaking](http://blog.christianposta.com/microservices/01-microservices-patterns-with-envoy-proxy-part-i-circuit-breaking/)
 
 
-**9. Rate Limiting**
+####9. Rate Limiting
+
+---
 
 In this step, we will use Istio's Quota Management feature to apply
 a rate limit on the `ratings` service.
@@ -480,7 +495,9 @@ This command will endlessly access the application and report the HTTP status re
 
 With this application load running, we can witness rate limits in action.
 
-**10. Add a rate limit**
+####10. Add a rate limit
+
+---
 
 Execute the following command:
 
@@ -503,7 +520,9 @@ rate-limited to 1 query per second:
 
 ![5xxs]({% image_path ratings-4xxs.png %})
 
-**11. Inspect the rule**
+####11. Inspect the rule
+
+---
 
 Take a look at the new rule:
 
@@ -529,7 +548,9 @@ You can also conditionally rate limit based on other dimensions, such as:
 * API paths
 * [Several other attributes](https://istio.io/docs/reference/config/mixer/attribute-vocabulary.html)
 
-**12. Remove the rate limit**
+####12. Remove the rate limit
+
+---
 
 Before moving on, execute the following to remove our rate limit:
 
@@ -549,7 +570,9 @@ Notice at the top that the `4xx`s dropped back down to zero.
 complex microservices architectures. Let's go!
 
 
-**13. Tracing**
+####13. Tracing
+
+---
 
 This step shows you how Istio-enabled applications automatically collect
 _trace spans_ telemetry and can visualize it with tools like using Jaeger or Zipkin.
@@ -559,8 +582,6 @@ participate in tracing, regardless of what language/framework/platform you
 use to build your application.
 
 ##### Tracing Goals
-
----
 
 Developers and engineering organizations are trading in old, monolithic systems
 for modern microservice architectures, and they do so for numerous compelling
@@ -574,8 +595,6 @@ about distinct pieces of a now-distributed system, etc.
 
 ##### What is a trace?
 
----
-
 At the highest level, a trace tells the story of a transaction or workflow as
 it propagates through a (potentially distributed) system. A trace is a directed
 acyclic graph (DAG) of _spans_: named, timed operations representing a
@@ -584,7 +603,7 @@ contiguous segment of work in that trace.
 Each component (microservice) in a distributed trace will contribute its
 own span or spans. For example:
 
-![Spans](http://opentracing.io/documentation/images/OTOV_3.png %})
+![Spans]({% image_path tracing.png %})
 
 This type of visualization adds the context of time, the hierarchy of
 the services involved, and the serial or parallel nature of the process/task
@@ -593,7 +612,9 @@ on the critical path, attention can focus on the area of code where the most
 valuable improvements can be made. For example, you might want to trace the
 resource allocation spans inside an API request down to the underlying blocking calls.
 
-**14. Access Jaeger Console**
+####14. Access Jaeger Console
+
+---
 
 With our application up and our script running to generate loads, visit the Jaeger Console:
 
@@ -670,9 +691,11 @@ Istio’s fault injection rules and tracing capabilities help you identify such 
 how different services contribute to the overall end-user perceived latency. In addition,
 it can be a valuable tool to diagnose and troubleshoot distributed applications.
 
-**15. Enable RH-SSO**
+####15. Enable RH-SSO
 
-## Summary
+---
+
+#### Summary
 
 In this scenario you used Istio to implement many of the
 Istio provides an easy way to create a network of deployed services with load balancing, service-to-service authentication, monitoring, and more, without requiring any changes in service code. You add Istio support to services by deploying a special sidecar proxy throughout your environment that intercepts all network communication between microservices, configured and managed using Istio’s control plane functionality.

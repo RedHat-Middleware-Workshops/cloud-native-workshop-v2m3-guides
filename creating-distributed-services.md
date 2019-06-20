@@ -26,19 +26,32 @@ The end-to-end architecture of the application is shown below.
 
 ![Bookinfo Architecture]({% image_path istio_bookinfo.png %})
 
-**1. Install Bookinfo**
+####1. Deploy Bookinfo Application
 
-Run the following command:
+---
+
+Change the empty **USERXX Bookinfo** project via CodeReady Workspace **Terminal** and you should replace **userxx** with your username:
 
 ~~~shell
-ISTIO_VERSION=0.6.0
-ISTIO_HOME=${HOME}/istio-${ISTIO_VERSION}
-export PATH="$PATH:${ISTIO_HOME}/bin"
+oc project userxx-bookinfo
+~~~
 
-cd ${ISTIO_HOME}
+Deploy the **Bookinfo application** in the bookinfo project:
 
-oc project istio-system
-istioctl kube-inject -f samples/bookinfo/kube/bookinfo.yaml | oc apply -f -
+~~~shell
+oc -n userxx-bookinfo apply -f https://raw.githubusercontent.com/Maistra/bookinfo/master/bookinfo.yaml
+~~~
+
+Create the **ingress gateway** for Bookinfo:
+
+~~~shell
+oc -n userxx-bookinfo apply -f https://raw.githubusercontent.com/Maistra/bookinfo/master/bookinfo-gateway.yaml
+~~~
+
+Set **GATEWAY_URL**:
+
+~~~shell
+export GATEWAY_URL=$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')
 ~~~
 
 The application consists of the usual objects like Deployments, Services, and Routes.
@@ -49,20 +62,41 @@ components (the Envoy Sidecars you read about in the previous step).
 Let's wait for our application to finish deploying.
 Execute the following commands to wait for the deployment to complete and result `successfully rolled out`:
 
-`oc rollout status -w deployment/productpage-v1 && \
+~~~shell
+oc rollout status -w deployment/productpage-v1 && \
  oc rollout status -w deployment/reviews-v1 && \
  oc rollout status -w deployment/reviews-v2 && \
  oc rollout status -w deployment/reviews-v3 && \
  oc rollout status -w deployment/details-v1 && \
- oc rollout status -w deployment/ratings-v1`
+ oc rollout status -w deployment/ratings-v1
+ ~~~
 
-**2. Access Bookinfo**
+ Confirm that Bookinfo has been **successfully** deployed:
+
+ ~~~shell
+ curl -o /dev/null -s -w "%{http_code}\n" http://${GATEWAY_URL}/productpage
+ ~~~
+
+You should get **200** as a response.
+
+Add default destination rules:
+
+~~~shell
+oc -n bookinfo apply -f https://raw.githubusercontent.com/istio/istio/release-1.1/samples/bookinfo/networking/destination-rule-all.yaml
+~~~
+
+List all available destination rules:
+~~~shell
+oc -n bookinfo get destinationrules -o yaml
+~~~
+
+####2. Access Bookinfo
 
 Open the application in your browser to make sure it's working:
 
 * Bookinfo Application running with Istio at 
 
-`http://istio-ingress-istio-system.$ROUTE_SUFFIX/productpage`
+`http://${GATEWAY_URL}/productpage`
 
 It should look something like:
 
@@ -96,3 +130,5 @@ sidecar).
 
 Now that we have our application deployed and linked into the Istio service mesh, let's take a look at the
 immediate value we can get out of it without touching the application code itself!
+
+#####Congratulations!
