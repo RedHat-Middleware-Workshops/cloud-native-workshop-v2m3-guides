@@ -30,7 +30,7 @@ a much more robust, reliable, and resilient application in the face of the new w
 
 ---
 
-![Logo]({% image_path istio-logo.png %})
+![Logo]({% image_path istio-logo.png %}){:width="800px"}
 
 Istio is an open, platform-independent service mesh designed to manage communications between microservices and
 applications in a transparent way.It provides behavioral insights and operational control over the service mesh
@@ -102,20 +102,20 @@ Istio uses an extended version of the [Envoy](https://envoyproxy.github.io/envoy
  * Fault injection
  * Rich metrics
 
-Envoy is deployed as a **sidecar** to the relevant service in the same Kubernetes pod. This deployment allows Istio to extract a wealth of signals about traffic behavior as attributes. Istio can, in turn, use these attributes in **Mixer** to enforce policy decisions, and send them to monitoring systems to provide information about the behavior of the entire mesh.
+Envoy is the **data plane** component that deployed as a **sidecar** to the relevant service in the same Kubernetes pod. This deployment allows Istio to extract a wealth of signals about traffic behavior as attributes. Istio can, in turn, use these attributes in **Mixer** to enforce policy decisions, and send them to monitoring systems to provide information about the behavior of the entire mesh.
 
 **Mixer**
-Mixer is a platform-independent component. Mixer enforces access control and usage policies across the service mesh, and collects telemetry data from the Envoy proxy and other services. The proxy extracts request level attributes, and sends them to Mixer for evaluation.
+Mixer is the **control plane** component responsible for enforcing access control and usage policies across the service mesh, and collects telemetry data from the Envoy proxy and other services. The proxy extracts request level attributes, and sends them to Mixer for evaluation.
 
 Mixer includes a flexible plugin model. This model enables Istio to interface with a variety of host environments and infrastructure backends. Thus, Istio abstracts the Envoy proxy and Istio-managed services from these details.
 
 **Pilot**
-Pilot provides service discovery for the Envoy sidecars, traffic management capabilities for intelligent routing (e.g., A/B tests, canary rollouts, etc.), and resiliency (timeouts, retries, circuit breakers, etc.).
+Pilot is the **control plane** component responsible for configuring the proxies at runtime. Pilot provides service discovery for the Envoy sidecars, traffic management capabilities for intelligent routing (for example, A/B tests or canary deployments), and resiliency (timeouts, retries, and circuit breakers).
 
 Pilot converts high level routing rules that control traffic behavior into Envoy-specific configurations, and propagates them to the sidecars at runtime. Pilot abstracts platform-specific service discovery mechanisms and synthesizes them into a standard format that any sidecar conforming with the [Envoy data plane APIs](https://github.com/envoyproxy/data-plane-api) can consume. This loose coupling allows Istio to run on multiple environments such as Kubernetes, Consul, or Nomad, while maintaining the same operator interface for traffic management.
 
 **Citadel**
-Citadel enables strong service-to-service and end-user authentication with built-in identity and credential management. You can use Citadel to upgrade unencrypted traffic in the service mesh. Using Citadel, operators can enforce policies based on service identity rather than on relatively unstable layer 3 or layer 4 network identifiers. Starting from release 0.5, you can use Istio’s authorization feature to control who can access your services.
+Citadel is the **control plane** component responsible for certificate issuance and rotation. Citadel provides strong service-to-service and end-user authentication with built-in identity and credential management. You can use Citadel to upgrade unencrypted traffic in the service mesh. Using Citadel, operators can enforce policies based on service identity rather than on network controls.
 
 **Galley**
 Galley is Istio’s configuration validation, ingestion, processing and distribution component. It is responsible for insulating the rest of the Istio components from the details of obtaining user configuration from the underlying platform (e.g. Kubernetes).

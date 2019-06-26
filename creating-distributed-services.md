@@ -32,35 +32,30 @@ The end-to-end architecture of the application is shown below.
 
 Change the empty **USERXX Bookinfo** project via CodeReady Workspace **Terminal** and you should replace **userxx** with your username:
 
-~~~shell
-oc project userxx-bookinfo
-~~~
+`oc project userxx-bookinfo`
 
 Deploy the **Bookinfo application** in the bookinfo project:
 
-~~~shell
-oc -n userxx-bookinfo apply -f https://raw.githubusercontent.com/Maistra/bookinfo/master/bookinfo.yaml
-~~~
+`oc -n userxx-bookinfo apply -f https://raw.githubusercontent.com/Maistra/bookinfo/master/bookinfo.yaml`
 
 Create the **ingress gateway** for Bookinfo:
 
-~~~shell
-oc -n userxx-bookinfo apply -f https://raw.githubusercontent.com/Maistra/bookinfo/master/bookinfo-gateway.yaml
-~~~
+`oc -n userxx-bookinfo apply -f https://raw.githubusercontent.com/Maistra/bookinfo/master/bookinfo-gateway.yaml`
 
 Set **GATEWAY_URL**:
 
-~~~shell
-export GATEWAY_URL=$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')
-~~~
+`export GATEWAY_URL=$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')`
 
 The application consists of the usual objects like Deployments, Services, and Routes.
 
 As part of the installation, we use Istio to "decorate" the application with additional
 components (the Envoy Sidecars you read about in the previous step).
 
-Let's wait for our application to finish deploying.
-Execute the following commands to wait for the deployment to complete and result `successfully rolled out`:
+Let's wait for our application to finish deploying. Go to the overview page in **userxx BookInfo Service Mesh** project:
+
+![bookinfo]({% image_path bookinfo-deployed.png %})
+
+Or you can execute the following commands to wait for the deployment to complete and result **successfully rolled out**:
 
 ~~~shell
 oc rollout status -w deployment/productpage-v1 && \
@@ -69,26 +64,21 @@ oc rollout status -w deployment/productpage-v1 && \
  oc rollout status -w deployment/reviews-v3 && \
  oc rollout status -w deployment/details-v1 && \
  oc rollout status -w deployment/ratings-v1
- ~~~
+~~~
 
- Confirm that Bookinfo has been **successfully** deployed:
+Confirm that Bookinfo has been **successfully** deployed:
 
- ~~~shell
- curl -o /dev/null -s -w "%{http_code}\n" http://${GATEWAY_URL}/productpage
- ~~~
+`curl -o /dev/null -s -w "%{http_code}\n" http://${GATEWAY_URL}/productpage`
 
 You should get **200** as a response.
 
 Add default destination rules:
 
-~~~shell
-oc -n bookinfo apply -f https://raw.githubusercontent.com/istio/istio/release-1.1/samples/bookinfo/networking/destination-rule-all.yaml
-~~~
+`oc -n userxx-bookinfo apply -f https://raw.githubusercontent.com/istio/istio/release-1.1/samples/bookinfo/networking/destination-rule-all.yaml`
 
 List all available destination rules:
-~~~shell
-oc -n bookinfo get destinationrules -o yaml
-~~~
+
+`oc -n userxx-bookinfo get destinationrules -o yaml`
 
 ####2. Access Bookinfo
 
@@ -119,10 +109,11 @@ reviews. Note that you'll have three versions of the reviews microservice:
 
 `oc get pods --selector app=reviews`
 
-~~~java
-reviews-v1-1796424978-4ddjj          2/2       Running   0          28m
-reviews-v2-1209105036-xd5ch          2/2       Running   0          28m
-reviews-v3-3187719182-7mj8c          2/2       Running   0          28m
+~~~shell
+NAME                          READY   STATUS    RESTARTS   AGE
+reviews-v1-7754bbd88-dm4s5    2/2     Running   0          12m
+reviews-v2-69fd995884-qpddl   2/2     Running   0          12m
+reviews-v3-5f9d5bbd8-sz29k    2/2     Running   0          12m
 ~~~
 
 Notice that each of the microservices shows `2/2` containers ready for each service (one for the service and one for its

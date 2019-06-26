@@ -1,54 +1,104 @@
 ## Lab2 - Service Visualization and Monitoring
 
-####1. Examine Kiali
+In this lba, we will visualize your service mesh using **Kiali**, **Prometheus**, **Grafana** and you will lean how to configure
+basic **Istio funtionalities** such as **RouteRule8**, **A/B Testing**.
 
----
-
-####2. Examine Service Graph
-
----
-
-The Servicegraph service is an example service that provides endpoints for generating and visualizing a graph of services within a mesh. It exposes the following endpoints:
-
-* `/graph` which provides a JSON serialization of the servicegraph
-* `/dotgraph` which provides a dot serialization of the servicegraph
-* `/dotviz` which provides a visual representation of the servicegraph
-
-
-The Service Graph addon provides a visualization of the different services and how they are connected. Open the link:
-
-* Bookinfo Service Graph (Dotviz) at 
-
-`http://servicegraph-istio-system.$ROUTE_SUFFIX/dotviz`
-
-It should look like:
-
-![Dotviz graph]({% image_path dotviz.png %})
-
-This shows you a graph of the services and how they are connected, with some basic access metrics like
-how many requests per second each service receives.
-
-As you add and remove services over time in your projects, you can use this to verify the connections between services and provides
-a high-level telemetry showing the rate at which services are accessed.
-
-####3. Generating application load
+####1. Generating application load
 
 ---
 
 To get a better idea of the power of metrics, let's setup an endless loop that will continually access
-the application and generate load. We'll open up a separate terminal just for this purpose. Execute this command:
+the application and generate load. We'll open up a separate terminal just for this purpose. 
+Open a new **Terminal** and execute this command:
 
-`while true; do
-    curl -o /dev/null -s -w "%{http_code}\n" \
-      http://istio-ingress-istio-system.[[HOST_SUBDOMAIN]]-80-[[KATACODA_HOST]].environments.katacoda.com/productpage
-  sleep .2
-done`
+`export GATEWAY_URL=$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')`
+
+`while true; do curl -o /dev/null -s -w "%{http_code}\n" http://${GATEWAY_URL}/productpage; sleep .2 ; done`
 
 This command will endlessly access the application and report the HTTP status result in a separate terminal window.
 
 With this application load running, metrics will become much more interesting in the next few steps.
 
-####4. Querying Metrics with Prometheus
+####1. Examine Kiali
+
+---
+
+**Kiali** is a frontend for Maistra that will allow you to manage and monitor your mesh from a single UI. This UI will allow you to view configurations, monitor traffic flow and health, and analyze traces.
+
+Access Kiali via finding the exposed route of **istio-system** project:
+
+`oc get route -n istio-system kiali -o jsonpath='{.spec.host}'`
+
+After you have your route, using your web browser navigate to this address using **https**. 
+This will bring you to a login screen. Enter the username and password as below and click Log In.
+
+ * Username: **admin**
+ * Password: **admin**
+
+![kiali]({% image_path kiali-login.png %})
+
+Input the namespace of your **userxx-bookinfo** application(i.e. user1-bookinfo) and Enter it. 
+
+![kiali]({% image_path kiali-all-namespaces.png %})
+
+Then you will only see your working namespace as below:
+
+![kiali]({% image_path kiali-bookinfo-namespaces.png %}){:width="800px"}
+
+##### Service Graph
+
+Go to the Service Graph page on the Graph menu:
+
+![kiali]({% image_path kiali-service-graph.png %})
+
+It shows a graph with all the microservices, connected by the requests going through then. On this page, 
+you can see how the services interact with each other.
+
+##### Applications
+
+Click on **Applications** menu in the left navigation. On this page you can view a listing of all the services that 
+are running in the cluster, and additional information about them, such as health status.
+
+![kiali]({% image_path kiali-applications.png %})
+
+Click on the **productpage** application to see its details and you can also see the health of a service (a service is considered healthy) 
+on the **Health** section when it’s online and responding to requests without errors:
+
+![kiali]({% image_path kiali-app-productpage.png %})
+
+By clicking on **Inbound Metrics** and change **Source** in **Reported from**, you can also see the metrics for an application, like so:
+
+![kiali]({% image_path kiali-app-productpage-inbound.png %})
+
+##### Workloads
+
+Click on **Workloads** menu in the left navigation. On this page you can view a listing of all the workloads are present on your applications.
+
+![kiali]({% image_path kiali-app-productpage-workload.png %})
+
+Click on the **productpage-v1** workload. Here you can see details for the workload, such as the pods and services that are included in it:
+
+![kiali]({% image_path kiali-app-productpage-workload-v1.png %})
+
+By clicking **Inbound Metrics**, you can check the metrics for the workload. The metrics are the same as the Application ones.
+
+##### Services
+
+Click on **Services** menu in the left navigation. Here, you can see the listing of all services.
+
+![kiali]({% image_path kiali-services.png %})
+
+Click on **productpage** service. You can, on this page, see the details of the service, such as metrics, traces, workloads, virtual services, destination rules and so on:
+
+![kiali]({% image_path kiali-services-productpage.png %})
+
+##### Distributed Tracing
+
+Click on the Distributed Tracing link in the left navigation. The distributed tracing, provided by Jaeger, will open in a new page.
+
+NOTE: The tracing page opens in a new browser window/tab, so if it doesn’t open, please check if your browser didn’t block it from opening.
+
+####3. Querying Metrics with Prometheus
 
 ---
 
@@ -57,23 +107,25 @@ add-on is a Prometheus server that comes pre-configured to scrape Mixer endpoint
 to collect the exposed metrics. It provides a mechanism for persistent storage
 and querying of Istio metrics.
 
-Open the Prometheus UI:
+Go to **istio-system** overview page in OpenShift Web Console and click on the Prometheus route link:
 
-* Prometheus UI at 
+![istio-prometheus]({% image_path istio-prometheus-route.png %})
 
-`http://prometheus-istio-system.$ROUTE_SUFFIX`
+You should see Prometheus' home screen, similar to this:
 
-In the “Expression” input box at the top of the web page, enter the text: `istio_request_count`.
+![istio-prometheus]({% image_path istio-prometheus-landing.png %})
+
+In the “Expression” input box at the top of the web page, enter the text: `istio_request_duration_seconds_count`.
 Then, click the **Execute** button.
 
 You should see a listing of each of the application's services along with a count of how many times it was accessed.
 
-![Prometheus console]({% image_path prom.png %})
+![Prometheus console]({% image_path istio-prometheus-console.png %})
 
 You can also graph the results over time by clicking on the _Graph_ tab (adjust the timeframe from 1 hour to 1 minute for
 example):
 
-![Prometheus graph]({% image_path promgraph.png %})
+![Prometheus graph]({% image_path istio-prometheus-graph.png %})
 
 Other expressions to try:
 
@@ -84,7 +136,7 @@ Other expressions to try:
 There are many, many different queries you can perform to extract the data you need. Consult the
 [Prometheus documentation](https://prometheus.io/docs) for more detail.
 
-####5. Visualizing Metrics with Grafana
+####4. Visualizing Metrics with Grafana
 
 ---
 
@@ -94,9 +146,7 @@ metrics extracted from the Istio data plane and can be used to quickly spot prob
 
 Open the Grafana Dashboard:
 
-* Grafana Dashboard at 
-
-`http://grafana-istio-system.$ROUTE_SUFFIX/dashboard/db/istio-dashboard`
+* Grafana Dashboard at **http://grafana-istio-system.$ROUTE_SUFFIX/dashboard/db/istio-dashboard**
 
 ![Grafana graph]({% image_path grafana-dash.png %})
 
@@ -121,7 +171,7 @@ As a developer, you can get quite a bit of information from these metrics withou
 itself. Let's use our new tools in the next section to see the real power of Istio to diagnose and fix issues in
 applications and make them more resilient and robust.
 
-####6. Request Routing
+####5. Request Routing
 
 ---
 
@@ -149,7 +199,7 @@ If your application already provides some defensive measures (e.g. using [Netfli
 Istio is completely transparent to the application. A failure response returned by Istio would not be
 distinguishable from a failure response returned by the upstream service to which the call was made.
 
-####7. Service Versions
+####6. Service Versions
 
 ---
 
@@ -164,7 +214,7 @@ provide additional control over traffic between services.
 
 As illustrated in the figure above, clients of a service have no knowledge of different versions of the service. They can continue to access the services using the hostname/IP address of the service. The Envoy sidecar/proxy intercepts and forwards all requests/responses between the client and the service.
 
-####8. RouteRule objects
+####7. RouteRule objects
 
 ---
 
@@ -188,61 +238,67 @@ cd ${ISTIO_HOME}`
 
 Now let's install a default set of routing rules which will direct all traffic to the `reviews:v1` service version:
 
-`oc create -f samples/bookinfo/kube/route-rule-all-v1.yaml`
+~~~shell
+oc create -f samples/bookinfo/kube/route-rule-all-v1.yaml
+~~~
 
 You can see this default set of rules with:
 
-`oc get routerules -o yaml`
+~~~shell
+oc get routerules -o yaml
+~~~
 
 There are default routing rules for each service, such as the one that forces all traffic to the `v1` version of the `reviews` service:
 
-`oc get routerules/reviews-default -o yaml`
+~~~shell
+oc get routerules/reviews-default -o yaml
+~~~
 
 ~~~yaml
-    apiVersion: config.istio.io/v1alpha2
-    kind: RouteRule
-    metadata:
-      name: reviews-default
-      namespace: default
-      ...
-    spec:
-      destination:
-        name: reviews
-      precedence: 1
-      route:
-      - labels:
-          version: v1
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: reviews-default
+  namespace: default
+  ...
+spec:
+  destination:
+    name: reviews
+  precedence: 1
+  route:
+  - labels:
+      version: v1
 ~~~
 
 Now, access the application again in your browser using the below link and reload the page several times - you should not see any rating stars since `reviews:v1` does not access the `ratings` service.
 
-* Bookinfo Application with no rating stars at 
-
-`http://istio-ingress-istio-system.$ROUTE_SUFFIX/productpage`
+* Bookinfo Application with no rating stars at **http://istio-ingress-istio-system.$ROUTE_SUFFIX/productpage**
 
 To verify this, open the Grafana Dashboard:
 
-* Grafana Dashboard at 
-
-`http://grafana-istio-system.$ROUTE_SUFFIX/dashboard/db/istio-dashboard`
+* Grafana Dashboard at **http://grafana-istio-system.$ROUTE_SUFFIX/dashboard/db/istio-dashboard**
 
 Scroll down to the `ratings` service and notice that the requests coming from the reviews service have stopped:
 
 ![Versions]({% image_path ratings-stopped.png %})
 
-####9. A/B Testing with Istio
+####8. A/B Testing with Istio
 
 ---
 
-Lets enable the ratings service for a test user named “jason” by routing `productpage` traffic to `reviews:v2`, but only for our test user. Execute:
+Lets enable the ratings service for a test user named “jason” by routing **productpage** traffic to **reviews:v2**, but only for our test user. Execute:
 
-`oc create -f samples/bookinfo/kube/route-rule-reviews-test-v2.yaml`
+~~~shell
+oc create -f samples/bookinfo/kube/route-rule-reviews-test-v2.yaml
+~~~
 
 Confirm the rule is created:
 
-`oc get routerule reviews-test-v2 -o yaml`
+~~~shell
+oc get routerule reviews-test-v2 -o yaml
+~~~
 
-Notice the `match` element:
+Notice the **match** element:
 
 ~~~yaml
   match:
@@ -257,7 +313,7 @@ This says that for any incoming HTTP request that has a cookie set to the `jason
 
 Now, access the application at 
 
-`http://istio-ingress-istio-system.$ROUTE_SUFFIX/productpage) and click **Sign In** (at the upper right` and sign in with:
+**http://istio-ingress-istio-system.$ROUTE_SUFFIX/productpage)** and click **Sign In** (at the upper right) and sign in with:
 
 * Username: `jason`
 * Password: `jason`
