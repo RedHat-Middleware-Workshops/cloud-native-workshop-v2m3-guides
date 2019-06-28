@@ -19,7 +19,7 @@ This command will endlessly access the application and report the HTTP status re
 
 With this application load running, metrics will become much more interesting in the next few steps.
 
-####1. Examine Kiali
+####2. Examine Kiali
 
 ---
 
