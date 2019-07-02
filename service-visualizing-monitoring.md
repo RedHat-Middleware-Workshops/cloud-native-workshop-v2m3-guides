@@ -9,11 +9,9 @@ basic **Istio funtionalities** such as **RouteRule8**, **A/B Testing**.
 
 To get a better idea of the power of metrics, let's setup an endless loop that will continually access
 the application and generate load. We'll open up a separate terminal just for this purpose. 
-Open a new **Terminal** and execute this command:
+Open a new **Terminal** and execute this command with your own **Gateway URL**:
 
-`export GATEWAY_URL=$(oc -n istio-system get route istio-ingressgateway -o jsonpath='{.spec.host}')`
-
-`while true; do curl -o /dev/null -s -w "%{http_code}\n" http://${GATEWAY_URL}/productpage; sleep .2 ; done`
+`while true; do curl -o /dev/null -s -w "%{http_code}\n" http://user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com/productpage; sleep .2 ; done`
 
 This command will endlessly access the application and report the HTTP status result in a separate terminal window.
 
@@ -25,17 +23,17 @@ With this application load running, metrics will become much more interesting in
 
 **Kiali** is a frontend for Maistra that will allow you to manage and monitor your mesh from a single UI. This UI will allow you to view configurations, monitor traffic flow and health, and analyze traces.
 
-Access Kiali via finding the exposed route of **istio-system** project:
+Go to **istio-system** overview page in OpenShift Web Console and click on the **Kiali** route link:
 
-`oc get route -n istio-system kiali -o jsonpath='{.spec.host}'`
+![istio-kiali]({% image_path istio-kiali-route.png %})
 
-After you have your route, using your web browser navigate to this address using **https**. 
-This will bring you to a login screen. Enter the username and password as below and click Log In.
+You should see **OpenShift Login** screen because Kiali itegrates OpenShift Authentication.
+Enter the username and password as below and click Log In.
 
- * Username: **admin**
- * Password: **admin**
+ * Username: **userXX**
+ * Password: **openshift**
 
-![kiali]({% image_path kiali-login.png %})
+![istio-kiali]({% image_path istio-kiali-login.png %})
 
 Input the namespace of your **userxx-bookinfo** application(i.e. user1-bookinfo) and Enter it. 
 
@@ -47,12 +45,13 @@ Then you will only see your working namespace as below:
 
 ##### Service Graph
 
-Go to the Service Graph page on the Graph menu:
+Go to the Service Graph page on the Graph menu and check **Traffic Animation" in **Display**:
 
 ![kiali]({% image_path kiali-service-graph.png %})
 
 It shows a graph with all the microservices, connected by the requests going through then. On this page, 
 you can see how the services interact with each other.
+
 
 ##### Applications
 
@@ -66,9 +65,13 @@ on the **Health** section when it’s online and responding to requests without 
 
 ![kiali]({% image_path kiali-app-productpage.png %})
 
-By clicking on **Inbound Metrics** and change **Source** in **Reported from**, you can also see the metrics for an application, like so:
+By clicking on **Inbound Metrics**, you can see the metrics for an application, like so:
 
 ![kiali]({% image_path kiali-app-productpage-inbound.png %})
+
+By clicking on **Outbound Metrics**, you can see the metrics for an application, like so:
+
+![kiali]({% image_path kiali-app-productpage-outbound.png %})
 
 ##### Workloads
 
@@ -92,12 +95,6 @@ Click on **productpage** service. You can, on this page, see the details of the 
 
 ![kiali]({% image_path kiali-services-productpage.png %})
 
-##### Distributed Tracing
-
-Click on the Distributed Tracing link in the left navigation. The distributed tracing, provided by Jaeger, will open in a new page.
-
-NOTE: The tracing page opens in a new browser window/tab, so if it doesn’t open, please check if your browser didn’t block it from opening.
-
 ####3. Querying Metrics with Prometheus
 
 ---
@@ -107,11 +104,11 @@ add-on is a Prometheus server that comes pre-configured to scrape Mixer endpoint
 to collect the exposed metrics. It provides a mechanism for persistent storage
 and querying of Istio metrics.
 
-Go to **istio-system** overview page in OpenShift Web Console and click on the Prometheus route link:
+Go to **istio-system** overview page in OpenShift Web Console and click on the **Prometheus** route link:
 
 ![istio-prometheus]({% image_path istio-prometheus-route.png %})
 
-You should see Prometheus' home screen, similar to this:
+You should see Prometheus home screen, similar to this:
 
 ![istio-prometheus]({% image_path istio-prometheus-landing.png %})
 
@@ -129,9 +126,9 @@ example):
 
 Other expressions to try:
 
-* Total count of all requests to `productpage` service: `istio_request_count{destination_service=~"productpage.*"}`
-* Total count of all requests to `v3` of the `reviews` service: `istio_request_count{destination_service=~"reviews.*", destination_version="v3"}`
-* Rate of requests over the past 5 minutes to all `productpage` services: `rate(istio_request_count{destination_service=~"productpage.*", response_code="200"}[5m])`
+* Total count of all requests to `productpage` service: `istio_request_duration_seconds_count{destination_service=~"productpage.*"}`
+* Total count of all requests to `v3` of the `reviews` service: `istio_request_duration_seconds_count{destination_service=~"reviews.*", destination_version="v3"}`
+* Rate of requests over the past 5 minutes to all `productpage` services: `rate(istio_request_duration_seconds_count{destination_service=~"productpage.*", response_code="200"}[5m])`
 
 There are many, many different queries you can perform to extract the data you need. Consult the
 [Prometheus documentation](https://prometheus.io/docs) for more detail.
@@ -144,26 +141,47 @@ As the number of services and interactions grows in your application, this style
 overwhelming. [Grafana](https://grafana.com/) provides a visual representation of many available Prometheus
 metrics extracted from the Istio data plane and can be used to quickly spot problems and take action.
 
-Open the Grafana Dashboard:
+Go to istio-system overview page in OpenShift Web Console and click on the **Grafana** route link:
 
-* Grafana Dashboard at **http://grafana-istio-system.$ROUTE_SUFFIX/dashboard/db/istio-dashboard**
+![istio-grafana]({% image_path istio-grafana-route.png %})
 
-![Grafana graph]({% image_path grafana-dash.png %})
+You should see Grafana home screen, similar to this:
+
+![Grafana graph]({% image_path grafana-home.png %})
+
+##### Istio Mesh Metrics
+
+Select "Istio Mesh Dashboard" from the drop-down list in the top left corner to see Istio mesh metrics:
+
+![Grafana graph]({% image_path grafana-mesh-metrics.png %})
+
+##### Istio Service Metrics
+
+To see detailed metrics for a service click on a service name in the "Service" column. 
+Change service to "Productpage" in the select box and the service dashboard will look similar to this:
+
+![Grafana graph]({% image_path grafana-service-metrics.png %})
 
 The Grafana Dashboard for Istio consists of three main sections:
 
-1. **A Global Summary View.** This section provides high-level summary of HTTP requests flowing through the service mesh.
-1. **A Mesh Summary View.** This section provides slightly more detail than the Global Summary View, allowing per-service filtering and selection.
-1. **Individual Services View.** This section provides metrics about requests and responses for each individual service within the mesh (HTTP and TCP).
+ * **A Global Summary View**. This section provides high-level summary of HTTP requests flowing through the service mesh.
+ * **A Mesh Summary View**. This section provides slightly more detail than the Global Summary View, allowing per-service filtering and selection.
+ * **Individual Services View**. This section provides metrics about requests and responses for each individual service within the mesh (HTTP and TCP).
 
-Scroll down to the `ratings` service graph:
+Note that **Tcp Bandwidth** metrics are empty, as Bookinfo uses http-based services only. Lower down on this dashboard are metrics 
+for workloads that call this service (labeled "Client Workloads") and for worloads that process requests from the service (labeled **Service Workloads**).
 
-![Grafana graph]({% image_path grafana-ratings.png %})
+You can switch to a different service or filter metrics by **client-** and **service-worloads** by using drop-down lists at the top of the dashboard.
 
-This graph shows which other services are accessing the `ratings` service. You can see that
-`reviews:v2` and `reviews:v3` are calling the `ratings` service, and each call is resulting in
-`HTTP 200 (OK)`. Since the default routing is _round-robin_, that means each reviews service is
-calling the ratings service equally. And `reviews:v1` never calls it, as we expect.
+##### Istio Workload Metrics
+
+To switch to workloads dashboard, select "Istio Workload Dashboard" from the drop-down list in the top left corner of the screen. 
+You should see a screen similar to this:
+
+![Grafana graph]({% image_path grafana-workload-metrics.png %})
+
+This dashboard shows workload’s metrics, and metrics for client- (inbound) and service (outbound) workloads. 
+You can switch to a different workload, ot filter metrics by inbound or outbound workloads by using drop-down lists at the top of the dashboard.
 
 For more on how to create, configure, and edit dashboards, please see the [Grafana documentation](http://docs.grafana.org/).
 
@@ -175,7 +193,7 @@ applications and make them more resilient and robust.
 
 ---
 
-In this step, we will learn how to configure dynamic request routing based on weights and HTTP headers.
+This task shows you how to configure dynamic request routing based on weights and HTTP headers.
 
 _Route rules_ control how requests are routed within an Istio service mesh. Route rules provide:
 
@@ -207,8 +225,7 @@ Istio introduces the concept of a service version, which is a finer-grained way 
 service instances by versions (`v1`, `v2`) or environment (`staging`, `prod`). These variants are not
 necessarily different API versions: they could be iterative changes to the same service, deployed
 in different environments (prod, staging, dev, etc.). Common scenarios where this is used include
-A/B testing or canary rollouts. Istio’s [traffic routing rules](https://istio.io/docs/concepts/traffic-management/rules-configuration.html) can refer to service versions to
-provide additional control over traffic between services.
+A/B testing or canary rollouts. Istio’s [traffic routing rules](https://istio.io/docs/concepts/traffic-management/rules-configuration.html) can refer to service versions to provide additional control over traffic between services.
 
 ![Versions]({% image_path versions.png %})
 
@@ -227,56 +244,44 @@ Otherwise if you access the application several times, you’ll notice that some
 ratings. This is because without an explicit default version set, Istio will route requests to all available
 versions of a service in a random fashion, and anytime you hit `v1` version you'll get no stars.
 
-First, let's set an environment variable to point to Istio:
+Let's create a default set of **virtual services** which will direct all traffic to the `reviews:v1` service version:
 
-~~~shell
-export ISTIO_VERSION=0.6.0; 
-export ISTIO_HOME=${HOME}/istio-${ISTIO_VERSION}; 
-export PATH=${PATH}:${ISTIO_HOME}/bin; 
-cd ${ISTIO_HOME}`
-~~~
+`oc create -f cloud-native-workshop-v2m3-labs/virtual-service-all-v1.yaml`
 
-Now let's install a default set of routing rules which will direct all traffic to the `reviews:v1` service version:
+You can see this default set of **virtual services** with:
 
-~~~shell
-oc create -f samples/bookinfo/kube/route-rule-all-v1.yaml
-~~~
-
-You can see this default set of rules with:
-
-~~~shell
-oc get routerules -o yaml
-~~~
+`oc get virtualservices -o yaml`
 
 There are default routing rules for each service, such as the one that forces all traffic to the `v1` version of the `reviews` service:
 
-~~~shell
-oc get routerules/reviews-default -o yaml
-~~~
+`oc get virtualservices/reviews -o yaml`
 
 ~~~yaml
-apiVersion: config.istio.io/v1alpha2
-kind: RouteRule
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
 metadata:
-  name: reviews-default
-  namespace: default
-  ...
+  creationTimestamp: "2019-07-02T15:50:36Z"
+  generation: 1
+  name: reviews
+  namespace: user1-bookinfo
+  resourceVersion: "2899673"
+  selfLink: /apis/networking.istio.io/v1alpha3/namespaces/user1-bookinfo/virtualservices/reviews
+  uid: 2240fcce-9ce1-11e9-b30a-0af4213cc1b8
 spec:
-  destination:
-    name: reviews
-  precedence: 1
-  route:
-  - labels:
-      version: v1
+  hosts:
+  - reviews
+  http:
+  - route:
+    - destination:
+        host: reviews
+        subset: v1
 ~~~
 
 Now, access the application again in your browser using the below link and reload the page several times - you should not see any rating stars since `reviews:v1` does not access the `ratings` service.
 
-* Bookinfo Application with no rating stars at **http://istio-ingress-istio-system.$ROUTE_SUFFIX/productpage**
+* Bookinfo Application with no rating stars at `http://user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com/productpage`
 
 To verify this, open the Grafana Dashboard:
-
-* Grafana Dashboard at **http://grafana-istio-system.$ROUTE_SUFFIX/dashboard/db/istio-dashboard**
 
 Scroll down to the `ratings` service and notice that the requests coming from the reviews service have stopped:
 
@@ -286,44 +291,52 @@ Scroll down to the `ratings` service and notice that the requests coming from th
 
 ---
 
-Lets enable the ratings service for a test user named “jason” by routing **productpage** traffic to **reviews:v2**, but only for our test user. Execute:
+Let's enable the ratings service for a test user named `jason` by routing `productpage` traffic to `reviews:vv` and the others to `reviews:v3`, 
+but only for our test user. Execute:
 
-~~~shell
-oc create -f samples/bookinfo/kube/route-rule-reviews-test-v2.yaml
-~~~
+`oc apply -f cloud-native-workshop-v2m3-labs/virtual-service-reviews-jason-v2-v3.yaml`
 
 Confirm the rule is created:
 
-~~~shell
-oc get routerule reviews-test-v2 -o yaml
-~~~
+`oc get virtualservices/reviews -o yaml`
+
 
 Notice the **match** element:
 
 ~~~yaml
-  match:
-    request:
-      headers:
-        cookie:
-          regex: ^(.*?;)?(user=jason)(;.*)?$
+http:
+  - match:
+    - headers:
+        end-user:
+          exact: jason
+    route:
+    - destination:
+        host: reviews
+        subset: v2
+  - route:
+    - destination:
+        host: reviews
+        subset: v3
 ~~~
 
 This says that for any incoming HTTP request that has a cookie set to the `jason` user to direct traffic to
-`reviews:v2`.
+`reviews:v1` and `reviews:v2`.
 
-Now, access the application at 
+Now, access the application via your own **Gateway URL**:
 
-**http://istio-ingress-istio-system.$ROUTE_SUFFIX/productpage)** and click **Sign In** (at the upper right) and sign in with:
+**http://user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com/productpage** and click **Sign In** (at the upper right) and sign in with:
 
 * Username: `jason`
 * Password: `jason`
 
 > If you get any certificate security exceptions, just accept them and continue. This is due to the use of self-signed certs.
 
-Once you login, refresh a few times - you should always see the black ratings stars coming from `ratings:v2`. If you logout,
-you'll return to the `reviews:v1` version which shows no stars. You may even see a small blip of access to `ratings:v2` on the
-Grafana dashboard if you refresh quickly 5-10 times while logged in as the test user `jason`.
+Once you login, refresh a few times - you should always see the black ratings stars coming from `ratings:v2`.
 
 ![Ratings for Test User]({% image_path ratings-testuser.png %})
+
+If you **sign out**, you'll return to the `reviews:v3` version which shows red ratings stars.
+
+![Ratings for Test User]({% image_path ratings-signout.png %})
 
 #####Congratulations!
