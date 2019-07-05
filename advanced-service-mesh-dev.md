@@ -101,7 +101,7 @@ the traffic flow from catalog service to inventory service:
 
 ![istio]({% image_path kiali_graph_sidecar.png %})
 
-#### Fault Injection
+####2. Fault Injection
 
 ---
 
@@ -139,9 +139,7 @@ increased network latency, or an overloaded upstream service. Aborts are crash f
 mimic failures in upstream services. Aborts usually manifest in the form of HTTP error codes,
 or TCP connection failures.
 
-####1. Inject a fault
-
----
+##### Inject a fault
 
 To test our application microservices for resiliency, we will inject a 7 second delay between the
 `reviews:v2` and `ratings` microservices, for user `jason`. This will be a simulated bug in the code which
@@ -184,7 +182,7 @@ You will see and feel that the webpage loads in about 6 seconds:
 
 The reviews section will show: **Sorry, product reviews are currently unavailable for this book**:
 
-####2. Use tracing to identify the bug
+####3. Use tracing to identify the bug
 
 ---
 
