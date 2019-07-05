@@ -1,12 +1,105 @@
 ## Lab3 - Advanced Service Mesh Development
 
-In this lab, you used Istio to send 100% of the traffic to the v1 version of each of the BookInfo services.
-You then set a rule to selectively send traffic to version v2 of the reviews service based on a header
-(i.e., a user cookie) in a request.
+In this lab, you will develop advanced servie mesh features such as **Fault Injection**, **Traffic Shifting**, **Circuit Breaker**,
+**Rate Limit** with **Coolstore microservices**(i.e Catalog, Inventory) that you developed and deployed to OpenShift cluster 
+in **Module 1** or **Module 2**.
 
-Once the v2 version has been tested to our satisfaction, we could use Istio to send traffic from all users to
-v2, optionally in a gradual fashion. We’ll explore this in the next step.
+####1. Configuring Automatic Sidecar Injection in Coolstore
 
+Lets' go to **Kiali console** once again to confirm if existing microservices(**Catalog**, **Inventory**) are running with a **side car**.
+Click on **Applictions** on the left menu check **userXX-catalog**, **userXX-inventory** in namespaces. You will see `Missing Sidecar` in 4 applications. 
+
+![istio]({% image_path kiali_missing_sidecar.png %})
+
+Upstream Istio community installations rely on the existence of a **proxy sidecar** within the application’s pod to provide service mesh capabilities to the application. You can include the proxy sidecar by using a manual process before deployment. However, automatic injection ensures that your application contains the appropriate configuration for your service mesh at the time of its deployment.
+
+**Automatic injection of the sidecar** is supported by using the `sidecar.istio.io/inject` annotation within your application yaml file. Set the annotation’s value to true for injection to occur.
+
+> Upstream Istio community installations require a specific label on the namespace after which all pods in that namespace are injected with the sidecar.  The OpenShift Service Mesh approach requires you to opt in to injection using an annotation with no need to label namspaces. This method requires fewer privileges and does not conflict with other OpenShift capabilities such as builder pods.
+
+Go to **USERXX Coolstore Inventory Microservice Application** project in OpenShift Web Console and navigate **Applications > Deployments** on the left menu. Click on **inventory-database** then click on **Edit YAML** in Actions at the top-right corner.
+
+Add the following annotation in **spec.template.metadata.annotations** path and click on **Save**:
+
+`sidecar.istio.io/inject: "true"`
+
+![istio]({% image_path inventory_db_inject_sidecar.png %})
+
+You will see **istio-init** container and **inventory-database** container in Pod Details page when you navigate **Applications > Pods** > **inventory-database-xxxxx**:
+
+![istio]({% image_path inventory_db_sidecar.png %})
+
+Now you will inject a sidecar container to application container(Inventory) as well, navigate **Applications > Deployments** on the left menu. Click on **inventory-quarkus** then click on **Edit YAML** in Actions at the top-right corner.
+
+`sidecar.istio.io/inject: "true"`
+
+![istio]({% image_path inventory_inject_sidecar.png %})
+
+You will see **istio-init** container and **inventory-quarkus** container in Pod Details page when you navigate **Applications > Pods** > **inventory-database-xxxxx**:
+
+![istio]({% image_path inventory_sidecar.png %})
+
+Next, go to **USERXX Coolstore Catalog Microservice Application** project in OpenShift Web Console and Navigate **Applications > Deployments** on the left menu. Click on **catalog-database** then click on **Edit YAML** in Actions at the top-right corner.
+
+Add the following annotation in **spec.template.metadata.annotations** path and click on **Save**:
+
+`sidecar.istio.io/inject: "true"`
+
+![istio]({% image_path catalog_db_inject_sidecar.png %})
+
+You will see **istio-init** container and **catalog-database** container in Pod Details page when you navigate **Applications > Pods** > **catalog-database-xxxxx**:
+
+![istio]({% image_path catalog_db_sidecar.png %})
+
+Now you will inject a sidecar container to application container(Catalog) as well, Open **catalog-deployment.yml** in **src/main/fabric8** and 
+copy the following annotation in **spec.template** path:
+
+~~~yaml
+metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
+~~~
+
+![istio]({% image_path catalog_inject_sidecar.png %})
+
+Re-build and re-deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspace **Terminal**:
+
+`cd cloud-native-workshop-v2m3-labs/catalog/`
+
+`oc project userXX-catalog`
+
+`mvn package fabric8:deploy -Popenshift -DskipTests`
+
+The build and deploy may take a minute or two. Wait for it to complete. You should see a **BUILD SUCCESS** at the
+end of the build output.
+
+After the maven build finishes it will take less than a minute for the application to become available.
+To verify that everything is started, run the following command and wait for it complete successfully:
+
+![istio]({% image_path catalog_sidecar_deploy_success.png %})
+
+You will see **istio-init** container and **spring-boot** container in Pod Details page when you navigate **Applications > Pods** > **catalog-xxxxx**:
+
+![istio]({% image_path catalog_sidecar.png %})
+
+Let's make sure if inventory and catalog services are working correctly via accessing **Catalog Route URL**:
+
+`i.e. http://catalog-userXX-catalog.apps.seoul-bfcf.openshiftworkshop.com`
+
+You will see the following web page including **Inventory Quantity** if the catalog service can access the inventory service via **Istio proxy sidecar**:
+
+![istio]({% image_path catalog_route_sidecar.png %})
+
+> Do not close the above **Catalog UI browser** to create traffics between services because this page continues to invoke catalog service and inventory service.
+
+Now, reload **Applications** in **Kiali console** to check if the `Missing sidecar` doesn't show any longer:
+
+![istio]({% image_path kiali_injecting_sidecar.png %})
+
+Also, go to the Service Graph page and uncheck **userXX-inventory** in Namespace, check **Traffic Animation** in **Display** for understanding 
+the traffic flow from catalog service to inventory service:
+
+![istio]({% image_path kiali_graph_sidecar.png %})
 
 #### Fault Injection
 

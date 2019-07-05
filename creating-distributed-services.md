@@ -36,7 +36,7 @@ Change the empty **USERXX Bookinfo** project via CodeReady Workspace **Terminal*
 
 Deploy the **Bookinfo application** in the bookinfo project:
 
-`oc apply -f cloud-native-workshop-v2m3-labs/bookinfo.yaml`
+`oc apply -f cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml`
 
 Replace your onw gateway URL with **REPLACE WITH YOUR BOOKINFO APP URL** in **bookinfo-gateway.yaml**.
 
@@ -47,7 +47,7 @@ Replace your onw gateway URL with **REPLACE WITH YOUR BOOKINFO APP URL** in **bo
 
 Create the **ingress gateway** for Bookinfo:
 
-`oc apply -f cloud-native-workshop-v2m3-labs/bookinfo-gateway.yaml`
+`oc apply -f cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml`
 
 The application consists of the usual objects like Deployments, Services, and Routes.
 
@@ -77,7 +77,7 @@ You should get **200** as a response.
 
 Add default destination rules:
 
-`oc apply -f cloud-native-workshop-v2m3-labs/destination-rule-all.yaml`
+`oc apply -f cloud-native-workshop-v2m3-labs/istio/destination-rule-all.yaml`
 
 List all available destination rules:
 

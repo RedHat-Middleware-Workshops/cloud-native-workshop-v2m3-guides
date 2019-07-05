@@ -45,7 +45,7 @@ Then you will only see your working namespace as below:
 
 ##### Service Graph
 
-Go to the Service Graph page on the Graph menu and check **Traffic Animation" in **Display**:
+Go to the Service Graph page on the Graph menu and check **Traffic Animation** in **Display**:
 
 ![kiali]({% image_path kiali-service-graph.png %})
 
@@ -231,7 +231,7 @@ A/B testing or canary rollouts. Istio’s [traffic routing rules](https://istio.
 
 As illustrated in the figure above, clients of a service have no knowledge of different versions of the service. They can continue to access the services using the hostname/IP address of the service. The Envoy sidecar/proxy intercepts and forwards all requests/responses between the client and the service.
 
-####7. RouteRule objects
+####7. VirtualService objects
 
 ---
 
@@ -246,13 +246,13 @@ versions of a service in a random fashion, and anytime you hit `v1` version you'
 
 Let's create a default set of **virtual services** which will direct all traffic to the `reviews:v1` service version:
 
-`oc create -f cloud-native-workshop-v2m3-labs/virtual-service-all-v1.yaml`
+`oc create -f cloud-native-workshop-v2m3-labs/istio/virtual-service-all-v1.yaml`
 
 You can see this default set of **virtual services** with:
 
 `oc get virtualservices -o yaml`
 
-There are default routing rules for each service, such as the one that forces all traffic to the `v1` version of the `reviews` service:
+There are default **virtual services** for each service, such as the one that forces all traffic to the `v1` version of the `reviews` service:
 
 `oc get virtualservices/reviews -o yaml`
 
@@ -294,7 +294,7 @@ Scroll down to the `ratings` service and notice that the requests coming from th
 Let's enable the ratings service for a test user named `jason` by routing `productpage` traffic to `reviews:vv` and the others to `reviews:v3`, 
 but only for our test user. Execute:
 
-`oc apply -f cloud-native-workshop-v2m3-labs/virtual-service-reviews-jason-v2-v3.yaml`
+`oc apply -f cloud-native-workshop-v2m3-labs/istio/virtual-service-reviews-jason-v2-v3.yaml`
 
 Confirm the rule is created:
 
@@ -340,3 +340,7 @@ If you **sign out**, you'll return to the `reviews:v3` version which shows red r
 ![Ratings for Test User]({% image_path ratings-signout.png %})
 
 #####Congratulations!
+In this lab, you used Istio to send 100% of the traffic to the v1 version of each of the BookInfo services. You then set a rule to selectively send traffic to version v2 of the reviews service based on a header (i.e., a user cookie) in a request.
+
+Once the v2 version has been tested to our satisfaction, we could use Istio to send traffic from all users to v2, optionally in a gradual fashion. 
+We’ll explore this in the next step.
