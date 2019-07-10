@@ -89,7 +89,7 @@ Open the application in your browser to make sure it's working:
 
 * Bookinfo Application running with your own **Gateway URL** at 
 
-`http://user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com/productpage`
+`http://userXX-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com/productpage`
 
 It should look something like:
 

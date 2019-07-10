@@ -4,7 +4,7 @@ In this lab, you will develop advanced servie mesh features such as **Fault Inje
 **Rate Limit** with **Coolstore microservices**(i.e Catalog, Inventory) that you developed and deployed to OpenShift cluster 
 in **Module 1** or **Module 2**.
 
-####1. Configuring Automatic Sidecar Injection in Coolstore
+####1. Configuring Automatic Sidecar Injection in Coolstore Microservices
 
 Lets' go to **Kiali console** once again to confirm if existing microservices(**Catalog**, **Inventory**) are running with a **side car**.
 Click on **Applictions** on the left menu check **userXX-catalog**, **userXX-inventory** in namespaces. You will see `Missing Sidecar` in 4 applications. 
@@ -105,9 +105,9 @@ the traffic flow from catalog service to inventory service:
 
 ---
 
-This step shows how to inject faults and test the resiliency of your application.
+This step will walk you through how to use **fault injection** to test the end-to-end failure recovery capability of the application as a whole. An incorrect configuration of the failure recovery policies could result in unavailability of critical services. Examples of incorrect configurations include incompatible or restrictive timeouts across service calls.
 
-Istio provides a set of failure recovery features that can be taken advantage of by the services
+**Istio** provides a set of failure recovery features that can be taken advantage of by the services
 in an application. Features include:
 
 * Timeouts
@@ -134,192 +134,155 @@ in continued unavailability of critical services in the application, resulting i
 Istio enables protocol-specific fault injection into the network (instead of killing pods) by
 delaying or corrupting packets at TCP layer.
 
-Two types of faults can be injected: delays and aborts. Delays are timing failures, mimicking
-increased network latency, or an overloaded upstream service. Aborts are crash failures that
-mimic failures in upstream services. Aborts usually manifest in the form of HTTP error codes,
-or TCP connection failures.
+Two types of faults can be injected: 
+
+ * **Delays** are timing failures. They mimic increased network latency or an overloaded upstream service.
+ * **Aborts** are crash failures. They mimic failures in upstream services. Aborts usually manifest in the form of HTTP error codes or TCP connection failures.
+
 
 ##### Inject a fault
 
-To test our application microservices for resiliency, we will inject a 7 second delay between the
-`reviews:v2` and `ratings` microservices, for user `jason`. This will be a simulated bug in the code which
-we will discover later.
+To test our application microservices for resiliency, we will inject a failure(**500 status**) in `50%` of requests to `inventory` microservices.
 
-Since the `reviews:v2` service has a
-built-in 10 second timeout for its calls to the ratings service, we expect the end-to-end flow
-to continue without any errors. Execute:
+Remove the route that we exposed the inventory service to manage network traffic by **Istio Ingressgateway**. Use the following command for **your own route name** at CodeReady Workspace **Terminal**:
 
-`oc create -f samples/bookinfo/kube/route-rule-ratings-test-delay.yaml`
+> Copy the route URL(i.e. inventory-quarkus-user1-inventory.apps.seoul-bfcf.openshiftworkshop.com) and you will reuse the URL to create a gateway in Istio.
 
-And confirm that the delay rule was created:
+`oc delete route/inventory-quarkus -n userXX-inventory`
 
-`oc get routerule ratings-test-delay -o yaml`
+Add the following label in the Inventory service to use a **virtural service** via OpenShift Web Consle when you navigate **Applications > Services** > **inventory-quarkus**:
 
-Notice the `httpFault` element:
+`service: inventory-quarkus`
+
+![fault-injection]({% image_path inventory_svc_add_label.png %})
+
+Click on **Save**.
+
+Create a **inventory-default.yaml** file in **cloud-native-workshop-v2m3-labs/inventory/rules/** to make a gateway and virtual service:
+
+> You need to replace **<YOUR_IVENTORY_GATEWAY_URL>** with the previous route URL that you copied earlier.
 
 ~~~yaml
-  httpFault:
-    delay:
-      fixedDelay: 7.000s
-      percent: 100
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: inventory-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - '<YOUR_IVENTORY_GATEWAY_URL>'
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: inventory-default
+spec:
+  hosts:
+  - '<YOUR_IVENTORY_GATEWAY_URL>'
+  gateways:
+  - inventory-gateway
+  http:
+    - match:
+        - uri:
+            exact: /services/inventory
+        - uri:
+            exact: /
+      route:
+        - destination:
+            host: inventory-quarkus
+            port:
+              number: 8080
 ~~~
 
-Now, access the application at 
+![fault-injection]({% image_path inventory-default-gateway.png %})
 
-`http://istio-ingress-istio-system.$ROUTE_SUFFIX/productpage` and click **Login** and login with:
+Run the following command via CodeReady Workspace **Terminal**:
 
-* Username: `jason`
-* Password: `jason`
+`oc create -f cloud-native-workshop-v2m3-labs/inventory/rules/inventory-default.yaml -n userXX-inventory`
 
-If the application’s front page was set to correctly handle delays, we expect it to load within
-approximately 7 seconds. To see the web page response times, open the Developer Tools menu in
+Now, you can test if the inventory service works correctly via accessing the gateway URL:
+
+`i.e. http://inventory-quarkus-user1-inventory.apps.seoul-bfcf.openshiftworkshop.com`
+
+![fault-injection]({% image_path inventory-ui-gateway.png %})
+
+Let's inject a failure(**500 status**) in `50%` of requests to `inventory` microservices. Go to **Virtual Service** in **Other Resources** in OpenShift Web Console and Click on **Edit YAML** in inventory-default:
+
+![fault-injection]({% image_path inventory-vs-error.png %})
+
+Edit **http** element with **fault.abort** injection as below and click on **Save**:
+
+~~~yaml
+- fault:
+    abort:
+      httpStatus: 500
+      percentage:
+        value: 50
+~~~
+
+Let's find out if the fault injection works corectly via accessing the Inventory gateway once again. You will see that the **Status** of CoolStore Inventory continues to change between **DEAD** and **OK**:
+
+![fault-injection]({% image_path inventory-dead-ok.png %})
+
+To make sure if the **50%** traffic is failed with **500 Error** in **Kiali Graph**. You will see `red` traffic from **istio-ingressgateway** as well as around 50% of requests are displayed as `5xx` on the right side, **HTTP Traffic**. The reason why the error rate is not exact 50% is that the request keeps coming from catalog and ingress gateway at the same time.
+
+![fault-injection]({% image_path inventlry-vs-error-kiali.png %})
+
+Let's make another injection in terms of you will introduce a `5 second delay` in `100% of requests` to Inventory service. Go to **Virtual Service** in **Other Resources** in OpenShift Web Console and Click on **Edit YAML** in inventory-default:
+
+Edit **http** element with **fault.delay** injection as below and click on **Save**:
+
+~~~yaml
+- fault:
+    delay:
+      fixedDelay: 5s
+      percentage:
+        value: 100
+~~~
+
+![fault-injection]({% image_path inventory-vs-delay.png %})
+
+When we go to **Kiali Graph**, you will see that the **green** traffic from **istio-ingressgateway** is delayed than requests from catalog service. Note that you need to check **Traffic Animation** in Display select box.
+
+![fault-injection]({% image_path inventlry-vs-delay-kiali.png %})
+
+If the Inventory’s front page was set to correctly handle delays, we expect it to load within
+approximately 5 seconds. To see the web page response times, open the Developer Tools menu in
 IE, Chrome or Firefox (typically, key combination `Ctrl`+`Shift`+`I` or `Alt`+`Cmd`+`I`), tab Network,
 and reload the bookinfo web page.
 
-You will see and feel that the webpage loads in about 6 seconds:
+You will see and feel that the webpage loads in about 5 seconds:
 
-![Delay]({% image_path testuser-delay.png %})
+![Delay]({% image_path inventory-webui-delay.png %})
 
-The reviews section will show: **Sorry, product reviews are currently unavailable for this book**:
-
-####3. Use tracing to identify the bug
-
----
-
-The reason that the entire reviews service has failed is because our BookInfo application has
-a bug. The timeout between the `productpage` and `reviews` service is less (3s times 2 retries == 6s total)
-than the timeout between the reviews and ratings service (10s). These kinds of bugs can occur in
-typical enterprise applications where different teams develop different microservices independently.
-
-Identifying this timeout mismatch is not so easy by observing the application, but is very easy when using
-Istio's built-in tracing capabilities. We will explore tracing in depth later on in this scenario and re-visit
-this issue.
-
-At this point we would normally fix the problem by either increasing the `productpage` timeout or
-decreasing the `reviews` -> `ratings` service timeout, terminate and restart the fixed microservice,
-and then confirm that the `productpage` returns its response without any errors.
-
-However, we already have this fix running in `v3` of the reviews service, so we can simply fix the
-problem by migrating all traffic to `reviews:v3`. We'll do this in the next step!
-
-####3. Traffic Shifting
-
----
-
-This step shows you how to gradually migrate traffic from an old to new version of a service.
-With Istio, we can migrate the traffic in a gradual fashion by using a sequence of rules with
-weights less than 100 to migrate traffic in steps, for example 10, 20, 30, … 100%. For simplicity
-this task will migrate the traffic from `reviews:v1` to `reviews:v3` in just two steps: 50%, 100%.
-
-Now that we've identified and fixed the bug, let's undo our previous testing routes. Execute:
-
-~~~shell
-oc delete -f samples/bookinfo/kube/route-rule-reviews-test-v2.yaml \
-           -f samples/bookinfo/kube/route-rule-ratings-test-delay.yaml
-~~~
-
-At this point, we are back to sending all traffic to `reviews:v1`. Access the application at 
-
-`http://istio-ingress-istio-system.$ROUTE_SUFFIX/productpage`
-and verify that no matter how many times you reload your browser, you'll always get no ratings stars, since
-`reviews:v1` doesn't ever access the `ratings` service:
-
-![no stars]({% image_path stars-none.png %})
-
-Open the Grafana dashboard and verify that the ratings service is receiving no traffic at all:
-
-* Grafana Dashboard at 
-
-`http://grafana-istio-system.$ROUTE_SUFFIX/dashboard/db/istio-dashboard`
-
-Scroll down to the `reviews` service and observe that all traffic from `productpage` to to `reviews:v2` and
-`reviews:v3` have stopped, and that only `reviews:v1` is receiving requests:
-
-![no traffic]({% image_path ratings-no-traffic.png %})
-
-In Grafana you can click on each service version below each graph to only show one graph at a time. Try it by
-clicking on `productpage.istio-system-v1 -> v1 : 200`. This shows a graph of all requests coming from
-`productpage` to `reviews` version `v1` that returned HTTP 200 (Success). You can then click on
-`productpage.istio-system-v1 -> v2 : 200` to verify no traffic is being sent to `reviews:v2`:
-
-![no traffic 2]({% image_path ratings-no-traffic-v2.png %})
-
-####4. Migrate users to v3
-
----
-
-To start the process, let's send half (50%) of the users to our new `v3` version with the fix, to do a canary test.
-Execute the following command which replaces the `reviews-default` rule with a new rule:
-
-`oc replace -f samples/bookinfo/kube/route-rule-reviews-50-v3.yaml`
-
-Inspect the new rule:
-
-`oc get routerule reviews-default -o yaml`
-
-Notice the new `weight` elements:
+Before we will move to the next step, clean up the fault injection with the default virtual service as here:
 
 ~~~yaml
-  route:
-  - labels:
-      version: v1
-    weight: 50
-  - labels:
-      version: v3
-    weight: 50
+http:
+  - match:
+      - uri:
+          exact: /services/inventory
+      - uri:
+          exact: /
+    route:
+      - destination:
+          host: inventory-quarkus
+          port:
+            number: 8080
 ~~~
 
-Open the Grafana dashboard and verify this:
-
-* Grafana Dashboard at 
-
-`http://grafana-istio-system.$ROUTE_SUFFIX/dashboard/db/istio-dashboard`
-
-Scroll down to the `reviews` service and observe that half the traffic goes to each of `v1` and `v3` and none goes
-to `v2`:
-
-![half traffic]({% image_path reviews-v1-v3-half.png %})
-
-At this point, we see some traffic going to `v3` and are happy with the result. Access the application at 
-
-`http://istio-ingress-istio-system.$ROUTE_SUFFIX/productpage`
-and verify that you either get no ratings stars (`v1`) or _red_ ratings stars (`v3`).
-
-We are now happy with the new version `v3` and want to migrate everyone to it. Execute:
-
-`oc replace -f samples/bookinfo/kube/route-rule-reviews-v3.yaml`
-
-Once again, open the Grafana dashboard and verify this:
-
-* Grafana Dashboard at 
-
-`http://grafana-istio-system.$ROUTE_SUFFIX/dashboard/db/istio-dashboard`
-
-Scroll down to the `reviews` service and observe that all traffic is now going to `v3`:
-
-![all v3 traffic]({% image_path reviews-v3-all.png %})
-
-Also, Access the application at 
-
-`http://istio-ingress-istio-system.$ROUTE_SUFFIX/productpage`
-and verify that you always get _red_ ratings stars (`v3`).
-
-**Congratulations!** In this task we migrated traffic from an old to new version of the reviews service using Istio’s
-weighted routing feature. Note that this is very different than version migration using deployment
-features of OpenShift, which use instance scaling to manage the traffic. With Istio, we can allow
-the two versions of the reviews service to scale up and down independently, without affecting the
-traffic distribution between them. For more about version routing with autoscaling, check out
-[Canary Deployments using Istio](https://istio.io/blog/canary-deployments-using-istio.html).
-
-In the next step, we will explore circuit breaking, which is useful for avoiding cascading failures
-and overloaded microservices, giving the system a chance to recover and minimize downtime.
-
-####5. Enable Circuit Breaker
+####3. Enable Circuit Breaker
 
 ---
 
-In this step, you will configure an Istio Circuit Breaker to protect the calls from `reviews` to `ratings` service.
-If the `ratings` service gets overloaded due to call volume, Istio (in conjunction with Kubernetes) will limit
+In this step, you will configure an Istio Circuit Breaker to protect the calls `Inventory` service.
+If the `Inventory` service gets overloaded due to call volume, Istio (in conjunction with Kubernetes) will limit
 future calls to the service instances to allow them to recover.
 
 Circuit breaking is a critical component of distributed systems.
@@ -345,38 +308,42 @@ max pending requests are not applicable.
 
 Each circuit breaking limit is configurable and tracked on a per upstream cluster and per priority basis.
 This allows different components of the distributed system to be tuned independently and have different limits.
-See the [Istio Circuit Breaker Spec](https://istio.io/docs/reference/config/traffic-rules/destination-policies.html#istio.proxy.v1.config.CircuitBreaker) for more details.
+See the [Envoy’s circuit breaker](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/circuit_breaking) for more details.
 
-Let's add a circuit breaker to the calls to the `ratings` service. Instead of using a _RouteRule_ object,
-circuit breakers in isto are defined as _DestinationPolicy_ objects. DestinationPolicy defines client/caller-side policies
-that determine how to handle traffic bound to a particular destination service. The policy specifies
-configuration for load balancing and circuit breakers.
+Let's add a circuit breaker to the calls to the `Inventory` service. Instead of using a _VirtualService_ object,
+circuit breakers in isto are defined as _DestinationRule_ objects. DestinationRule defines policies that apply to traffic intended for a service after routing has occurred. These rules specify configuration for load balancing, connection pool size from the sidecar, and outlier detection settings to detect and evict unhealthy hosts from the load balancing pool.
 
-Add a circuit breaker to protect calls destined for the `ratings` service:
+Create a **inventory-cb.yaml** file in **cloud-native-workshop-v2m3-labs/inventory/rules/** to apply 
+circuit breaking settings when calling the `Inventory` service:
 
-~~~shell
-oc create -f - <<EOF
-    apiVersion: config.istio.io/v1alpha2
-    kind: DestinationPolicy
-    metadata:
-      name: ratings-cb
-    spec:
-      destination:
-        name: ratings
-        labels:
-          version: v1
-      circuitBreaker:
-        simpleCb:
-          maxConnections: 1
-          httpMaxPendingRequests: 1
-          httpConsecutiveErrors: 1
-          sleepWindow: 15m
-          httpDetectionInterval: 10s
-          httpMaxEjectionPercent: 100
-EOF
+~~~yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: inventory-cb
+spec:
+  hosts:
+  - '<YOUR_IVENTORY_GATEWAY_URL>'
+  gateways:
+  - inventory-gateway
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 1
+      http:
+        http1MaxPendingRequests: 1
+        maxRequestsPerConnection: 1
 ~~~
 
-We set the `ratings` service's maximum connections to 1 and maximum pending requests to 1. Thus, if we send more
+> If you installed/configured Istio with mutual TLS authentication enabled, you must add a TLS traffic policy mode: ISTIO_MUTUAL to the DestinationRule before applying it. 
+
+![circuit-breaker]({% image_path inventory-circuit-breaker.png %})
+
+Run the following command via CodeReady Workspace **Terminal**:
+
+`oc create -f cloud-native-workshop-v2m3-labs/inventory/rules/inventory-cb.yaml -n userXX-inventory`
+
+We set the `Inventory` service's maximum connections to 1 and maximum pending requests to 1. Thus, if we send more
 than 2 requests within a short period of time to the reviews service, 1 will go through, 1 will be pending,
 and any additional requests will be denied until the pending request is processed. Furthermore, it will detect any hosts that
 return a server error (5XX) and eject the pod out of the load balancing pool for 15 minutes. You can visit
@@ -384,19 +351,20 @@ here to check the
 [Istio spec](https://istio.io/docs/reference/config/traffic-rules/destination-policies.html#istio.proxy.v1.config.CircuitBreaker.SimpleCircuitBreakerPolicy)
 for more details on what each configuration parameter does.
 
-####6. Overload the service
+####4. Overload the service
 
 ---
 
 Let's use some simple `curl` commands to send multiple concurrent requests to our application, and witness the
 circuit breaker kicking in opening the circuit.
 
-Execute this to simulate a number of users attampting to access the application simultaneously:
+Execute this to simulate a number of users attampting to access the gateway URL simultaneously:
 
+Your Inventory gateway URL seems like **http://inventory-quarkus-user1-inventory.apps.seoul-bfcf.openshiftworkshop.com**
 
 ~~~shell
-    for i in {1..10} ; do
-        curl 'http://istio-ingress-istio-system.[[HOST_SUBDOMAIN]]-80-[[KATACODA_HOST]].environments.katacoda.com/productpage?foo=[1-1000]' >& /dev/null &
+    for i in {1..50} ; do
+        curl 'http://YOUR_IVENTORY_GATEWAY_URL/services/inventory' >& /dev/null &
     done
 ~~~
 
@@ -421,7 +389,7 @@ Below that, in the **Service Mesh** section of the dashboard observe that the se
 
 That's the circuit breaker in action, limiting the number of requests to the service. In practice your limits would be much higher
 
-####7. Stop overloading
+####5. Stop overloading
 
 ---
 
@@ -429,7 +397,7 @@ Before moving on, stop the traffic generator by clicking here to stop them:
 
 `for i in {1..10} ; do kill %${i} ; done`
 
-####8. Pod Ejection
+####6. Pod Ejection
 
 ---
 
@@ -555,7 +523,7 @@ different customers based on policy and contractual requirements
 * [Christian Posta's Blog on Envoy and Circuit Breaking](http://blog.christianposta.com/microservices/01-microservices-patterns-with-envoy-proxy-part-i-circuit-breaking/)
 
 
-####9. Rate Limiting
+####7. Rate Limiting
 
 ---
 
@@ -586,7 +554,7 @@ This command will endlessly access the application and report the HTTP status re
 
 With this application load running, we can witness rate limits in action.
 
-####10. Add a rate limit
+####8. Add a rate limit
 
 ---
 
@@ -611,7 +579,7 @@ rate-limited to 1 query per second:
 
 ![5xxs]({% image_path ratings-4xxs.png %})
 
-####11. Inspect the rule
+####9. Inspect the rule
 
 ---
 
@@ -639,7 +607,7 @@ You can also conditionally rate limit based on other dimensions, such as:
 * API paths
 * [Several other attributes](https://istio.io/docs/reference/config/mixer/attribute-vocabulary.html)
 
-####12. Remove the rate limit
+####10. Remove the rate limit
 
 ---
 
@@ -661,7 +629,7 @@ Notice at the top that the `4xx`s dropped back down to zero.
 complex microservices architectures. Let's go!
 
 
-####13. Tracing
+####11. Tracing
 
 ---
 
@@ -703,7 +671,7 @@ on the critical path, attention can focus on the area of code where the most
 valuable improvements can be made. For example, you might want to trace the
 resource allocation spans inside an API request down to the underlying blocking calls.
 
-####14. Access Jaeger Console
+####12. Access Jaeger Console
 
 ---
 
@@ -782,7 +750,7 @@ Istio’s fault injection rules and tracing capabilities help you identify such 
 how different services contribute to the overall end-user perceived latency. In addition,
 it can be a valuable tool to diagnose and troubleshoot distributed applications.
 
-####15. Enable RH-SSO
+####13. Enable RH-SSO
 
 ---
 
