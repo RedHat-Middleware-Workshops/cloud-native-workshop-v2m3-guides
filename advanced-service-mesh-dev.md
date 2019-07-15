@@ -322,10 +322,7 @@ kind: DestinationRule
 metadata:
   name: inventory-cb
 spec:
-  hosts:
-  - '<YOUR_IVENTORY_GATEWAY_URL>'
-  gateways:
-  - inventory-gateway
+  host: inventory-quarkus
   trafficPolicy:
     connectionPool:
       tcp:
@@ -360,7 +357,7 @@ circuit breaker kicking in opening the circuit.
 
 Execute this to simulate a number of users attampting to access the gateway URL simultaneously:
 
-Your Inventory gateway URL seems like **http://inventory-quarkus-user1-inventory.apps.seoul-bfcf.openshiftworkshop.com**
+Your Inventory gateway URL seems like **http://inventory-quarkus-user1-inventory.apps.seoul-6eb1.openshiftworkshop.com**
 
 ~~~shell
     for i in {1..50} ; do
@@ -369,161 +366,31 @@ Your Inventory gateway URL seems like **http://inventory-quarkus-user1-inventory
 ~~~
 
 Due to the very conservative circuit breaker, many of these calls will fail with HTTP 503 (Server Unavailable). To see this,
-open the Grafana console:
-
-* Grafana Dashboard at 
-
-`http://grafana-istio-system.$ROUTE_SUFFIX/dashboard/db/istio-dashboard`
+open the `Istio Service Mesh Dashboard` in Grafana console and select `inventory-quarkus.userxx-inventory.svc.cluster.local` service:
 
 > **NOTE**: It make take 10-20 seconds before the evidence of the circuit breaker is visible
 within the Grafana dashboard, due to the not-quite-realtime nature of Prometheus metrics and Grafana
 refresh periods and general network latency.
 
-Notice at the top, the increase in the number of **5xxs Responses** at the top right of the dashboard:
+![circuit-breaker]({% image_path inventory-circuit-breaker-grafana.png %})
 
-![5xxs]({% image_path 5xxs.png %})
-
-Below that, in the **Service Mesh** section of the dashboard observe that the services are returning 503 (Service Unavailable) quite a lot:
-
-![5xxs]({% image_path 5xxs-services.png %})
-
-That's the circuit breaker in action, limiting the number of requests to the service. In practice your limits would be much higher
+That's the circuit breaker in action, limiting the number of requests to the service. In practice your limits would be much higher.
 
 ####5. Stop overloading
 
 ---
 
-Before moving on, stop the traffic generator by clicking here to stop them:
+Before moving on, stop the traffic generator by executing the following commands in CodeReady Workspace **Terminal**:
 
-`for i in {1..10} ; do kill %${i} ; done`
+`for i in {1..50} ; do kill %${i} ; done`
 
-####6. Pod Ejection
+![circuit-breaker]({% image_path inventory-circuit-breaker-stop.png %})
 
----
+Delete the circuit breaker of the Inventory service via the following commands. You should replace **userxx** with your namespace:
 
-In addition to limiting the traffic, Istio can also forcibly eject pods out of service if they are running slowly
-or not at all. To see this, let's deploy a pod that doesn't work (has a bug).
+`oc delete destinationrule/inventory-cb -n userxx-inventory`
 
-First, let's define a new circuit breaker, very similar to the previous one but without the arbitrary connection
-limits. To do this, execute:
-
-~~~shell
-oc replace -f - <<EOF
-    apiVersion: config.istio.io/v1alpha2
-    kind: DestinationPolicy
-    metadata:
-      name: ratings-cb
-    spec:
-      destination:
-        name: ratings
-        labels:
-          version: v1
-      circuitBreaker:
-        simpleCb:
-          httpConsecutiveErrors: 1
-          sleepWindow: 15m
-          httpDetectionInterval: 10s
-          httpMaxEjectionPercent: 100
-EOF
-~~~
-
-This policy says that if any instance of the `ratings` service fails more than once, it will be ejected for
-15 minutes.
-
-Next, deploy a new instance of the `ratings` service which has been misconfigured and will return a failure
-(HTTP 500) value for any request. Execute:
-
-`${ISTIO_HOME}/bin/istioctl kube-inject -f ~/projects/ratings/broken.yaml | oc create -f -`
-
-Verify that the broken pod has been added to the `ratings` load balancing service:
-
-`oc get pods -l app=ratings`
-
-You should see 2 pods, including the broken one:
-
-~~~shell
-NAME                                 READY     STATUS    RESTARTS   AGE
-ratings-v1-3080059732-5ts95          2/2       Running   0          3h
-ratings-v1-broken-1694306571-c6zlk   2/2       Running   0          7s
-~~~
-
-Save the name of this pod to an environment variable:
-
-`BROKEN_POD_NAME=$(oc get pods -l app=ratings,broken=true -o jsonpath='{.items[?(@.status.phase=="Running")].metadata.name}')`
-
-Requests to the `ratings` service will be load-balanced across these two pods. The circuit breaker will
-detect the failures in the broken pod and eject it from the load balancing pool for a minimum of 15 minutes.
-In the real world this would give the failing pod a chance to recover or be killed and replaced. For mis-configured
-pods that will never recover, this means that the pod will very rarely be accessed (once every 15 minutes,
-and this would also be very noticeable in production environment monitoring like those we are
-using in this workshop).
-
-To trigger this, simply access the application:
-
-* Application Link at 
-
-`http://istio-ingress-istio-system.$ROUTE_SUFFIX/productpage`
-
-Reload the webpage 5-10 times (click the reload icon, or press `CMD-R`, or `CTRL-R`) and notice that you
-only see a failure (no stars) ONE time, due to the
-circuit breaker's policy for `httpConsecutiveErrors=1`.  After the first error, the pod is ejected from
-the load balancing pool for 15 minutes and you should see red stars from now on.
-
-Verify that the broken pod only received one request that failed:
-
-`oc logs -c ratings $BROKEN_POD_NAME`
-
-You should see:
-
-~~~shell
-Server listening on: http://0.0.0.0:9080
-GET /ratings/0
-~~~
-
-You should see one and only one `GET` request, no matter how many times you reload the webpage.
-This indicates that the pod has been ejected from the load balancing pool and will not be accessed
-for 15 minutes. You can also see this in the Prometheus logs for the Istio Mixer. Open the Prometheus query
-console:
-
-* Prometheus UI at 
-
-`http://prometheus-istio-system.$ROUTE_SUFFIX`
-
-In the “Expression” input box at the top of the web page, enter the text: `envoy_cluster_out_ratings_istio_system_svc_cluster_local_http_version_v1_outlier_detection_ejections_active` and click
-**Execute**. This expression refers to the number of _active ejections_ of pods from the `ratings:v1` destination that have failed more than the value of the `httpConsecutiveErrors` which
-we have set to 1 (one).
-
-Then, click the Execute button.
-
-You should see a result of `1`:
-
-![5xxs]({% image_path prom-outlier.png %})
-
-In practice this means that the failing pod will not receive any traffic for the timeout period, giving it a chance
-to recover and not affect the user experience.
-
-**Congratulations!** Circuit breaking is a critical component of distributed systems. When we apply a circuit breaker to an
-entity, and if failures reach a certain threshold, subsequent calls to that entity should automatically
-fail without applying additional pressure on the failed entity and paying for communication costs.
-
-In this step, you implemented the Circuit Breaker microservice pattern without changing any of the application code.
-This is one additional way to build resilient applications, ones designed to deal with failure rather than go to great lengths
-to avoid it.
-
-In the next step, we will explore rate limiting, which can be useful to give different service levels to
-different customers based on policy and contractual requirements
-
-> **NOTE**: Before moving on, in case your simulated user loads are still running, kill them with:
-
-`for i in {1..10} ; do kill %${i}; done`
-
-##### More references
-
-* [Istio Documentation](https://istio.io/docs)
-* [Christian Posta's Blog on Envoy and Circuit Breaking](http://blog.christianposta.com/microservices/01-microservices-patterns-with-envoy-proxy-part-i-circuit-breaking/)
-
-
-####7. Rate Limiting
+####6. Rate Limiting
 
 ---
 
@@ -554,7 +421,7 @@ This command will endlessly access the application and report the HTTP status re
 
 With this application load running, we can witness rate limits in action.
 
-####8. Add a rate limit
+####7. Add a rate limit
 
 ---
 
@@ -579,7 +446,7 @@ rate-limited to 1 query per second:
 
 ![5xxs]({% image_path ratings-4xxs.png %})
 
-####9. Inspect the rule
+####8. Inspect the rule
 
 ---
 
@@ -607,7 +474,7 @@ You can also conditionally rate limit based on other dimensions, such as:
 * API paths
 * [Several other attributes](https://istio.io/docs/reference/config/mixer/attribute-vocabulary.html)
 
-####10. Remove the rate limit
+####9. Remove the rate limit
 
 ---
 
@@ -629,7 +496,7 @@ Notice at the top that the `4xx`s dropped back down to zero.
 complex microservices architectures. Let's go!
 
 
-####11. Tracing
+####10. Tracing
 
 ---
 
@@ -671,7 +538,7 @@ on the critical path, attention can focus on the area of code where the most
 valuable improvements can be made. For example, you might want to trace the
 resource allocation spans inside an API request down to the underlying blocking calls.
 
-####12. Access Jaeger Console
+####11. Access Jaeger Console
 
 ---
 
@@ -750,7 +617,7 @@ Istio’s fault injection rules and tracing capabilities help you identify such 
 how different services contribute to the overall end-user perceived latency. In addition,
 it can be a valuable tool to diagnose and troubleshoot distributed applications.
 
-####13. Enable RH-SSO
+####12. Enable RH-SSO
 
 ---
 
