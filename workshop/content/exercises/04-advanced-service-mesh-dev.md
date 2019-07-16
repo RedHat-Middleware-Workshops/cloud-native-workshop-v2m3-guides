@@ -9,7 +9,7 @@ in **Module 1** or **Module 2**.
 Lets' go to **Kiali console** once again to confirm if existing microservices(**Catalog**, **Inventory**) are running with a **side car**.
 Click on **Applictions** on the left menu check **userXX-catalog**, **userXX-inventory** in namespaces. You will see `Missing Sidecar` in 4 applications. 
 
-![istio]({% image_path kiali_missing_sidecar.png %})
+![istio](images/kiali_missing_sidecar.png)
 
 Upstream Istio community installations rely on the existence of a **proxy sidecar** within the application’s pod to provide service mesh capabilities to the application. You can include the proxy sidecar by using a manual process before deployment. However, automatic injection ensures that your application contains the appropriate configuration for your service mesh at the time of its deployment.
 
@@ -23,21 +23,21 @@ Add the following annotation in **spec.template.metadata.annotations** path and 
 
 `sidecar.istio.io/inject: "true"`
 
-![istio]({% image_path inventory_db_inject_sidecar.png %})
+![istio](images/inventory_db_inject_sidecar.png)
 
 You will see **istio-init** container and **inventory-database** container in Pod Details page when you navigate **Applications > Pods** > **inventory-database-xxxxx**:
 
-![istio]({% image_path inventory_db_sidecar.png %})
+![istio](images/inventory_db_sidecar.png)
 
 Now you will inject a sidecar container to application container(Inventory) as well, navigate **Applications > Deployments** on the left menu. Click on **inventory-quarkus** then click on **Edit YAML** in Actions at the top-right corner.
 
 `sidecar.istio.io/inject: "true"`
 
-![istio]({% image_path inventory_inject_sidecar.png %})
+![istio](images/inventory_inject_sidecar.png)
 
 You will see **istio-init** container and **inventory-quarkus** container in Pod Details page when you navigate **Applications > Pods** > **inventory-database-xxxxx**:
 
-![istio]({% image_path inventory_sidecar.png %})
+![istio](images/inventory_sidecar.png)
 
 Next, go to **USERXX Coolstore Catalog Microservice Application** project in OpenShift Web Console and Navigate **Applications > Deployments** on the left menu. Click on **catalog-database** then click on **Edit YAML** in Actions at the top-right corner.
 
@@ -45,11 +45,11 @@ Add the following annotation in **spec.template.metadata.annotations** path and 
 
 `sidecar.istio.io/inject: "true"`
 
-![istio]({% image_path catalog_db_inject_sidecar.png %})
+![istio](images/catalog_db_inject_sidecar.png)
 
 You will see **istio-init** container and **catalog-database** container in Pod Details page when you navigate **Applications > Pods** > **catalog-database-xxxxx**:
 
-![istio]({% image_path catalog_db_sidecar.png %})
+![istio](images/catalog_db_sidecar.png)
 
 Now you will inject a sidecar container to application container(Catalog) as well, Open **catalog-deployment.yml** in **src/main/fabric8** and 
 copy the following annotation in **spec.template** path:
@@ -60,7 +60,7 @@ metadata:
         sidecar.istio.io/inject: "true"
 ~~~
 
-![istio]({% image_path catalog_inject_sidecar.png %})
+![istio](images/catalog_inject_sidecar.png)
 
 Re-build and re-deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspace **Terminal**:
 
@@ -76,11 +76,11 @@ end of the build output.
 After the maven build finishes it will take less than a minute for the application to become available.
 To verify that everything is started, run the following command and wait for it complete successfully:
 
-![istio]({% image_path catalog_sidecar_deploy_success.png %})
+![istio](images/catalog_sidecar_deploy_success.png)
 
 You will see **istio-init** container and **spring-boot** container in Pod Details page when you navigate **Applications > Pods** > **catalog-xxxxx**:
 
-![istio]({% image_path catalog_sidecar.png %})
+![istio](images/catalog_sidecar.png)
 
 Let's make sure if inventory and catalog services are working correctly via accessing **Catalog Route URL**:
 
@@ -88,18 +88,18 @@ Let's make sure if inventory and catalog services are working correctly via acce
 
 You will see the following web page including **Inventory Quantity** if the catalog service can access the inventory service via **Istio proxy sidecar**:
 
-![istio]({% image_path catalog_route_sidecar.png %})
+![istio](images/catalog_route_sidecar.png)
 
 > Do not close the above **Catalog UI browser** to create traffics between services because this page continues to invoke catalog service and inventory service.
 
 Now, reload **Applications** in **Kiali console** to check if the `Missing sidecar` doesn't show any longer:
 
-![istio]({% image_path kiali_injecting_sidecar.png %})
+![istio](images/kiali_injecting_sidecar.png)
 
 Also, go to the Service Graph page and uncheck **userXX-inventory** in Namespace, check **Traffic Animation** in **Display** for understanding 
 the traffic flow from catalog service to inventory service:
 
-![istio]({% image_path kiali_graph_sidecar.png %})
+![istio](images/kiali_graph_sidecar.png)
 
 ####2. Fault Injection
 
@@ -154,7 +154,7 @@ Add the following label in the Inventory service to use a **virtural service** v
 
 `service: inventory-quarkus`
 
-![fault-injection]({% image_path inventory_svc_add_label.png %})
+![fault-injection](images/inventory_svc_add_label.png)
 
 Click on **Save**.
 
@@ -200,7 +200,7 @@ spec:
               number: 8080
 ~~~
 
-![fault-injection]({% image_path inventory-default-gateway.png %})
+![fault-injection](images/inventory-default-gateway.png)
 
 Run the following command via CodeReady Workspace **Terminal**:
 
@@ -210,11 +210,11 @@ Now, you can test if the inventory service works correctly via accessing the gat
 
 `i.e. http://inventory-quarkus-user1-inventory.apps.seoul-bfcf.openshiftworkshop.com`
 
-![fault-injection]({% image_path inventory-ui-gateway.png %})
+![fault-injection](images/inventory-ui-gateway.png)
 
 Let's inject a failure(**500 status**) in `50%` of requests to `inventory` microservices. Go to **Virtual Service** in **Other Resources** in OpenShift Web Console and Click on **Edit YAML** in inventory-default:
 
-![fault-injection]({% image_path inventory-vs-error.png %})
+![fault-injection](images/inventory-vs-error.png)
 
 Edit **http** element with **fault.abort** injection as below and click on **Save**:
 
@@ -228,11 +228,11 @@ Edit **http** element with **fault.abort** injection as below and click on **Sav
 
 Let's find out if the fault injection works corectly via accessing the Inventory gateway once again. You will see that the **Status** of CoolStore Inventory continues to change between **DEAD** and **OK**:
 
-![fault-injection]({% image_path inventory-dead-ok.png %})
+![fault-injection](images/inventory-dead-ok.png)
 
 To make sure if the **50%** traffic is failed with **500 Error** in **Kiali Graph**. You will see `red` traffic from **istio-ingressgateway** as well as around 50% of requests are displayed as `5xx` on the right side, **HTTP Traffic**. The reason why the error rate is not exact 50% is that the request keeps coming from catalog and ingress gateway at the same time.
 
-![fault-injection]({% image_path inventlry-vs-error-kiali.png %})
+![fault-injection](images/inventlry-vs-error-kiali.png)
 
 Let's make another injection in terms of you will introduce a `5 second delay` in `100% of requests` to Inventory service. Go to **Virtual Service** in **Other Resources** in OpenShift Web Console and Click on **Edit YAML** in inventory-default:
 
@@ -246,11 +246,11 @@ Edit **http** element with **fault.delay** injection as below and click on **Sav
         value: 100
 ~~~
 
-![fault-injection]({% image_path inventory-vs-delay.png %})
+![fault-injection](images/inventory-vs-delay.png)
 
 When we go to **Kiali Graph**, you will see that the **green** traffic from **istio-ingressgateway** is delayed than requests from catalog service. Note that you need to check **Traffic Animation** in Display select box.
 
-![fault-injection]({% image_path inventlry-vs-delay-kiali.png %})
+![fault-injection](images/inventlry-vs-delay-kiali.png)
 
 If the Inventory’s front page was set to correctly handle delays, we expect it to load within
 approximately 5 seconds. To see the web page response times, open the Developer Tools menu in
@@ -259,7 +259,7 @@ and reload the bookinfo web page.
 
 You will see and feel that the webpage loads in about 5 seconds:
 
-![Delay]({% image_path inventory-webui-delay.png %})
+![Delay](images/inventory-webui-delay.png)
 
 Before we will move to the next step, clean up the fault injection with the default virtual service as here:
 
@@ -334,7 +334,7 @@ spec:
 
 > If you installed/configured Istio with mutual TLS authentication enabled, you must add a TLS traffic policy mode: ISTIO_MUTUAL to the DestinationRule before applying it. 
 
-![circuit-breaker]({% image_path inventory-circuit-breaker.png %})
+![circuit-breaker](images/inventory-circuit-breaker.png)
 
 Run the following command via CodeReady Workspace **Terminal**:
 
@@ -372,7 +372,7 @@ open the `Istio Service Mesh Dashboard` in Grafana console and select `inventory
 within the Grafana dashboard, due to the not-quite-realtime nature of Prometheus metrics and Grafana
 refresh periods and general network latency.
 
-![circuit-breaker]({% image_path inventory-circuit-breaker-grafana.png %})
+![circuit-breaker](images/inventory-circuit-breaker-grafana.png)
 
 That's the circuit breaker in action, limiting the number of requests to the service. In practice your limits would be much higher.
 
@@ -384,7 +384,7 @@ Before moving on, stop the traffic generator by executing the following commands
 
 `for i in {1..50} ; do kill %${i} ; done`
 
-![circuit-breaker]({% image_path inventory-circuit-breaker-stop.png %})
+![circuit-breaker](images/inventory-circuit-breaker-stop.png)
 
 Delete the circuit breaker of the Inventory service via the following commands. You should replace **userxx** with your namespace:
 
@@ -439,12 +439,12 @@ the `ratings` service is subject to a 1qps rate limit. Verify this with Grafana:
 Scroll down to the `ratings` service and observe that you are seeing that some of the requests sent
 from `reviews:v3` service to the `ratings` service are returning HTTP Code 429 (Too Many Requests).
 
-![5xxs]({% image_path ratings-overload.png %})
+![5xxs](images/ratings-overload.png)
 
 In addition, at the top of the dashboard, the '4xxs' report shows an increase in 4xx HTTP codes. We are being
 rate-limited to 1 query per second:
 
-![5xxs]({% image_path ratings-4xxs.png %})
+![5xxs](images/ratings-4xxs.png)
 
 ####8. Inspect the rule
 
@@ -490,7 +490,7 @@ Verify that the rate limit is no longer in effect. Open the dashboard:
 
 Notice at the top that the `4xx`s dropped back down to zero.
 
-![5xxs]({% image_path ratings-4xxs-gone.png %})
+![5xxs](images/ratings-4xxs-gone.png)
 
 **Congratulations!** In the final step, we'll explore distributed tracing and how it can help diagnose and fix issues in
 complex microservices architectures. Let's go!
@@ -529,7 +529,7 @@ contiguous segment of work in that trace.
 Each component (microservice) in a distributed trace will contribute its
 own span or spans. For example:
 
-![Spans]({% image_path tracing.png %})
+![Spans](images/tracing.png)
 
 This type of visualization adds the context of time, the hierarchy of
 the services involved, and the serial or parallel nature of the process/task
@@ -548,11 +548,11 @@ With our application up and our script running to generate loads, visit the Jaeg
 
 `http://jaeger-query-istio-system.$ROUTE_SUFFIX`
 
-![jager console]({% image_path jag-console.png %})
+![jager console](images/jag-console.png)
 
 Select `istio-ingress` from the _Service_ dropdown menu, change the value of **Limit Results** to `200` and click **Find Traces**:
 
-![jager console]({% image_path jag-console2.png %})
+![jager console](images/jag-console2.png)
 
 In the top right corner, a duration vs. time scatter plot gives a visual representation of the results, showing how and when
 each service was accessed, with drill-down capability. The bottom right includes a list of all spans that were traced over the last
@@ -561,7 +561,7 @@ hour (limited to 200).
 If you click on the first trace in the listing, you should see the details corresponding
 to a recent access to `/productpage`. The page should look something like this:
 
-![jager listing]({% image_path jag-listing.png %})
+![jager listing](images/jag-listing.png)
 
 As you can see, the trace is comprised of _spans_, where each span corresponds to a
 microservice invoked during the execution of a `/productpage` request.
@@ -595,11 +595,11 @@ that took at least 5 seconds. Select these options for the query:
 Then click **Find Traces**. Change the sorting to **Longest First** to see the ones that took the longest.
 The result list should show several spans with errors:
 
-![jager listing]({% image_path jag-last10.png %})
+![jager listing](images/jag-last10.png)
 
 Click on the top-most span that took ~10s and open details for it:
 
-![jager listing]({% image_path jag-2x3.png %})
+![jager listing](images/jag-2x3.png)
 
 Here you can see the `reviews` service takes 2 attempts to access the `ratings` service, with each attempt
 timing out after 3 seconds. After the second attempt, it gives up and returns a failure back to the product

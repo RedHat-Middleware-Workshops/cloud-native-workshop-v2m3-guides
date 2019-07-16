@@ -1,0 +1,11 @@
+name: Workshop Content
+
+modules:
+    activate:
+    - workshop-overview
+    - setup-environment
+    - exercises/01-getting-started-service-mesh
+    - exercises/02-creating-distributed-services
+    - exercises/03-service-visualizing-monitoring
+    - exercises/04-advanced-service-mesh-dev
+    - workshop-summary

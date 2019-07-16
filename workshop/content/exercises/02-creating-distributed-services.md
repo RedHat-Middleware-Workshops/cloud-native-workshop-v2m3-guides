@@ -24,7 +24,7 @@ There are 3 versions of the reviews microservice:
 
 The end-to-end architecture of the application is shown below.
 
-![Bookinfo Architecture]({% image_path istio_bookinfo.png %})
+![Bookinfo Architecture](images/istio_bookinfo.png)
 
 ####1. Deploy Bookinfo Application
 
@@ -43,7 +43,7 @@ Replace your onw gateway URL with **REPLACE WITH YOUR BOOKINFO APP URL** in **bo
  * URL format: userXX-bookinfo-istio-system.<ROUTE SUBFFIX>
  * URL example: user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com
 
-![gateway]({% image_path bookinfo-gateway.png %})
+![gateway](images/bookinfo-gateway.png)
 
 Create the **ingress gateway** for Bookinfo:
 
@@ -56,7 +56,7 @@ components (the Envoy Sidecars you read about in the previous step).
 
 Let's wait for our application to finish deploying. Go to the overview page in **userxx BookInfo Service Mesh** project:
 
-![bookinfo]({% image_path bookinfo-deployed.png %})
+![bookinfo](images/bookinfo-deployed.png)
 
 Or you can execute the following commands to wait for the deployment to complete and result **successfully rolled out**:
 
@@ -93,15 +93,15 @@ Open the application in your browser to make sure it's working:
 
 It should look something like:
 
-![Bookinfo App]({% image_path bookinfo.png %})
+![Bookinfo App](images/bookinfo.png)
 
 Reload the page multiple times. The three different versions of the Reviews service
 show the star ratings differently - `v1` shows no stars at all, `v2` shows black stars,
 and `v3` shows red stars:
 
-* `v1`: ![no stars]({% image_path stars-none.png %})
-* `v2`: ![black stars]({% image_path stars-black.png %})
-* `v3`: ![red stars]({% image_path stars-red.png %})
+* `v1`: ![no stars](images/stars-none.png)
+* `v2`: ![black stars](images/stars-black.png)
+* `v3`: ![red stars](images/stars-red.png)
 
 That's because there are 3 versions of reviews deployment for our reviews service. Istio’s
 load-balancer is using a _round-robin_ algorithm to iterate through the 3 instances of this service.

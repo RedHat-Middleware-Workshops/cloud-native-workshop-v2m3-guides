@@ -1,0 +1,25 @@
+config:
+    vars:
+    - name: OC_VERSION
+      value: undefined
+    - name: KUBECTL_VERSION
+      value: undefined
+
+modules:
+    workshop-overview:
+        name: Workshop Overview
+        exit_sign: Setup Environment
+    setup-environment:
+        name: Workshop Setup
+        exit_sign: Start Workshop
+    exercises/01-getting-started-service-mesh:
+        name: Getting Started with Service Mesh
+    exercises/02-creating-distributed-services:
+        name: Creating Distributed Services
+    exercises/03-service-visualizing-monitoring:
+        name: Service Visualization and Monitoring
+    exercises/04-advanced-service-mesh-dev:
+        name: Advanced Service Mesh Development
+    workshop-summary:
+        name: Workshop Summary
+        exit_sign: Finish Workshop

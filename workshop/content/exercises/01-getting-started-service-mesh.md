@@ -30,7 +30,7 @@ a much more robust, reliable, and resilient application in the face of the new w
 
 ---
 
-![Logo]({% image_path istio-logo.png %}){:width="600px"}
+![Logo](images/istio-logo.png)
 
 Istio is an open, platform-independent service mesh designed to manage communications between microservices and
 applications in a transparent way.It provides behavioral insights and operational control over the service mesh
@@ -85,7 +85,7 @@ The **control plane** is responsible for managing and configuring proxies to rou
 
 The following diagram shows the different components that make up each plane:
 
-![Istio Arch]({% image_path arch.png %}){:width="800px"}
+![Istio Arch](images/arch.png)
 
 ##### Istio Components
 

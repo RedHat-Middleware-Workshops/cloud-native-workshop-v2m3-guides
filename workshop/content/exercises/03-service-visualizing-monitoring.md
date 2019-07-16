@@ -25,7 +25,7 @@ With this application load running, metrics will become much more interesting in
 
 Go to **istio-system** overview page in OpenShift Web Console and click on the **Kiali** route link:
 
-![istio-kiali]({% image_path istio-kiali-route.png %})
+![istio-kiali](images/istio-kiali-route.png)
 
 You should see **OpenShift Login** screen because Kiali itegrates OpenShift Authentication.
 Enter the username and password as below and click Log In.
@@ -33,21 +33,21 @@ Enter the username and password as below and click Log In.
  * Username: **userXX**
  * Password: **openshift**
 
-![istio-kiali]({% image_path istio-kiali-login.png %})
+![istio-kiali](images/istio-kiali-login.png)
 
 Input the namespace of your **userxx-bookinfo** application(i.e. user1-bookinfo) and Enter it. 
 
-![kiali]({% image_path kiali-all-namespaces.png %})
+![kiali](images/kiali-all-namespaces.png)
 
 Then you will only see your working namespace as below:
 
-![kiali]({% image_path kiali-bookinfo-namespaces.png %}){:width="800px"}
+![kiali](images/kiali-bookinfo-namespaces.png)
 
 ##### Service Graph
 
 Go to the Service Graph page on the Graph menu and check **Traffic Animation** in **Display**:
 
-![kiali]({% image_path kiali-service-graph.png %})
+![kiali](images/kiali-service-graph.png)
 
 It shows a graph with all the microservices, connected by the requests going through then. On this page, 
 you can see how the services interact with each other.
@@ -58,30 +58,30 @@ you can see how the services interact with each other.
 Click on **Applications** menu in the left navigation. On this page you can view a listing of all the services that 
 are running in the cluster, and additional information about them, such as health status.
 
-![kiali]({% image_path kiali-applications.png %})
+![kiali](images/kiali-applications.png)
 
 Click on the **productpage** application to see its details and you can also see the health of a service (a service is considered healthy) 
 on the **Health** section when it’s online and responding to requests without errors:
 
-![kiali]({% image_path kiali-app-productpage.png %})
+![kiali](images/kiali-app-productpage.png)
 
 By clicking on **Inbound Metrics**, you can see the metrics for an application, like so:
 
-![kiali]({% image_path kiali-app-productpage-inbound.png %})
+![kiali](images/kiali-app-productpage-inbound.png)
 
 By clicking on **Outbound Metrics**, you can see the metrics for an application, like so:
 
-![kiali]({% image_path kiali-app-productpage-outbound.png %})
+![kiali](images/kiali-app-productpage-outbound.png)
 
 ##### Workloads
 
 Click on **Workloads** menu in the left navigation. On this page you can view a listing of all the workloads are present on your applications.
 
-![kiali]({% image_path kiali-app-productpage-workload.png %})
+![kiali](images/kiali-app-productpage-workload.png)
 
 Click on the **productpage-v1** workload. Here you can see details for the workload, such as the pods and services that are included in it:
 
-![kiali]({% image_path kiali-app-productpage-workload-v1.png %})
+![kiali](images/kiali-app-productpage-workload-v1.png)
 
 By clicking **Inbound Metrics**, you can check the metrics for the workload. The metrics are the same as the Application ones.
 
@@ -89,11 +89,11 @@ By clicking **Inbound Metrics**, you can check the metrics for the workload. The
 
 Click on **Services** menu in the left navigation. Here, you can see the listing of all services.
 
-![kiali]({% image_path kiali-services.png %})
+![kiali](images/kiali-services.png)
 
 Click on **productpage** service. You can, on this page, see the details of the service, such as metrics, traces, workloads, virtual services, destination rules and so on:
 
-![kiali]({% image_path kiali-services-productpage.png %})
+![kiali](images/kiali-services-productpage.png)
 
 ####3. Querying Metrics with Prometheus
 
@@ -106,23 +106,23 @@ and querying of Istio metrics.
 
 Go to **istio-system** overview page in OpenShift Web Console and click on the **Prometheus** route link:
 
-![istio-prometheus]({% image_path istio-prometheus-route.png %})
+![istio-prometheus](images/istio-prometheus-route.png)
 
 You should see Prometheus home screen, similar to this:
 
-![istio-prometheus]({% image_path istio-prometheus-landing.png %})
+![istio-prometheus](images/istio-prometheus-landing.png)
 
 In the “Expression” input box at the top of the web page, enter the text: `istio_request_duration_seconds_count`.
 Then, click the **Execute** button.
 
 You should see a listing of each of the application's services along with a count of how many times it was accessed.
 
-![Prometheus console]({% image_path istio-prometheus-console.png %})
+![Prometheus console](images/istio-prometheus-console.png)
 
 You can also graph the results over time by clicking on the _Graph_ tab (adjust the timeframe from 1 hour to 1 minute for
 example):
 
-![Prometheus graph]({% image_path istio-prometheus-graph.png %})
+![Prometheus graph](images/istio-prometheus-graph.png)
 
 Other expressions to try:
 
@@ -143,24 +143,24 @@ metrics extracted from the Istio data plane and can be used to quickly spot prob
 
 Go to istio-system overview page in OpenShift Web Console and click on the **Grafana** route link:
 
-![istio-grafana]({% image_path istio-grafana-route.png %})
+![istio-grafana](images/istio-grafana-route.png)
 
 You should see Grafana home screen, similar to this:
 
-![Grafana graph]({% image_path grafana-home.png %})
+![Grafana graph](images/grafana-home.png)
 
 ##### Istio Mesh Metrics
 
 Select "Istio Mesh Dashboard" from the drop-down list in the top left corner to see Istio mesh metrics:
 
-![Grafana graph]({% image_path grafana-mesh-metrics.png %})
+![Grafana graph](images/grafana-mesh-metrics.png)
 
 ##### Istio Service Metrics
 
 To see detailed metrics for a service click on a service name in the "Service" column. 
 Change service to "Productpage" in the select box and the service dashboard will look similar to this:
 
-![Grafana graph]({% image_path grafana-service-metrics.png %})
+![Grafana graph](images/grafana-service-metrics.png)
 
 The Grafana Dashboard for Istio consists of three main sections:
 
@@ -178,7 +178,7 @@ You can switch to a different service or filter metrics by **client-** and **ser
 To switch to workloads dashboard, select "Istio Workload Dashboard" from the drop-down list in the top left corner of the screen. 
 You should see a screen similar to this:
 
-![Grafana graph]({% image_path grafana-workload-metrics.png %})
+![Grafana graph](images/grafana-workload-metrics.png)
 
 This dashboard shows workload’s metrics, and metrics for client- (inbound) and service (outbound) workloads. 
 You can switch to a different workload, ot filter metrics by inbound or outbound workloads by using drop-down lists at the top of the dashboard.
@@ -227,7 +227,7 @@ necessarily different API versions: they could be iterative changes to the same 
 in different environments (prod, staging, dev, etc.). Common scenarios where this is used include
 A/B testing or canary rollouts. Istio’s [traffic routing rules](https://istio.io/docs/concepts/traffic-management/rules-configuration.html) can refer to service versions to provide additional control over traffic between services.
 
-![Versions]({% image_path versions.png %})
+![Versions](images/versions.png)
 
 As illustrated in the figure above, clients of a service have no knowledge of different versions of the service. They can continue to access the services using the hostname/IP address of the service. The Envoy sidecar/proxy intercepts and forwards all requests/responses between the client and the service.
 
@@ -285,7 +285,7 @@ To verify this, open the Grafana Dashboard:
 
 Scroll down to the `ratings` service and notice that the requests coming from the reviews service have stopped:
 
-![Versions]({% image_path ratings-stopped.png %})
+![Versions](images/ratings-stopped.png)
 
 ####8. A/B Testing with Istio
 
@@ -333,11 +333,11 @@ Now, access the application via your own **Gateway URL**:
 
 Once you login, refresh a few times - you should always see the black ratings stars coming from `ratings:v2`.
 
-![Ratings for Test User]({% image_path ratings-testuser.png %})
+![Ratings for Test User](images/ratings-testuser.png)
 
 If you **sign out**, you'll return to the `reviews:v3` version which shows red ratings stars.
 
-![Ratings for Test User]({% image_path ratings-signout.png %})
+![Ratings for Test User](images/ratings-signout.png)
 
 #####Congratulations!
 In this lab, you used Istio to send 100% of the traffic to the v1 version of each of the BookInfo services. You then set a rule to selectively send traffic to version v2 of the reviews service based on a header (i.e., a user cookie) in a request.
