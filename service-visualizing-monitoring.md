@@ -11,7 +11,7 @@ To get a better idea of the power of metrics, let's setup an endless loop that w
 the application and generate load. We'll open up a separate terminal just for this purpose. 
 Open a new **Terminal** and execute this command with your own **Gateway URL**:
 
-`while true; do curl -o /dev/null -s -w "%{http_code}\n" http://user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com/productpage; sleep .2 ; done`
+`while true; do curl -o /dev/null -s -w "%{http_code}\n" http://YOUR_BOOKINFO_GATEWAY_URL/productpage ; sleep .2 ; done`
 
 This command will endlessly access the application and report the HTTP status result in a separate terminal window.
 

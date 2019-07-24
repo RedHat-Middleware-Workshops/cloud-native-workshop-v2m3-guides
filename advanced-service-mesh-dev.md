@@ -2,7 +2,17 @@
 
 In this lab, you will develop advanced servie mesh features such as **Fault Injection**, **Traffic Shifting**, **Circuit Breaker**,
 **Rate Limit** with **Coolstore microservices**(i.e Catalog, Inventory) that you developed and deployed to OpenShift cluster 
-in **Module 1** or **Module 2**.
+in **Module 1** or/and **Module 2**.
+
+If you haven't deployment in Module 1 or Module2, you can deploy the cloud-native applications easily via executing the following shell script in CodeReady Workspace Terminal:
+
+`chmod +x cloud-native-workshop-v2m3-labs/istio/deploy-*.sh`
+
+Replace with your username before running this commands:
+
+`cloud-native-workshop-v2m3-labs/istio/scripts/deploy-inventory.sh userXX`
+
+`cloud-native-workshop-v2m3-labs/istio/scripts/eploy-catalog.sh userXX`
 
 ####1. Configuring Automatic Sidecar Injection in Coolstore Microservices
 
@@ -158,9 +168,9 @@ Add the following label in the Inventory service to use a **virtural service** v
 
 Click on **Save**.
 
-Create a **inventory-default.yaml** file in **cloud-native-workshop-v2m3-labs/inventory/rules/** to make a gateway and virtual service:
+Open a **inventory-default.yaml** file in **cloud-native-workshop-v2m3-labs/inventory/rules/** to make a gateway and virtual service:
 
-> You need to replace **<YOUR_IVENTORY_GATEWAY_URL>** with the previous route URL that you copied earlier.
+> You need to replace 2 **YOUR_INVENTORY_GATEWAY_URL** with the previous route URL that you copied earlier.
 
 ~~~yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -176,7 +186,7 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - '<YOUR_IVENTORY_GATEWAY_URL>'
+    - 'YOUR_INVENTORY_GATEWAY_URL'
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -184,7 +194,7 @@ metadata:
   name: inventory-default
 spec:
   hosts:
-  - '<YOUR_IVENTORY_GATEWAY_URL>'
+  - 'YOUR_INVENTORY_GATEWAY_URL'
   gateways:
   - inventory-gateway
   http:
@@ -313,7 +323,7 @@ See the [Envoy’s circuit breaker](https://www.envoyproxy.io/docs/envoy/latest/
 Let's add a circuit breaker to the calls to the `Inventory` service. Instead of using a _VirtualService_ object,
 circuit breakers in isto are defined as _DestinationRule_ objects. DestinationRule defines policies that apply to traffic intended for a service after routing has occurred. These rules specify configuration for load balancing, connection pool size from the sidecar, and outlier detection settings to detect and evict unhealthy hosts from the load balancing pool.
 
-Create a **inventory-cb.yaml** file in **cloud-native-workshop-v2m3-labs/inventory/rules/** to apply 
+Open a **inventory-cb.yaml** file in **cloud-native-workshop-v2m3-labs/inventory/rules/** to apply 
 circuit breaking settings when calling the `Inventory` service:
 
 ~~~yaml
@@ -395,7 +405,77 @@ Delete the circuit breaker of the Inventory service via the following commands. 
 ---
 
 In this step, we will use Istio's Quota Management feature to apply
-a rate limit on the `ratings` service.
+a rate limit on the `catalog` service.
+
+First, let's remove the route that we exposed the catalog service to manage network traffic by **Istio Ingressgateway**. Use the following command for **your own route name** at CodeReady Workspace **Terminal**:
+
+> Copy the route URL(i.e. catalog-user1-catalog.apps.seoul-6eb1.openshiftworkshop.com) and you will reuse the URL to create a gateway in Istio.
+
+`oc delete route/catalog -n userXX-catalog`
+
+Add the following label in the catalog service to use a **virtural service** via OpenShift Web Consle when you navigate **Applications > Services** > **catalog**:
+
+`service: catalog`
+
+![rate-limiting]({% image_path catalog_svc_add_label.png %})
+
+Click on **Save**.
+
+Open a **catalog-default.yaml** file in **cloud-native-workshop-v2m3-labs/catalog/rules/** to make a gateway and virtual service:
+
+> You need to replace 2 **YOUR_CATALOG_GATEWAY_URL** with the previous route URL that you copied earlier.
+
+~~~yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: catalog-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - 'YOUR_CATALOG_GATEWAY_URL'
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: catalog-default
+spec:
+  hosts:
+  - 'YOUR_CATALOG_GATEWAY_URL'
+  gateways:
+  - catalog-gateway
+  http:
+    - match:
+        - uri:
+            exact: /services/products
+        - uri:
+            exact: /services/product
+        - uri:
+            exact: /
+      route:
+        - destination:
+            host: catalog
+            port:
+              number: 8080
+~~~
+
+![rate-limiting]({% image_path catalog-default-gateway.png %})
+
+Run the following command via CodeReady Workspace **Terminal**:
+
+`oc create -f cloud-native-workshop-v2m3-labs/catalog/rules/catalog-default.yaml -n userXX-catalog`
+
+Now, you can test if the inventory service works correctly via accessing the gateway URL:
+
+`i.e. http://catalog-user1-catalog.apps.seoul-6eb1.openshiftworkshop.com`
+
+![rate-limiting]({% image_path catalog-ui-gateway.png %})
 
 * Quotas in Istio
 Quota Management enables services to allocate and free quota on a
@@ -409,13 +489,7 @@ Rate limits are examples of quotas, and are handled by the
 
 As before, let's start up some processes to generate load on the app. Execute this command:
 
-~~~shell
-while true; do
-    curl -o /dev/null -s -w "%{http_code}\n" \
-      http://istio-ingress-istio-system.[[HOST_SUBDOMAIN]]-80-[[KATACODA_HOST]].environments.katacoda.com/productpage
-  sleep .2
-done
-~~~
+`for (( ; ; )) ; do curl -o /dev/null -s -w "%{http_code}\n" http://YOUR_CATALOG_GATEWAY_URL/services/products ; sleep .2 ; done`
 
 This command will endlessly access the application and report the HTTP status result in a separate terminal window.
 
@@ -425,12 +499,98 @@ With this application load running, we can witness rate limits in action.
 
 ---
 
-Execute the following command:
+Open a **mixer-rule-catalog-ratelimit.yaml** file in **cloud-native-workshop-v2m3-labs/catalog/rules/** to create handler, QuotaSpec, rule, QuotaSpecBinding:
 
-`oc create -f samples/bookinfo/kube/mixer-rule-ratings-ratelimit.yaml`
+> You need to replace 2 **YOUR_CATALOG_GATEWAY_URL** with the previous route URL that you copied earlier.
+
+~~~yaml
+apiVersion: "config.istio.io/v1alpha2"
+kind: handler
+metadata:
+  name: quotahandler
+  namespace: user1-catalog
+spec:
+  compiledAdapter: memquota
+  params:
+    quotas:
+    - name: requestcountquota.instance.user1-catalog
+      maxAmount: 5000
+      validDuration: 1s
+      # The first matching override is applied.
+      # A requestcount instance is checked against override dimensions.
+      overrides:
+      # The following override applies to 'ratings' when
+      # the source is 'reviews'.
+      - dimensions:
+          destination: user1-inventory
+          source: user1-catalog
+        maxAmount: 1
+        validDuration: 1s
+      # The following override applies to 'ratings' regardless
+      # of the source.
+      - dimensions:
+          destination: user1-inventorys
+        maxAmount: 100
+        validDuration: 1s
+
+---
+apiVersion: "config.istio.io/v1alpha2"
+kind: instance
+metadata:
+  name: requestcountquota
+  namespace: user1-catalog
+spec:
+  compiledTemplate: quota
+  params:
+    dimensions:
+      source: source.labels["app"] | "unknown"
+      sourceVersion: source.labels["version"] | "unknown"
+      destination: destination.labels["app"] | destination.service.name | "unknown"
+      destinationVersion: destination.labels["version"] | "unknown"
+---
+apiVersion: "config.istio.io/v1alpha2"
+kind: rule
+metadata:
+  name: quota
+  namespace: user1-catalog
+spec:
+  actions:
+  - handler: quotahandler
+    instances:
+    - requestcountquota
+---
+apiVersion: config.istio.io/v1alpha2
+kind: QuotaSpec
+metadata:
+  name: request-count
+  namespace: user1-catalog
+spec:
+  rules:
+  - quotas:
+    - charge: 1
+      quota: requestcountquota
+---
+apiVersion: config.istio.io/v1alpha2
+kind: QuotaSpecBinding
+metadata:
+  name: request-count
+  namespace: user1-catalog
+spec:
+  quotaSpecs:
+  - name: request-count
+    namespace: user1-catalog
+  services:
+  - name: catalog
+~~~
+
+![rate-limiting]({% image_path catalog-mixer-ratelimit.png %})
+
+Execute the following command in CodeReady Workspace **Terminal**:
+
+`oc create -f cloud-native-workshop-v2m3-labs/catalog/rules/mixer-rule-catalog-ratelimit.yaml`
 
 This configuration specifies a default 1 qps (query per second) rate limit. Traffic reaching
-the `ratings` service is subject to a 1qps rate limit. Verify this with Grafana:
+the `catalog` service is subject to a 1qps rate limit. Verify this with Grafana:
 
 * Grafana Dashboard at 
 
@@ -621,6 +781,15 @@ it can be a valuable tool to diagnose and troubleshoot distributed applications.
 
 ---
 
+`oc project userXX-catalog`
+
+`oc policy add-role-to-user view system:serviceaccount:$(oc project -q):default`
+
+`oc new-app --template=sso72-https`
+
+`oc set probe dc/catalog --remove --readiness --liveness`
+
+
 #### Summary
 
 In this scenario you used Istio to implement many of the
@@ -630,11 +799,3 @@ Technologies like containers and container orchestration platforms like OpenShif
 applications quite well, but are still catching up to addressing the service communication necessary to fully take advantage
 of distributed microservice applications. With Istio you can solve many of these issues outside of your business logic,
 freeing you as a developer from concerns that belong in the infrastructure. Congratulations!
-
-Additional Resources:
-
-* [Istio on OpenShift via Veer Muchandi](https://github.com/VeerMuchandi/istio-on-openshift)
-* [Envoy resilience examples](http://blog.christianposta.com/microservices/00-microservices-patterns-with-envoy-proxy-series/)
-* [Istio and Kubernetes workshop from KubeCon 2017 via Zach Butcher, et. al.]()
-* [Istio and Kubernetes workshop](https://github.com/retroryan/istio-workshop)
-* [Bookinfo from http://istio.io](https://istio.io/docs/tasks/traffic-management/request-routing.html)
