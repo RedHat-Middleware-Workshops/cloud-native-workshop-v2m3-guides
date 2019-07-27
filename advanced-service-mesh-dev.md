@@ -400,30 +400,33 @@ Delete the circuit breaker of the Inventory service via the following commands. 
 
 `oc delete destinationrule/inventory-cb -n userxx-inventory`
 
-####6. Rate Limiting
+####6. Enable Authentication using Single Sign-on
 
 ---
 
-In this step, we will use Istio's Quota Management feature to apply
-a rate limit on the `catalog` service.
+In this step, you will learn how to enable authenticating **catalog** microservices with Istio, [JSON Web Token(JWT)](https://en.wikipedia.org/wiki/JSON_Web_Token), and 
+[Red Hat Single Sign-On](https://access.redhat.com/products/red-hat-single-sign-on) in [Red Hat Application Runtimes](https://www.redhat.com/en/products/application-runtimes).
 
-First, let's remove the route that we exposed the catalog service to manage network traffic by **Istio Ingressgateway**. Use the following command for **your own route name** at CodeReady Workspace **Terminal**:
+First, let's remove the route that we exposed the catalog service to manage network traffic by **Istio Ingressgateway**. 
+Use the following command for **your own route name** at CodeReady Workspace **Terminal**:
 
-> Copy the route URL(i.e. catalog-user1-catalog.apps.seoul-6eb1.openshiftworkshop.com) and you will reuse the URL to create a gateway in Istio.
+> Copy the route URL(i.e. catalog-user1-catalog.apps.seoul-0993.openshiftworkshop.com) and you will reuse the URL to create a gateway in Istio.
 
-`oc delete route/catalog -n userXX-catalog`
+`oc project userXX-catalog`
+
+`oc delete route/catalog`
 
 Add the following label in the catalog service to use a **virtural service** via OpenShift Web Consle when you navigate **Applications > Services** > **catalog**:
 
 `service: catalog`
 
-![rate-limiting]({% image_path catalog_svc_add_label.png %})
+![sso]({% image_path catalog_svc_add_label.png %})
 
 Click on **Save**.
 
 Open a **catalog-default.yaml** file in **cloud-native-workshop-v2m3-labs/catalog/rules/** to make a gateway and virtual service:
 
-> You need to replace 2 **YOUR_CATALOG_GATEWAY_URL** with the previous route URL that you copied earlier.
+> Replace 2 **YOUR_CATALOG_GATEWAY_URL** with the previous route URL that you copied earlier.
 
 ~~~yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -465,17 +468,240 @@ spec:
               number: 8080
 ~~~
 
-![rate-limiting]({% image_path catalog-default-gateway.png %})
+![sso]({% image_path catalog-default-gateway.png %})
 
 Run the following command via CodeReady Workspace **Terminal**:
 
-`oc create -f cloud-native-workshop-v2m3-labs/catalog/rules/catalog-default.yaml -n userXX-catalog`
+`oc create -f cloud-native-workshop-v2m3-labs/catalog/rules/catalog-default.yaml`
 
-Now, you can test if the inventory service works correctly via accessing the gateway URL:
+Now, you can test if the inventory service works correctly via accessing the gateway URL without **authentication**:
 
 `i.e. http://catalog-user1-catalog.apps.seoul-6eb1.openshiftworkshop.com`
 
-![rate-limiting]({% image_path catalog-ui-gateway.png %})
+![sso]({% image_path catalog-ui-gateway.png %})
+
+Let's deploy `Red Hat Single Sign-On (RH-SSO)` to provide security token that enables service authentication in Istio.
+
+**Red Hat Single Sign-On (RH-SSO)** is based on the **Keycloak** project and enables you to secure your web applications by providing 
+Web single sign-on (SSO) capabilities based on popular standards such as **SAML 2.0, OpenID Connect and OAuth 2.0**. The RH-SSO server 
+can act as a SAML or OpenID Connect-based Identity Provider, mediating with your enterprise user directory or 3rd-party SSO provider 
+for identity information and your applications via standards-based tokens. The major features are here:
+
+ * **Authentication Server** - Acts as a standalone SAML or OpenID Connect-based Identity Provider.
+ * **User Federation** - Certified with LDAP servers and Microsoft Active Directory as sources for user information.
+ * **Identity Brokering** - Integrates with 3rd-party Identity Providers including leading social networks as identity source.
+ * **REST APIs and Administration GUI** - Specify user federation, role mapping, and client applications with easy-to-use Administration GUI and REST APIs.
+
+We will deploy RH-SSO in Catalog project via running the following commands in CodeReady Workspace **Terminal**:
+
+You need to replace your username with **authuserXX**.
+
+~~~shell
+oc project userXX-catalog
+
+oc new-app ccn-sso72 \
+   -p SSO_ADMIN_USERNAME=admin \
+   -p SSO_ADMIN_PASSWORD=admin \
+   -p SSO_REALM=istio \
+   -p SSO_SERVICE_USERNAME=authuserXX \
+   -p SSO_SERVICE_PASSWORD=openshift
+~~~
+
+> If you change **SSO_ADMIN_USERNAME**, **SSO_ADMIN_PASSWORD** then you need to login RH-SSO web console with them.
+
+Once you complete to deploy RH-SSO in OpenShift then you will see HTTPS/HTTP route URL as below:
+
+![sso]({% image_path rhsso_deployment.png %})
+
+Click on *HTTPS** URL(i.e. secure-sso-user1-catalog.apps.seoul-0993.openshiftworkshop.com) to access RH-SSO web console as below:
+
+![sso]({% image_path rhsso_landing_page.png %})
+
+Click on **Administration Console** to configure *Istio* Ream then input usename and password that you deployed.
+
+ * Username or email: `admin`
+ * Password: `admin`
+
+ > If you change the credential when you deployed the RH-SSO container, you need to use them for this.
+
+![sso]({% image_path rhsso_admin_login.png %})
+
+You will see general information of **Istio Realm Setting** and click on **Login** tab to swich off `Require SSL` with `none` then click on **Save**.
+
+![sso]({% image_path rhsso_istio_realm.png %})
+
+> Red Hat Single Sign-On generates a self-signed certificate the first time it runs. Please note that self-signed certificates doesn't work to authenticate by Istio 
+so we will change not to use SSL for testing Istio authentication.
+
+Next, create a new **client** that is trusted browser apps and web services in a **Istio** realm. The client can request a login. You can also define client specific roles.
+Go to **Clients** in the left menu then click on **Create**.
+
+![sso]({% image_path rhsso_clients.png %})
+
+Input **ccn-cli** in **Client ID** field and click on **Save**.
+
+![sso]({% image_path rhsso_clients_create.png %})
+
+On the next screen, you will see details of the **Settings** tab, the only thing you need to do is to input **Valid Redirect URIs** after successful login or logout.
+
+> Replace **YOUR_CATALOG_GATEWAY_URL** with your own ingress gatewat URL of the catalog service and please note to add `/*` at the end of URL.
+
+ * Valid Redirect URIs - http://YOUR_CATALOG_GATEWAY_URL/*
+
+![sso]({% image_path rhsso_clients_settings.png %})
+
+Now, you will define a role that will be assigned to your credential, let’s create a simple role called **ccn_auth**.
+Go to **Roles** in the left menu then click on **Add Role**.
+
+![sso]({% image_path rhsso_roles.png %})
+
+Input **ccn_auth** in **Role Name** field and click on **Save**.
+
+![sso]({% image_path rhsso_roles_create.png %})
+
+And update the password of your credentials(i.e. authuserXX) that is created automatically when you deployed RH-SSO earlier. 
+Because the password doesn't set as defual when you create a credential in RH-SSO. Go to **Users** menu on the left side menu then click on **View all users**.
+
+![sso]({% image_path rhsso_users.png %})
+
+If you click on ID then you will find more information such as Detials, Attributes, Credentials, Role Mappings, Groups, 
+Contents, and Sessions. You don't need to update any details in this step. 
+
+![sso]({% image_path rhsso_istio_users_details.png %})
+
+Go to **Credentials** tab and input the following variables:
+
+ * New Password: **openshift**
+ * Password Confirmation: **openshift**
+ * Temporary: **OFF**
+
+Make sure to turn off the “Temporary” flag unless you want the authuserXX to have to change his password the first time he authenticates.
+
+Click on **Reset Password**.
+
+![sso]({% image_path rhsso_users_credentials.png %})
+
+Then click on **Change password** in the popup window.
+
+![sso]({% image_path rhsso_users_change_pwd.png %})
+
+Now proceed to the **Role Mappings** tab and assign the role **ccn_auth** via clicking on **Add selected >**.
+
+![sso]({% image_path rhsso_rolemapping.png %})
+
+You will confirm the ccn_auth role in **Assigned Roles** box.
+
+![sso]({% image_path rhsso_rolemapping_assigned.png %})
+
+Well done to enable RH-SSO server! Let's create an user-facing authentication policy using JSON Web Token(JWT) token.
+JWT token format for authentication as defined by [RFC 7519](https://tools.ietf.org/html/rfc7519). You can find more details 
+how [OAuth 2.0](https://tools.ietf.org/html/rfc6749) and [OIDC 1.0](https://openid.net/connect/) works in the whole authentication flow.
+
+Open a **ccn-auth-config.yml** file in **cloud-native-workshop-v2m3-labs/catalog/rules/** to create an authentication policy:
+
+> Replace 2 **YOUR_SSO_HTTP_ROUTE_URL** with your own HTTP route url of SSO container that you created earlier as well as **USERXX**. You can also find the url via **oc get route -n userXX-catalog | grep -v secure | awk 'NR>1{print $2}'**.
+
+~~~yaml
+apiVersion: authentication.istio.io/v1alpha1
+kind: Policy
+metadata: 
+  name: auth-policy
+  namespace: userXX-catalog
+spec: 
+  targets:
+  - name: catalog
+  origins:
+  - jwt:
+      issuer: YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio
+      jwks_uri: YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio/protocol/openid-connect/certs    
+  principalBinding: USE_ORIGIN
+~~~
+
+You can define the following fields to create a Policy in Istio.
+
+ * issuer - Identifies the issuer that issued the JWT. See [issuer](https://tools.ietf.org/html/rfc7519#section-4.1.1) usually a URL or an email address.
+ * jwksUri - URL of the provider’s public key set to validate signature of the JWT.
+ * audiences - The list of JWT [audiences](https://tools.ietf.org/html/rfc7519#section-4.1.3). that are allowed to access. A JWT containing any of these audiences will be accepted.
+
+Then execute the following oc command in CodeReady Workspace **Terminal**:
+
+`oc create -f cloud-native-workshop-v2m3-labs/catalog/rules/ccn-auth-config.yml`
+
+Now you can't access the catalog service without authentication of RH-SSO. You confirm it using CURL command with replacing USERXX in CodeReady Workspace **Terminal**:
+
+`curl http://catalog-userXX-catalog.apps.seoul-0993.openshiftworkshop.com/services/products ; echo`
+
+The expected response is here because the user has not been identified with a valid JWT token in RH-SSO.
+
+> Origin authentication failed.
+
+![sso]({% image_path rhsso_call_catalog_noauth.png %})
+
+In order to generate a correct token, just run next curl request in CodeReady Workspace **Terminal**. This command will 
+store the output Authorization token from RH-SSO in an environment variable called `$TOKEN`. 
+
+> Replace **YOUR_SSO_HTTP_ROUTE_URL** with your own HTTP route url of SSO container that you created earlier. 
+
+~~~shell
+export TOKEN=$( curl -X POST 'http://YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio/protocol/openid-connect/token' \
+ -H "Content-Type: application/x-www-form-urlencoded" \
+ -d "username=authuser1" \
+ -d 'password=openshift' \
+ -d 'grant_type=password' \
+ -d 'client_id=admin-cli' | jq -r '.access_token')
+ ~~~
+
+Once you have generated the token, re-run the curl command below with the token in CodeReady Workspace **Terminal**:
+
+`curl -H "Authorization: Bearer $TOKEN" http://catalog-user1-catalog.apps.seoul-0993.openshiftworkshop.com/services/products ; echo`
+
+You will see the following expected output:
+
+~~~shell
+[{"itemId":"329299","name":"Red Fedora","desc":"Official Red Hat Fedora","price":34.99,"quantity":736},{"itemId":"329199","name":
+"Forge Laptop Sticker","desc":"JBoss Community Forge Project Sticker","price":8.5,"quantity":512},{"itemId":"165613","name":"Solid 
+Performance Polo","desc":"Moisture-wicking, antimicrobial 100% polyester design wicks for life of garment. No-curl, rib-knit collar; 
+special collar band maintains crisp fold; three-button placket with dyed-to-match buttons; hemmed sleeves; even bottom with side vents;
+Import. Embroidery. Red Pepper.","price":17.8,"quantity":256},{"itemId":"165614","name":"Ogio Caliber Polo","desc":"Moisture-wicking 100% 
+polyester. Rib-knit collar and cuffs; Ogio jacquard tape inside neck; bar-tacked three-button placket with Ogio dyed-to-match buttons; 
+...
+~~~
+
+![sso]({% image_path rhsso_call_catalog_auth.png %})
+
+However, the catalog service doesn't still work when you access to the web page as below because the applicaion has no authentication codes, configuration yet:
+
+![sso]({% image_path rhsso_web_catalog_noauth.png %})
+
+Open **application-default.properties** in **cloud-native-workshop-v2m3-labs/catalog/src/main/resources/c** and add the following settings:
+
+~~~yaml
+#TODO: Set RH-SSO authentication
+keycloak.auth-server-url=http://YOUR_SSO_HTTP_ROUTE_URL/auth
+keycloak.realm=istio
+keycloak.resource=ccn-cli
+keycloak.public-client=true
+
+keycloak.security-constraints[0].authRoles[0]=ccn_auth
+keycloak.security-constraints[0].securityCollections[0].patterns[0]=/*
+~~~
+
+In order to log out 
+Open **index.html** in **cloud-native-workshop-v2m3-labs/catalog/src/main/resources/static** and add the following codes:
+
+`cd cloud-native-workshop-v2m3-labs/catalog`
+
+`mvn package fabric8:deploy -Popenshift -DskipTests`
+
+`oc delete route/catalog`
+
+`oc set probe dc/catalog --remove --readiness --liveness`
+
+####6. Rate Limiting
+
+---
+
+In this step, we will use Istio's Quota Management feature to apply a rate limit on the `catalog` service.
 
 * Quotas in Istio
 Quota Management enables services to allocate and free quota on a
@@ -777,17 +1003,8 @@ Istio’s fault injection rules and tracing capabilities help you identify such 
 how different services contribute to the overall end-user perceived latency. In addition,
 it can be a valuable tool to diagnose and troubleshoot distributed applications.
 
-####12. Enable RH-SSO
 
----
 
-`oc project userXX-catalog`
-
-`oc policy add-role-to-user view system:serviceaccount:$(oc project -q):default`
-
-`oc new-app --template=sso72-https`
-
-`oc set probe dc/catalog --remove --readiness --liveness`
 
 
 #### Summary
