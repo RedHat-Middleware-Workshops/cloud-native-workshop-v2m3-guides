@@ -6,13 +6,13 @@ in **Module 1** or/and **Module 2**.
 
 If you haven't deployment in Module 1 or Module2, you can deploy the cloud-native applications easily via executing the following shell script in CodeReady Workspace Terminal:
 
-`chmod +x cloud-native-workshop-v2m3-labs/istio/deploy-*.sh`
+`chmod +x cloud-native-workshop-v2m3-labs/istio/scripts/deploy-*.sh`
 
 Replace with your username before running this commands:
 
 `cloud-native-workshop-v2m3-labs/istio/scripts/deploy-inventory.sh userXX`
 
-`cloud-native-workshop-v2m3-labs/istio/scripts/eploy-catalog.sh userXX`
+`cloud-native-workshop-v2m3-labs/istio/scripts/deploy-catalog.sh userXX`
 
 ####1. Configuring Automatic Sidecar Injection in Coolstore Microservices
 
@@ -673,7 +673,7 @@ However, the catalog service doesn't still work when you access to the web page 
 
 ![sso]({% image_path rhsso_web_catalog_noauth.png %})
 
-Open **application-default.properties** in **cloud-native-workshop-v2m3-labs/catalog/src/main/resources/c** and add the following settings:
+Open **application-openshift.properties** in **cloud-native-workshop-v2m3-labs/catalog/src/main/resources/c** and add the following settings:
 
 ~~~yaml
 #TODO: Set RH-SSO authentication
@@ -685,6 +685,51 @@ keycloak.public-client=true
 keycloak.security-constraints[0].authRoles[0]=ccn_auth
 keycloak.security-constraints[0].securityCollections[0].patterns[0]=/*
 ~~~
+
+And  **keycloak configureatio
+`<dependencyManagement>`
+`From:`
+
+~~~yaml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>me.snowdrop</groupId>
+            <artifactId>spring-boot-bom</artifactId>
+            <version>${spring-boot.bom.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+~~~
+
+`To:`
+
+~~~yaml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.keycloak.bom</groupId>
+            <artifactId>keycloak-adapter-bom</artifactId>
+            <version>3.1.0.Final</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+<dependencies>
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-spring-boot-starter</artifactId>
+    </dependency>
+~~~
+
 
 In order to log out 
 Open **index.html** in **cloud-native-workshop-v2m3-labs/catalog/src/main/resources/static** and add the following codes:
