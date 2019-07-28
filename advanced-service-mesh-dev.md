@@ -170,7 +170,7 @@ Click on **Save**.
 
 Open a **inventory-default.yaml** file in **cloud-native-workshop-v2m3-labs/inventory/rules/** to make a gateway and virtual service:
 
-> You need to replace 2 **YOUR_INVENTORY_GATEWAY_URL** with the previous route URL that you copied earlier.
+> You need to replace all **YOUR_INVENTORY_GATEWAY_URL** with the previous route URL that you copied earlier.
 
 ~~~yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -426,7 +426,7 @@ Click on **Save**.
 
 Open a **catalog-default.yaml** file in **cloud-native-workshop-v2m3-labs/catalog/rules/** to make a gateway and virtual service:
 
-> Replace 2 **YOUR_CATALOG_GATEWAY_URL** with the previous route URL that you copied earlier.
+> Replace all **YOUR_CATALOG_GATEWAY_URL** with the previous route URL that you copied earlier.
 
 ~~~yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -599,7 +599,8 @@ how [OAuth 2.0](https://tools.ietf.org/html/rfc6749) and [OIDC 1.0](https://open
 
 Open a **ccn-auth-config.yml** file in **cloud-native-workshop-v2m3-labs/catalog/rules/** to create an authentication policy:
 
-> Replace 2 **YOUR_SSO_HTTP_ROUTE_URL** with your own HTTP route url of SSO container that you created earlier as well as **USERXX**. You can also find the url via **oc get route -n userXX-catalog | grep -v secure | awk 'NR>1{print $2}'**.
+> Replace all **YOUR_SSO_HTTP_ROUTE_URL** with your own HTTP route url of SSO container that you created earlier and also replace **USERXX** with your username. 
+> You can also find the url via **oc get route -n userXX-catalog | grep -v secure | awk 'NR>1{print $2}' | grep sso**.
 
 ~~~yaml
 apiVersion: authentication.istio.io/v1alpha1
@@ -612,16 +613,20 @@ spec:
   - name: catalog
   origins:
   - jwt:
-      issuer: YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio
-      jwks_uri: YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio/protocol/openid-connect/certs    
+      issuer: http://YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio
+      jwks_uri: http://YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio/protocol/openid-connect/certs    
   principalBinding: USE_ORIGIN
 ~~~
 
-You can define the following fields to create a Policy in Istio.
+To avoid failure of Kubernetes health check without RH-SSO authentication, we will remove the liveness and readiness check temporarily.
 
- * issuer - Identifies the issuer that issued the JWT. See [issuer](https://tools.ietf.org/html/rfc7519#section-4.1.1) usually a URL or an email address.
- * jwksUri - URL of the provider’s public key set to validate signature of the JWT.
- * audiences - The list of JWT [audiences](https://tools.ietf.org/html/rfc7519#section-4.1.3). that are allowed to access. A JWT containing any of these audiences will be accepted.
+`oc set probe dc/catalog --remove --readiness --liveness`
+
+You can also define the following fields to create a Policy in Istio.
+
+ * **issuer** - Identifies the issuer that issued the JWT. See [issuer](https://tools.ietf.org/html/rfc7519#section-4.1.1) usually a URL or an email address.
+ * **jwksUri** - URL of the provider’s public key set to validate signature of the JWT.
+ * **audiences** - The list of JWT [audiences](https://tools.ietf.org/html/rfc7519#section-4.1.3). that are allowed to access. A JWT containing any of these audiences will be accepted.
 
 Then execute the following oc command in CodeReady Workspace **Terminal**:
 
@@ -629,9 +634,10 @@ Then execute the following oc command in CodeReady Workspace **Terminal**:
 
 Now you can't access the catalog service without authentication of RH-SSO. You confirm it using CURL command with replacing USERXX in CodeReady Workspace **Terminal**:
 
-`curl http://catalog-userXX-catalog.apps.seoul-0993.openshiftworkshop.com/services/products ; echo`
+`curl http://YOUR_CATALOG_GATEWAY_URL/services/products ; echo`
 
-The expected response is here because the user has not been identified with a valid JWT token in RH-SSO.
+The expected response is here because the user has not been identified with a valid JWT token in RH-SSO. 
+It normally takes `5 ~ 10 seconds` to apply the authentication policy in Istio Mixer.
 
 > Origin authentication failed.
 
@@ -648,12 +654,12 @@ export TOKEN=$( curl -X POST 'http://YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio/p
  -d "username=authuser1" \
  -d 'password=openshift' \
  -d 'grant_type=password' \
- -d 'client_id=admin-cli' | jq -r '.access_token')
- ~~~
+ -d 'client_id=ccn-cli' | jq -r '.access_token')
+~~~
 
 Once you have generated the token, re-run the curl command below with the token in CodeReady Workspace **Terminal**:
 
-`curl -H "Authorization: Bearer $TOKEN" http://catalog-user1-catalog.apps.seoul-0993.openshiftworkshop.com/services/products ; echo`
+`curl -H "Authorization: Bearer $TOKEN" http://YOUR_CATALOG_GATEWAY_URL/services/products ; echo`
 
 You will see the following expected output:
 
@@ -673,7 +679,7 @@ However, the catalog service doesn't still work when you access to the web page 
 
 ![sso]({% image_path rhsso_web_catalog_noauth.png %})
 
-Open **application-openshift.properties** in **cloud-native-workshop-v2m3-labs/catalog/src/main/resources/c** and add the following settings:
+Open **application-openshift.properties** in **cloud-native-workshop-v2m3-labs/catalog/src/main/resources/** and add the following settings:
 
 ~~~yaml
 #TODO: Set RH-SSO authentication
@@ -686,8 +692,23 @@ keycloak.security-constraints[0].authRoles[0]=ccn_auth
 keycloak.security-constraints[0].securityCollections[0].patterns[0]=/*
 ~~~
 
-And  **keycloak configureatio
-`<dependencyManagement>`
+Let's update `pom.xml' in **cloud-native-workshop-v2m3-labs/catalog/** to process keycloak configuration by Spring Boot.
+
+ * Add **spring-boot-starter-parent** artifact Id before **properties** element:
+
+~~~yaml
+<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.21.RELEASE</version>
+		<relativePath/> 
+</parent>  
+~~~
+
+![sso]({% image_path rhsso_catalog_pom_parent.png %})
+
+ * Replace **nme.snowdrop** dependencyManagement and **spring-boot-starter** dependency with **keycloak** dependency.
+
 `From:`
 
 ~~~yaml
@@ -713,218 +734,52 @@ And  **keycloak configureatio
 
 ~~~yaml
 <dependencyManagement>
-    <dependencies>
+      <dependencies>
+          <dependency>
+              <groupId>org.keycloak.bom</groupId>
+              <artifactId>keycloak-adapter-bom</artifactId>
+              <version>3.1.0.Final</version>
+              <type>pom</type>
+              <scope>import</scope>
+          </dependency>
+      </dependencies>
+  </dependencyManagement>
+  <dependencies>
         <dependency>
-            <groupId>org.keycloak.bom</groupId>
-            <artifactId>keycloak-adapter-bom</artifactId>
-            <version>3.1.0.Final</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
-<dependencies>
-      <dependency>
-        <groupId>org.keycloak</groupId>
-        <artifactId>keycloak-spring-boot-starter</artifactId>
-    </dependency>
+          <groupId>org.keycloak</groupId>
+          <artifactId>keycloak-spring-boot-starter</artifactId>
+      </dependency>
 ~~~
 
+![sso]({% image_path rhsso_catalog_pom_dependency.png %})
 
-In order to log out 
-Open **index.html** in **cloud-native-workshop-v2m3-labs/catalog/src/main/resources/static** and add the following codes:
+Let's re-deploy the catalog service to OpenShift via running the following maven command in CodeReady Workspace **Terminal**:
 
 `cd cloud-native-workshop-v2m3-labs/catalog`
 
 `mvn package fabric8:deploy -Popenshift -DskipTests`
 
+₩oc delete policy/auth-policy
+
+Once you complete to build successfully, you have delete to **the route, healthcheck** that you already deleted because Fabric8 deployment recreates them automatically.
+Execute the following **oc commands** to remove them:
+
 `oc delete route/catalog`
 
 `oc set probe dc/catalog --remove --readiness --liveness`
 
-####6. Rate Limiting
+After the catalog pod get started completely, access the catalog gateway via a new web brower then you will redirect to the login page of **RH-SSO**.
 
----
+Input the following credential that we created it in RH-SSO administration page eariler.
 
-In this step, we will use Istio's Quota Management feature to apply a rate limit on the `catalog` service.
+ * Username or email: **authuserXX**
+ * Password: **openshift**
 
-* Quotas in Istio
-Quota Management enables services to allocate and free quota on a
-based on rules called _dimensions_. Quotas are used as a relatively
-simple resource management tool to provide some fairness between
-service consumers when contending for limited resources.
-Rate limits are examples of quotas, and are handled by the
-[Istio Mixer](https://istio.io/docs/concepts/policy-and-control/mixer.html).
+![sso]({% image_path rhsso_catalog_redirect.png %})
 
-* Generate some traffic
+Finally, you can access to the catalog service as below:
 
-As before, let's start up some processes to generate load on the app. Execute this command:
-
-`for (( ; ; )) ; do curl -o /dev/null -s -w "%{http_code}\n" http://YOUR_CATALOG_GATEWAY_URL/services/products ; sleep .2 ; done`
-
-This command will endlessly access the application and report the HTTP status result in a separate terminal window.
-
-With this application load running, we can witness rate limits in action.
-
-####7. Add a rate limit
-
----
-
-Open a **mixer-rule-catalog-ratelimit.yaml** file in **cloud-native-workshop-v2m3-labs/catalog/rules/** to create handler, QuotaSpec, rule, QuotaSpecBinding:
-
-> You need to replace 2 **YOUR_CATALOG_GATEWAY_URL** with the previous route URL that you copied earlier.
-
-~~~yaml
-apiVersion: "config.istio.io/v1alpha2"
-kind: handler
-metadata:
-  name: quotahandler
-  namespace: user1-catalog
-spec:
-  compiledAdapter: memquota
-  params:
-    quotas:
-    - name: requestcountquota.instance.user1-catalog
-      maxAmount: 5000
-      validDuration: 1s
-      # The first matching override is applied.
-      # A requestcount instance is checked against override dimensions.
-      overrides:
-      # The following override applies to 'ratings' when
-      # the source is 'reviews'.
-      - dimensions:
-          destination: user1-inventory
-          source: user1-catalog
-        maxAmount: 1
-        validDuration: 1s
-      # The following override applies to 'ratings' regardless
-      # of the source.
-      - dimensions:
-          destination: user1-inventorys
-        maxAmount: 100
-        validDuration: 1s
-
----
-apiVersion: "config.istio.io/v1alpha2"
-kind: instance
-metadata:
-  name: requestcountquota
-  namespace: user1-catalog
-spec:
-  compiledTemplate: quota
-  params:
-    dimensions:
-      source: source.labels["app"] | "unknown"
-      sourceVersion: source.labels["version"] | "unknown"
-      destination: destination.labels["app"] | destination.service.name | "unknown"
-      destinationVersion: destination.labels["version"] | "unknown"
----
-apiVersion: "config.istio.io/v1alpha2"
-kind: rule
-metadata:
-  name: quota
-  namespace: user1-catalog
-spec:
-  actions:
-  - handler: quotahandler
-    instances:
-    - requestcountquota
----
-apiVersion: config.istio.io/v1alpha2
-kind: QuotaSpec
-metadata:
-  name: request-count
-  namespace: user1-catalog
-spec:
-  rules:
-  - quotas:
-    - charge: 1
-      quota: requestcountquota
----
-apiVersion: config.istio.io/v1alpha2
-kind: QuotaSpecBinding
-metadata:
-  name: request-count
-  namespace: user1-catalog
-spec:
-  quotaSpecs:
-  - name: request-count
-    namespace: user1-catalog
-  services:
-  - name: catalog
-~~~
-
-![rate-limiting]({% image_path catalog-mixer-ratelimit.png %})
-
-Execute the following command in CodeReady Workspace **Terminal**:
-
-`oc create -f cloud-native-workshop-v2m3-labs/catalog/rules/mixer-rule-catalog-ratelimit.yaml`
-
-This configuration specifies a default 1 qps (query per second) rate limit. Traffic reaching
-the `catalog` service is subject to a 1qps rate limit. Verify this with Grafana:
-
-* Grafana Dashboard at 
-
-`http://grafana-istio-system.$ROUTE_SUFFIX/dashboard/db/istio-dashboard`
-
-Scroll down to the `ratings` service and observe that you are seeing that some of the requests sent
-from `reviews:v3` service to the `ratings` service are returning HTTP Code 429 (Too Many Requests).
-
-![5xxs]({% image_path ratings-overload.png %})
-
-In addition, at the top of the dashboard, the '4xxs' report shows an increase in 4xx HTTP codes. We are being
-rate-limited to 1 query per second:
-
-![5xxs]({% image_path ratings-4xxs.png %})
-
-####8. Inspect the rule
-
----
-
-Take a look at the new rule:
-
-`oc get memquota handler -o yaml`
-
-In particular, notice the _dimension_ that causes the rate limit to be applied:
-
-~~~yaml
-# The following override applies to 'ratings' when
-# the source is 'reviews'.
-- dimensions:
-    destination: ratings
-    source: reviews
-  maxAmount: 1
-  validDuration: 1s
-~~~
-
-You can also conditionally rate limit based on other dimensions, such as:
-
-* Source and Destination project names (e.g. to limit developer projects from overloading the production services during testing)
-* Login names (e.g. to limit certain customers or classes of customers)
-* Source/Destination hostnames, IP addresses, DNS domains, HTTP Request header values, protocols
-* API paths
-* [Several other attributes](https://istio.io/docs/reference/config/mixer/attribute-vocabulary.html)
-
-####9. Remove the rate limit
-
----
-
-Before moving on, execute the following to remove our rate limit:
-
-`oc delete -f samples/bookinfo/kube/mixer-rule-ratings-ratelimit.yaml`
-
-Verify that the rate limit is no longer in effect. Open the dashboard:
-
-* Grafana Dashboard at 
-
-`http://grafana-istio-system.$ROUTE_SUFFIX/dashboard/db/istio-dashboard`
-
-Notice at the top that the `4xx`s dropped back down to zero.
-
-![5xxs]({% image_path ratings-4xxs-gone.png %})
-
-**Congratulations!** In the final step, we'll explore distributed tracing and how it can help diagnose and fix issues in
-complex microservices architectures. Let's go!
+![istio]({% image_path catalog_route_sidecar.png %})
 
 
 ####10. Tracing
