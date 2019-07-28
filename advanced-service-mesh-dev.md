@@ -600,7 +600,8 @@ how [OAuth 2.0](https://tools.ietf.org/html/rfc6749) and [OIDC 1.0](https://open
 Open a **ccn-auth-config.yml** file in **cloud-native-workshop-v2m3-labs/catalog/rules/** to create an authentication policy:
 
 > Replace all **YOUR_SSO_HTTP_ROUTE_URL** with your own HTTP route url of SSO container that you created earlier and also replace **USERXX** with your username. 
-> You can also find the url via **oc get route -n userXX-catalog | grep -v secure | awk 'NR>1{print $2}' | grep sso**.
+
+You can also find the url via **oc get route -n userXX-catalog | grep -v secure | awk 'NR>1{print $2}' | grep sso**.
 
 ~~~yaml
 apiVersion: authentication.istio.io/v1alpha1
@@ -759,7 +760,8 @@ Let's re-deploy the catalog service to OpenShift via running the following maven
 
 `mvn package fabric8:deploy -Popenshift -DskipTests`
 
-₩oc delete policy/auth-policy
+...
+`oc delete policy/auth-policy`
 
 Once you complete to build successfully, you have delete to **the route, healthcheck** that you already deleted because Fabric8 deployment recreates them automatically.
 Execute the following **oc commands** to remove them:
@@ -780,6 +782,35 @@ Input the following credential that we created it in RH-SSO administration page 
 Finally, you can access to the catalog service as below:
 
 ![sso]({% image_path rhsso_web_catalog_auth.png %})
+
+
+####7. More Red Hat Single Sing-On
+
+---
+
+RH-SSO allows system admin to configure various login features in terms of User registration, Email as username, Forgot password,Remember Me, Login with email, and more.
+Let's update the Login page with adding **User registration** and **Forgot password**.
+
+Change from **Istio** to **Master** realm in the left top menu, click on **Login** tab. Next, toggle on **User registration** and **Forgot password** as below:
+
+![sso]({% image_path rhsso_master_realm_change.png %})
+
+Don't forget to click on **Save**. Let's confirm the changed login page via clicking on **Sign Out** in the right top menu as below:
+
+![sso]({% image_path rhsso_master_signout.png %})
+
+The page will be redirected automatically to the login page. Now you will see **Forget Password?** link under the password field. 
+You can find **New User? Register** link on the right side.
+
+![sso]({% image_path rhsso_master_relogin.png %})
+
+If you click on **Forget Password?** link, you will the below the page where you can change the password of your credential.
+
+![sso]({% image_path rhsso_master_forgot_pwd.png %})
+
+When you click on **Register** link, you will the below the page where you can create a new credential.
+
+![sso]({% image_path rhsso_master_reg_user.png %})
 
 #### Summary
 
