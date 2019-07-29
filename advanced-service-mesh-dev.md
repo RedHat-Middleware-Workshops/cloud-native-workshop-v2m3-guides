@@ -74,7 +74,7 @@ metadata:
 
 Re-build and re-deploy the project using the following command, which will use the maven plugin to deploy via CodeReady Workspace **Terminal**:
 
-`cd cloud-native-workshop-v2m3-labs/catalog/`
+`cd /projects/cloud-native-workshop-v2m3-labs/catalog/`
 
 `oc project userXX-catalog`
 
@@ -168,7 +168,7 @@ Add the following label in the Inventory service to use a **virtural service** v
 
 Click on **Save**.
 
-Open a **inventory-default.yaml** file in **cloud-native-workshop-v2m3-labs/inventory/rules/** to make a gateway and virtual service:
+Open a **inventory-default.yaml** file in **/projects/cloud-native-workshop-v2m3-labs/inventory/rules/** to make a gateway and virtual service:
 
 > You need to replace all **YOUR_INVENTORY_GATEWAY_URL** with the previous route URL that you copied earlier.
 
@@ -214,7 +214,7 @@ spec:
 
 Run the following command via CodeReady Workspace **Terminal**:
 
-`oc create -f cloud-native-workshop-v2m3-labs/inventory/rules/inventory-default.yaml -n userXX-inventory`
+`oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-default.yaml -n userXX-inventory`
 
 Now, you can test if the inventory service works correctly via accessing the gateway URL:
 
@@ -323,7 +323,7 @@ See the [Envoy’s circuit breaker](https://www.envoyproxy.io/docs/envoy/latest/
 Let's add a circuit breaker to the calls to the `Inventory` service. Instead of using a _VirtualService_ object,
 circuit breakers in isto are defined as _DestinationRule_ objects. DestinationRule defines policies that apply to traffic intended for a service after routing has occurred. These rules specify configuration for load balancing, connection pool size from the sidecar, and outlier detection settings to detect and evict unhealthy hosts from the load balancing pool.
 
-Open a **inventory-cb.yaml** file in **cloud-native-workshop-v2m3-labs/inventory/rules/** to apply 
+Open a **inventory-cb.yaml** file in **/projects/cloud-native-workshop-v2m3-labs/inventory/rules/** to apply 
 circuit breaking settings when calling the `Inventory` service:
 
 ~~~yaml
@@ -348,7 +348,7 @@ spec:
 
 Run the following command via CodeReady Workspace **Terminal**:
 
-`oc create -f cloud-native-workshop-v2m3-labs/inventory/rules/inventory-cb.yaml -n userXX-inventory`
+`oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-cb.yaml -n userXX-inventory`
 
 We set the `Inventory` service's maximum connections to 1 and maximum pending requests to 1. Thus, if we send more
 than 2 requests within a short period of time to the reviews service, 1 will go through, 1 will be pending,
@@ -424,7 +424,7 @@ Add the following label in the catalog service to use a **virtural service** via
 
 Click on **Save**.
 
-Open a **catalog-default.yaml** file in **cloud-native-workshop-v2m3-labs/catalog/rules/** to make a gateway and virtual service:
+Open a **catalog-default.yaml** file in **/projects/cloud-native-workshop-v2m3-labs/catalog/rules/** to make a gateway and virtual service:
 
 > Replace all **YOUR_CATALOG_GATEWAY_URL** with the previous route URL that you copied earlier.
 
@@ -472,7 +472,7 @@ spec:
 
 Run the following command via CodeReady Workspace **Terminal**:
 
-`oc create -f cloud-native-workshop-v2m3-labs/catalog/rules/catalog-default.yaml`
+`oc create -f /projects/cloud-native-workshop-v2m3-labs/catalog/rules/catalog-default.yaml`
 
 Now, you can test if the inventory service works correctly via accessing the gateway URL without **authentication**:
 
@@ -546,7 +546,7 @@ On the next screen, you will see details of the **Settings** tab, the only thing
 
 > Replace **YOUR_CATALOG_GATEWAY_URL** with your own ingress gatewat URL of the catalog service and please note to add `/*` at the end of URL.
 
- * Valid Redirect URIs - http://YOUR_CATALOG_GATEWAY_URL/*
+ * Valid Redirect URIs: http://YOUR_CATALOG_GATEWAY_URL/*
 
 ![sso]({% image_path rhsso_clients_settings.png %})
 
@@ -597,7 +597,7 @@ Well done to enable RH-SSO server! Let's create an user-facing authentication po
 JWT token format for authentication as defined by [RFC 7519](https://tools.ietf.org/html/rfc7519). You can find more details 
 how [OAuth 2.0](https://tools.ietf.org/html/rfc6749) and [OIDC 1.0](https://openid.net/connect/) works in the whole authentication flow.
 
-Open a **ccn-auth-config.yml** file in **cloud-native-workshop-v2m3-labs/catalog/rules/** to create an authentication policy:
+Open a **ccn-auth-config.yml** file in **/projects/cloud-native-workshop-v2m3-labs/catalog/rules/** to create an authentication policy:
 
 > Replace all **YOUR_SSO_HTTP_ROUTE_URL** with your own HTTP route url of SSO container that you created earlier and also replace **USERXX** with your username. 
 
@@ -633,7 +633,7 @@ You can also define the following fields to create a Policy in Istio.
 
 Then execute the following oc command in CodeReady Workspace **Terminal**:
 
-`oc create -f cloud-native-workshop-v2m3-labs/catalog/rules/ccn-auth-config.yml`
+`oc create -f /projects/cloud-native-workshop-v2m3-labs/catalog/rules/ccn-auth-config.yml`
 
 Now you can't access the catalog service without authentication of RH-SSO. You confirm it using CURL command with replacing USERXX in CodeReady Workspace **Terminal**:
 
@@ -679,7 +679,7 @@ polyester. Rib-knit collar and cuffs; Ogio jacquard tape inside neck; bar-tacked
 ![sso]({% image_path rhsso_call_catalog_auth.png %})
 
 
-####7. More Red Hat Single Sing-On
+####7. Securing Spring Boot with Red Hat Single Sing-On
 
 ---
 
@@ -692,7 +692,7 @@ First, clean up all authentication configuration that we have tested in the prev
 
 `/projects/cloud-native-workshop-v2m3-labs/istio/scripts/cleanup.sh userXX`
 
-Next, open **application-openshift.properties** in **cloud-native-workshop-v2m3-labs/catalog/src/main/resources/** and add the following settings:
+Next, open **application-openshift.properties** in **/projects/cloud-native-workshop-v2m3-labs/catalog/src/main/resources/** and add the following settings:
 
 ~~~yaml
 #TODO: Set RH-SSO authentication
@@ -705,7 +705,7 @@ keycloak.security-constraints[0].authRoles[0]=ccn_auth
 keycloak.security-constraints[0].securityCollections[0].patterns[0]=/*
 ~~~
 
-Let's update `pom.xml' in **cloud-native-workshop-v2m3-labs/catalog/** to process keycloak configuration by Spring Boot.
+Let's update `pom.xml' in **/projects/cloud-native-workshop-v2m3-labs/catalog/** to process keycloak configuration by Spring Boot.
 
  * Add **spring-boot-starter-parent** artifact Id before **properties** element:
 
@@ -768,7 +768,7 @@ Let's update `pom.xml' in **cloud-native-workshop-v2m3-labs/catalog/** to proces
 
 Let's re-deploy the catalog service to OpenShift via running the following maven command in CodeReady Workspace **Terminal**:
 
-`cd cloud-native-workshop-v2m3-labs/catalog`
+`cd /projects/cloud-native-workshop-v2m3-labs/catalog`
 
 `mvn package fabric8:deploy -Popenshift -DskipTests`
 
@@ -792,7 +792,9 @@ Finally, you can access to the catalog service as below:
 
 ![sso]({% image_path rhsso_web_catalog_auth.png %})
 
-#### More Fun Facts of RH-SSO
+####8. Improving Web Login Features with Red Hat Single Sing-On
+
+---
 
 RH-SSO allows system admin to configure various login features in terms of User registration, Email as username, Forgot password,Remember Me, Login with email, and more.
 Let's update the Login page with adding **User registration** and **Forgot password**.
