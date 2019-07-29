@@ -6,13 +6,13 @@ in **Module 1** or/and **Module 2**.
 
 If you haven't deployment in Module 1 or Module2, you can deploy the cloud-native applications easily via executing the following shell script in CodeReady Workspace Terminal:
 
-`chmod +x cloud-native-workshop-v2m3-labs/istio/scripts/deploy-*.sh`
+`chmod +x /projects/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-*.sh`
 
 Replace with your username before running this commands:
 
-`cloud-native-workshop-v2m3-labs/istio/scripts/deploy-inventory.sh userXX`
+`/projects/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-inventory.sh userXX`
 
-`cloud-native-workshop-v2m3-labs/istio/scripts/deploy-catalog.sh userXX`
+`/projects/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-catalog.sh userXX`
 
 ####1. Configuring Automatic Sidecar Injection in Coolstore Microservices
 
@@ -601,7 +601,9 @@ Open a **ccn-auth-config.yml** file in **cloud-native-workshop-v2m3-labs/catalog
 
 > Replace all **YOUR_SSO_HTTP_ROUTE_URL** with your own HTTP route url of SSO container that you created earlier and also replace **USERXX** with your username. 
 
-You can also find the url via **oc get route -n userXX-catalog | grep -v secure | awk 'NR>1{print $2}' | grep sso**.
+You can also get the route url via executing the following commands in CodeReady Workspace **Terminal**:
+
+`oc get route -n userXX-catalog | grep -v secure | awk 'NR>1{print $2}' | grep sso`
 
 ~~~yaml
 apiVersion: authentication.istio.io/v1alpha1
@@ -676,11 +678,21 @@ polyester. Rib-knit collar and cuffs; Ogio jacquard tape inside neck; bar-tacked
 
 ![sso]({% image_path rhsso_call_catalog_auth.png %})
 
+
+####7. More Red Hat Single Sing-On
+
+---
+
 However, the catalog service doesn't still work when you access to the web page as below because the applicaion has no authentication codes, configuration yet:
 
 ![sso]({% image_path rhsso_web_catalog_noauth.png %})
 
-Open **application-openshift.properties** in **cloud-native-workshop-v2m3-labs/catalog/src/main/resources/** and add the following settings:
+Let's integrate RH-SSO authentication to the presentation layer of the catalog service. 
+First, clean up all authentication configuration that we have tested in the previous steps. Run the following script to clean up in CodeReady Workspace **Terminal**:
+
+`/projects/cloud-native-workshop-v2m3-labs/istio/scripts/cleanup.sh userXX`
+
+Next, open **application-openshift.properties** in **cloud-native-workshop-v2m3-labs/catalog/src/main/resources/** and add the following settings:
 
 ~~~yaml
 #TODO: Set RH-SSO authentication
@@ -760,9 +772,6 @@ Let's re-deploy the catalog service to OpenShift via running the following maven
 
 `mvn package fabric8:deploy -Popenshift -DskipTests`
 
-...
-`oc delete policy/auth-policy`
-
 Once you complete to build successfully, you have delete to **the route, healthcheck** that you already deleted because Fabric8 deployment recreates them automatically.
 Execute the following **oc commands** to remove them:
 
@@ -783,10 +792,7 @@ Finally, you can access to the catalog service as below:
 
 ![sso]({% image_path rhsso_web_catalog_auth.png %})
 
-
-####7. More Red Hat Single Sing-On
-
----
+#### More Fun Facts of RH-SSO
 
 RH-SSO allows system admin to configure various login features in terms of User registration, Email as username, Forgot password,Remember Me, Login with email, and more.
 Let's update the Login page with adding **User registration** and **Forgot password**.
