@@ -1,7 +1,7 @@
 ## Lab2 - Service Visualization and Monitoring
 
-In this lba, we will visualize your service mesh using **Kiali**, **Prometheus**, **Grafana** and you will lean how to configure
-basic **Istio funtionalities** such as **RouteRule8**, **A/B Testing**.
+In this lba, we will visualize your service mesh using `Kiali`, `Prometheus`, `Grafana` and you will lean how to configure
+basic `Istio funtionalities` such as `RouteRule8`, `A/B Testing`.
 
 ####1. Generating application load
 
@@ -9,7 +9,7 @@ basic **Istio funtionalities** such as **RouteRule8**, **A/B Testing**.
 
 To get a better idea of the power of metrics, let's setup an endless loop that will continually access
 the application and generate load. We'll open up a separate terminal just for this purpose. 
-Open a new **Terminal** and execute this command with your own **Gateway URL**:
+Open a new `Terminal` and execute this command with your own `Gateway URL`:
 
 `while true; do curl -o /dev/null -s -w "%{http_code}\n" http://YOUR_BOOKINFO_GATEWAY_URL/productpage ; sleep .2 ; done`
 
@@ -21,21 +21,21 @@ With this application load running, metrics will become much more interesting in
 
 ---
 
-**Kiali** is a frontend for Maistra that will allow you to manage and monitor your mesh from a single UI. This UI will allow you to view configurations, monitor traffic flow and health, and analyze traces.
+`Kiali` is a frontend for Maistra that will allow you to manage and monitor your mesh from a single UI. This UI will allow you to view configurations, monitor traffic flow and health, and analyze traces.
 
-Go to **istio-system** overview page in OpenShift Web Console and click on the **Kiali** route link:
+Go to `istio-system` overview page in OpenShift Web Console and click on the `Kiali` route link:
 
 ![istio-kiali]({% image_path istio-kiali-route.png %})
 
-You should see **OpenShift Login** screen because Kiali itegrates OpenShift Authentication.
+You should see `OpenShift Login` screen because Kiali itegrates OpenShift Authentication.
 Enter the username and password as below and click Log In.
 
- * Username: **userXX**
- * Password: **openshift**
+ * Username: `userXX`
+ * Password: `openshift`
 
 ![istio-kiali]({% image_path istio-kiali-login.png %})
 
-Input the namespace of your **userxx-bookinfo** application(i.e. user1-bookinfo) and Enter it. 
+Input the namespace of your `userxx-bookinfo` application(i.e. user1-bookinfo) and Enter it. 
 
 ![kiali]({% image_path kiali-all-namespaces.png %})
 
@@ -45,7 +45,7 @@ Then you will only see your working namespace as below:
 
 ##### Service Graph
 
-Go to the Service Graph page on the Graph menu and check **Traffic Animation** in **Display**:
+Go to the Service Graph page on the Graph menu and check `Traffic Animation` in `Display`:
 
 ![kiali]({% image_path kiali-service-graph.png %})
 
@@ -55,43 +55,43 @@ you can see how the services interact with each other.
 
 ##### Applications
 
-Click on **Applications** menu in the left navigation. On this page you can view a listing of all the services that 
+Click on `Applications` menu in the left navigation. On this page you can view a listing of all the services that 
 are running in the cluster, and additional information about them, such as health status.
 
 ![kiali]({% image_path kiali-applications.png %})
 
-Click on the **productpage** application to see its details and you can also see the health of a service (a service is considered healthy) 
-on the **Health** section when it’s online and responding to requests without errors:
+Click on the `productpage` application to see its details and you can also see the health of a service (a service is considered healthy) 
+on the `Health` section when it’s online and responding to requests without errors:
 
 ![kiali]({% image_path kiali-app-productpage.png %})
 
-By clicking on **Inbound Metrics**, you can see the metrics for an application, like so:
+By clicking on `Inbound Metrics`, you can see the metrics for an application, like so:
 
 ![kiali]({% image_path kiali-app-productpage-inbound.png %})
 
-By clicking on **Outbound Metrics**, you can see the metrics for an application, like so:
+By clicking on `Outbound Metrics`, you can see the metrics for an application, like so:
 
 ![kiali]({% image_path kiali-app-productpage-outbound.png %})
 
 ##### Workloads
 
-Click on **Workloads** menu in the left navigation. On this page you can view a listing of all the workloads are present on your applications.
+Click on `Workloads` menu in the left navigation. On this page you can view a listing of all the workloads are present on your applications.
 
 ![kiali]({% image_path kiali-app-productpage-workload.png %})
 
-Click on the **productpage-v1** workload. Here you can see details for the workload, such as the pods and services that are included in it:
+Click on the `productpage-v1` workload. Here you can see details for the workload, such as the pods and services that are included in it:
 
 ![kiali]({% image_path kiali-app-productpage-workload-v1.png %})
 
-By clicking **Inbound Metrics**, you can check the metrics for the workload. The metrics are the same as the Application ones.
+By clicking `Inbound Metrics`, you can check the metrics for the workload. The metrics are the same as the Application ones.
 
 ##### Services
 
-Click on **Services** menu in the left navigation. Here, you can see the listing of all services.
+Click on `Services` menu in the left navigation. Here, you can see the listing of all services.
 
 ![kiali]({% image_path kiali-services.png %})
 
-Click on **productpage** service. You can, on this page, see the details of the service, such as metrics, traces, workloads, virtual services, destination rules and so on:
+Click on `productpage` service. You can, on this page, see the details of the service, such as metrics, traces, workloads, virtual services, destination rules and so on:
 
 ![kiali]({% image_path kiali-services-productpage.png %})
 
@@ -104,7 +104,7 @@ add-on is a Prometheus server that comes pre-configured to scrape Mixer endpoint
 to collect the exposed metrics. It provides a mechanism for persistent storage
 and querying of Istio metrics.
 
-Go to **istio-system** overview page in OpenShift Web Console and click on the **Prometheus** route link:
+Go to `istio-system` overview page in OpenShift Web Console and click on the `Prometheus` route link:
 
 ![istio-prometheus]({% image_path istio-prometheus-route.png %})
 
@@ -113,7 +113,7 @@ You should see Prometheus home screen, similar to this:
 ![istio-prometheus]({% image_path istio-prometheus-landing.png %})
 
 In the “Expression” input box at the top of the web page, enter the text: `istio_request_duration_seconds_count`.
-Then, click the **Execute** button.
+Then, click the `Execute` button.
 
 You should see a listing of each of the application's services along with a count of how many times it was accessed.
 
@@ -141,7 +141,7 @@ As the number of services and interactions grows in your application, this style
 overwhelming. [Grafana](https://grafana.com/) provides a visual representation of many available Prometheus
 metrics extracted from the Istio data plane and can be used to quickly spot problems and take action.
 
-Go to istio-system overview page in OpenShift Web Console and click on the **Grafana** route link:
+Go to istio-system overview page in OpenShift Web Console and click on the `Grafana` route link:
 
 ![istio-grafana]({% image_path istio-grafana-route.png %})
 
@@ -164,14 +164,14 @@ Change service to "Productpage" in the select box and the service dashboard will
 
 The Grafana Dashboard for Istio consists of three main sections:
 
- * **A Global Summary View**. This section provides high-level summary of HTTP requests flowing through the service mesh.
- * **A Mesh Summary View**. This section provides slightly more detail than the Global Summary View, allowing per-service filtering and selection.
- * **Individual Services View**. This section provides metrics about requests and responses for each individual service within the mesh (HTTP and TCP).
+ * `A Global Summary View`. This section provides high-level summary of HTTP requests flowing through the service mesh.
+ * `A Mesh Summary View`. This section provides slightly more detail than the Global Summary View, allowing per-service filtering and selection.
+ * `Individual Services View`. This section provides metrics about requests and responses for each individual service within the mesh (HTTP and TCP).
 
-Note that **Tcp Bandwidth** metrics are empty, as Bookinfo uses http-based services only. Lower down on this dashboard are metrics 
-for workloads that call this service (labeled "Client Workloads") and for worloads that process requests from the service (labeled **Service Workloads**).
+Note that `Tcp Bandwidth` metrics are empty, as Bookinfo uses http-based services only. Lower down on this dashboard are metrics 
+for workloads that call this service (labeled "Client Workloads") and for worloads that process requests from the service (labeled `Service Workloads`).
 
-You can switch to a different service or filter metrics by **client-** and **service-worloads** by using drop-down lists at the top of the dashboard.
+You can switch to a different service or filter metrics by `client-` and `service-worloads` by using drop-down lists at the top of the dashboard.
 
 ##### Istio Workload Metrics
 
@@ -197,11 +197,11 @@ This task shows you how to configure dynamic request routing based on weights an
 
 _Route rules_ control how requests are routed within an Istio service mesh. Route rules provide:
 
-* **Timeouts**
-* **Bounded retries** with timeout budgets and variable jitter between retries
-* **Limits** on number of concurrent connections and requests to upstream services
-* **Active (periodic) health checks** on each member of the load balancing pool
-* **Fine-grained circuit breakers** (passive health checks) – applied per instance in the load balancing pool
+* `Timeouts`
+* `Bounded retries` with timeout budgets and variable jitter between retries
+* `Limits` on number of concurrent connections and requests to upstream services
+* `Active (periodic) health checks` on each member of the load balancing pool
+* `Fine-grained circuit breakers` (passive health checks) – applied per instance in the load balancing pool
 
 Requests can be routed based on
 the source and destination, HTTP header fields, and weights associated with individual service versions.
@@ -244,15 +244,15 @@ Otherwise if you access the application several times, you’ll notice that some
 ratings. This is because without an explicit default version set, Istio will route requests to all available
 versions of a service in a random fashion, and anytime you hit `v1` version you'll get no stars.
 
-Let's create a default set of **virtual services** which will direct all traffic to the `reviews:v1` service version:
+Let's create a default set of `virtual services` which will direct all traffic to the `reviews:v1` service version:
 
 `oc create -f cloud-native-workshop-v2m3-labs/istio/virtual-service-all-v1.yaml`
 
-You can see this default set of **virtual services** with:
+You can see this default set of `virtual services` with:
 
 `oc get virtualservices -o yaml`
 
-There are default **virtual services** for each service, such as the one that forces all traffic to the `v1` version of the `reviews` service:
+There are default `virtual services` for each service, such as the one that forces all traffic to the `v1` version of the `reviews` service:
 
 `oc get virtualservices/reviews -o yaml`
 
@@ -301,7 +301,7 @@ Confirm the rule is created:
 `oc get virtualservices/reviews -o yaml`
 
 
-Notice the **match** element:
+Notice the `match` element:
 
 ~~~yaml
 http:
@@ -322,9 +322,9 @@ http:
 This says that for any incoming HTTP request that has a cookie set to the `jason` user to direct traffic to
 `reviews:v1` and `reviews:v2`.
 
-Now, access the application via your own **Gateway URL**:
+Now, access the application via your own `Gateway URL`:
 
-**http://user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com/productpage** and click **Sign In** (at the upper right) and sign in with:
+`http://user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com/productpage` and click `Sign In` (at the upper right) and sign in with:
 
 * Username: `jason`
 * Password: `jason`
@@ -335,7 +335,7 @@ Once you login, refresh a few times - you should always see the black ratings st
 
 ![Ratings for Test User]({% image_path ratings-testuser.png %})
 
-If you **sign out**, you'll return to the `reviews:v3` version which shows red ratings stars.
+If you `sign out`, you'll return to the `reviews:v3` version which shows red ratings stars.
 
 ![Ratings for Test User]({% image_path ratings-signout.png %})
 

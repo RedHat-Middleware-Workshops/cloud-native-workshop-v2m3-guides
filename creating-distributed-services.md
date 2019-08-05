@@ -11,10 +11,10 @@ description of the book, book details (ISBN, number of pages, and so on), and a 
 
 The BookInfo application is broken into four separate microservices:
 
-* **productpage** - The productpage microservice calls the details and reviews microservices to populate the page.
-* **details** - The details microservice contains book information.
-* **reviews** - The reviews microservice contains book reviews. It also calls the ratings microservice.
-* **ratings** - The ratings microservice contains book ranking information that accompanies a book review.
+* `productpage` - The productpage microservice calls the details and reviews microservices to populate the page.
+* `details` - The details microservice contains book information.
+* `reviews` - The reviews microservice contains book reviews. It also calls the ratings microservice.
+* `ratings` - The ratings microservice contains book ranking information that accompanies a book review.
 
 There are 3 versions of the reviews microservice:
 
@@ -30,22 +30,22 @@ The end-to-end architecture of the application is shown below.
 
 ---
 
-Change the empty **USERXX Bookinfo** project via CodeReady Workspace **Terminal** and you should replace **userxx** with your username:
+Change the empty `USERXX Bookinfo` project via CodeReady Workspace `Terminal` and you should replace `userxx` with your username:
 
 `oc project userxx-bookinfo`
 
-Deploy the **Bookinfo application** in the bookinfo project:
+Deploy the `Bookinfo application` in the bookinfo project:
 
 `oc apply -f cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml`
 
-Replace your onw gateway URL with **REPLACE WITH YOUR BOOKINFO APP URL** in **bookinfo-gateway.yaml**.
+Replace your onw gateway URL with `REPLACE WITH YOUR BOOKINFO APP URL` in `bookinfo-gateway.yaml`.
 
  * URL format: userXX-bookinfo-istio-system.<ROUTE SUBFFIX>
  * URL example: user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com
 
 ![gateway]({% image_path bookinfo-gateway.png %})
 
-Create the **ingress gateway** for Bookinfo:
+Create the `ingress gateway` for Bookinfo:
 
 `oc apply -f cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml`
 
@@ -54,11 +54,11 @@ The application consists of the usual objects like Deployments, Services, and Ro
 As part of the installation, we use Istio to "decorate" the application with additional
 components (the Envoy Sidecars you read about in the previous step).
 
-Let's wait for our application to finish deploying. Go to the overview page in **userxx BookInfo Service Mesh** project:
+Let's wait for our application to finish deploying. Go to the overview page in `userxx BookInfo Service Mesh` project:
 
 ![bookinfo]({% image_path bookinfo-deployed.png %})
 
-Or you can execute the following commands to wait for the deployment to complete and result **successfully rolled out**:
+Or you can execute the following commands to wait for the deployment to complete and result `successfully rolled out`:
 
 ~~~shell
 oc rollout status -w deployment/productpage-v1 && \
@@ -69,11 +69,11 @@ oc rollout status -w deployment/productpage-v1 && \
  oc rollout status -w deployment/ratings-v1
 ~~~
 
-Confirm that Bookinfo has been **successfully** deployed via your own **Gateway URL**:
+Confirm that Bookinfo has been `successfully` deployed via your own `Gateway URL`:
 
 `curl -o /dev/null -s -w "%{http_code}\n" http://user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com/productpage`
 
-You should get **200** as a response.
+You should get `200` as a response.
 
 Add default destination rules:
 
@@ -87,7 +87,7 @@ List all available destination rules:
 
 Open the application in your browser to make sure it's working:
 
-* Bookinfo Application running with your own **Gateway URL** at 
+* Bookinfo Application running with your own `Gateway URL` at 
 
 `http://userXX-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com/productpage`
 

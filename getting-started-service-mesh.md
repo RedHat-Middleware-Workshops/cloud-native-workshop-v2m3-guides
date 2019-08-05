@@ -36,13 +36,13 @@ Istio is an open, platform-independent service mesh designed to manage communica
 applications in a transparent way.It provides behavioral insights and operational control over the service mesh
 as a whole. It provides a number of key capabilities uniformly across a network of services:
 
-* **Traffic Management** - Control the flow of traffic and API calls between services, make calls more reliable, and make the network more robust in the face of adverse conditions.
+* `Traffic Management` - Control the flow of traffic and API calls between services, make calls more reliable, and make the network more robust in the face of adverse conditions.
 
-* **Observability** - Gain understanding of the dependencies between services and the nature and flow of traffic between them, providing the ability to quickly identify issues.
+* `Observability` - Gain understanding of the dependencies between services and the nature and flow of traffic between them, providing the ability to quickly identify issues.
 
-* **Policy Enforcement** - Apply organizational policy to the interaction between services, ensure access policies are enforced and resources are fairly distributed among consumers. Policy changes are made by configuring the mesh, not by changing application code.
+* `Policy Enforcement` - Apply organizational policy to the interaction between services, ensure access policies are enforced and resources are fairly distributed among consumers. Policy changes are made by configuring the mesh, not by changing application code.
 
-* **Service Identity and Security** - Provide services in the mesh with a verifiable identity and provide the ability to protect service traffic as it flows over networks of varying degrees of trustability.
+* `Service Identity and Security` - Provide services in the mesh with a verifiable identity and provide the ability to protect service traffic as it flows over networks of varying degrees of trustability.
 
 These capabilities greatly decrease the coupling between application code, the underlying platform, and policy. This decreased coupling not only makes services easier to implement, but also makes it simpler for operators to move application deployments between environments or to new policy schemes. Applications become inherently more portable as a result.
 
@@ -66,7 +66,7 @@ What's happend during Istio installation eariler as below:
 * Creates the project `istio-system` as the location to deploy all the components
 * Adds necessary permissions
 * Deploys Istio components
-* Deploys additional add-ons, namely **Kiali, Prometheus, Grafana, Service Graph and Jaeger Tracing**
+* Deploys additional add-ons, namely `Kiali, Prometheus, Grafana, Service Graph and Jaeger Tracing`
 * Exposes routes for those add-ons and for Istio's Ingress component
 
 We'll use the above components througout this scenario, so don't worry if you don't know what they do!
@@ -77,11 +77,11 @@ You can also read a bit more about the [Istio](https://istio.io/docs) architectu
 
 ---
 
-An Istio service mesh is logically split into a **data plane** and a **control plane**.
+An Istio service mesh is logically split into a `data plane` and a `control plane`.
 
-The **data plane** is composed of a set of intelligent proxies (_Envoy_ proxies) deployed as _sidecars_ to your application's pods in OpenShift that mediate and control all network communication between microservices.
+The `data plane` is composed of a set of intelligent proxies (_Envoy_ proxies) deployed as _sidecars_ to your application's pods in OpenShift that mediate and control all network communication between microservices.
 
-The **control plane** is responsible for managing and configuring proxies to route traffic, as well as enforcing policies at runtime.
+The `control plane` is responsible for managing and configuring proxies to route traffic, as well as enforcing policies at runtime.
 
 The following diagram shows the different components that make up each plane:
 
@@ -89,7 +89,7 @@ The following diagram shows the different components that make up each plane:
 
 ##### Istio Components
 
-**Envoy**
+`Envoy`
 Istio uses an extended version of the [Envoy](https://envoyproxy.github.io/envoy/) proxy. Envoy is a high-performance proxy developed in C++ to mediate all inbound and outbound traffic for all services in the service mesh. Istio leverages Envoy’s many built-in features, for example:
 
  * Dynamic service discovery
@@ -102,25 +102,25 @@ Istio uses an extended version of the [Envoy](https://envoyproxy.github.io/envoy
  * Fault injection
  * Rich metrics
 
-Envoy is the **data plane** component that deployed as a **sidecar** to the relevant service in the same Kubernetes pod. This deployment allows Istio to extract a wealth of signals about traffic behavior as attributes. Istio can, in turn, use these attributes in **Mixer** to enforce policy decisions, and send them to monitoring systems to provide information about the behavior of the entire mesh.
+Envoy is the `data plane` component that deployed as a `sidecar` to the relevant service in the same Kubernetes pod. This deployment allows Istio to extract a wealth of signals about traffic behavior as attributes. Istio can, in turn, use these attributes in `Mixer` to enforce policy decisions, and send them to monitoring systems to provide information about the behavior of the entire mesh.
 
-**Mixer**
-Mixer is the **control plane** component responsible for enforcing access control and usage policies across the service mesh, and collects telemetry data from the Envoy proxy and other services. The proxy extracts request level attributes, and sends them to Mixer for evaluation.
+`Mixer`
+Mixer is the `control plane` component responsible for enforcing access control and usage policies across the service mesh, and collects telemetry data from the Envoy proxy and other services. The proxy extracts request level attributes, and sends them to Mixer for evaluation.
 
 Mixer includes a flexible plugin model. This model enables Istio to interface with a variety of host environments and infrastructure backends. Thus, Istio abstracts the Envoy proxy and Istio-managed services from these details.
 
-**Pilot**
-Pilot is the **control plane** component responsible for configuring the proxies at runtime. Pilot provides service discovery for the Envoy sidecars, traffic management capabilities for intelligent routing (for example, A/B tests or canary deployments), and resiliency (timeouts, retries, and circuit breakers).
+`Pilot`
+Pilot is the `control plane` component responsible for configuring the proxies at runtime. Pilot provides service discovery for the Envoy sidecars, traffic management capabilities for intelligent routing (for example, A/B tests or canary deployments), and resiliency (timeouts, retries, and circuit breakers).
 
 Pilot converts high level routing rules that control traffic behavior into Envoy-specific configurations, and propagates them to the sidecars at runtime. Pilot abstracts platform-specific service discovery mechanisms and synthesizes them into a standard format that any sidecar conforming with the [Envoy data plane APIs](https://github.com/envoyproxy/data-plane-api) can consume. This loose coupling allows Istio to run on multiple environments such as Kubernetes, Consul, or Nomad, while maintaining the same operator interface for traffic management.
 
-**Citadel**
-Citadel is the **control plane** component responsible for certificate issuance and rotation. Citadel provides strong service-to-service and end-user authentication with built-in identity and credential management. You can use Citadel to upgrade unencrypted traffic in the service mesh. Using Citadel, operators can enforce policies based on service identity rather than on network controls.
+`Citadel`
+Citadel is the `control plane` component responsible for certificate issuance and rotation. Citadel provides strong service-to-service and end-user authentication with built-in identity and credential management. You can use Citadel to upgrade unencrypted traffic in the service mesh. Using Citadel, operators can enforce policies based on service identity rather than on network controls.
 
-**Galley**
+`Galley`
 Galley is Istio’s configuration validation, ingestion, processing and distribution component. It is responsible for insulating the rest of the Istio components from the details of obtaining user configuration from the underlying platform (e.g. Kubernetes).
 
-**Add-ons**
+`Add-ons`
 Several components are used to provide additional visualizations, metrics, and tracing functions:
 
 * [Kiali](https://www.kiali.io/) - Service mesh observability and configuration
