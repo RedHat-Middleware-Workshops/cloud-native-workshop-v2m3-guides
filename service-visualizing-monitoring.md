@@ -27,10 +27,10 @@ Go to `Networling > Routes` in the left menu and select `istio-system` in projec
 
 ![istio-kiali]({% image_path istio-kiali-route.png %})
 
-You should see `OpenShift Login` screen because Kiali itegrates OpenShift Authentication. Enter the username and password as below and click `Log In`.
+You should see `Kiali Login` screen. Enter the username and password as below and click `Log In`.
 
- * Username: `userXX`
- * Password: `r3dh4t1!`
+ * Username: `admin`
+ * Password: `admin`
 
 ![istio-kiali]({% image_path istio-kiali-login.png %})
 

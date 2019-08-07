@@ -6,7 +6,7 @@ in `Module 1` or/and `Module 2`.
 
 If you haven't deployment in Module 1 or Module2, you can deploy the cloud-native applications easily via executing the following shell script in CodeReady Workspace Terminal:
 
-`chmod +x /projects/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-*.sh`
+`chmod +x /projects/cloud-native-workshop-v2m3-labs/istio/scripts/*.sh`
 
 Replace with your username before running this commands:
 
@@ -544,7 +544,7 @@ oc -n userXX-catalog new-app ccn-sso72 \
    -p SSO_ADMIN_PASSWORD=admin \
    -p SSO_REALM=istio \
    -p SSO_SERVICE_USERNAME=authuserXX \
-   -p SSO_SERVICE_PASSWORD=openshift
+   -p SSO_SERVICE_PASSWORD=redh4t1!
 ~~~
 
 > If you change `SSO_ADMIN_USERNAME`, `SSO_ADMIN_PASSWORD` then you need to login RH-SSO web console with them.
@@ -669,7 +669,7 @@ You can also define the following fields to create a Policy in Istio.
 
 Then execute the following oc command in CodeReady Workspace `Terminal`:
 
-`oc create -f /projects/cloud-native-workshop-v2m3-labs/catalog/rules/ccn-auth-config.yaml`
+`oc create -f /projects/cloud-native-workshop-v2m3-labs/catalog/rules/ccn-auth-config.yaml -n userXX-catalog`
 
 Now you can't access the catalog service without authentication of RH-SSO. You confirm it using CURL command with replacing USERXX in CodeReady Workspace `Terminal`:
 
@@ -692,7 +692,7 @@ export TOKEN=$( curl -X POST 'http://YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio/p
  -H "Content-Type: application/x-www-form-urlencoded" \
  -d "username=authuser1" \
  -d 'password=openshift' \
- -d 'grant_type=password' \
+ -d 'grant_type=redh4t1!' \
  -d 'client_id=ccn-cli' | jq -r '.access_token')
 ~~~
 
@@ -728,7 +728,7 @@ First, clean up all authentication configuration that we have tested in the prev
 
 `/projects/cloud-native-workshop-v2m3-labs/istio/scripts/cleanup.sh userXX`
 
-Next, open `application-openshift.properties` in `/projects/cloud-native-workshop-v2m3-labs/catalog/src/main/resources/` and add the following settings:
+Next, open `application-default.properties` in `/projects/cloud-native-workshop-v2m3-labs/catalog/src/main/resources/` and add the following settings:
 
 ~~~yaml
 #TODO: Set RH-SSO authentication
@@ -741,7 +741,7 @@ keycloak.security-constraints[0].authRoles[0]=ccn_auth
 keycloak.security-constraints[0].securityCollections[0].patterns[0]=/*
 ~~~
 
-Let's update `pom.xml' in `/projects/cloud-native-workshop-v2m3-labs/catalog/` to process keycloak configuration by Spring Boot.
+Let's update `pom.xml` in `/projects/cloud-native-workshop-v2m3-labs/catalog/` to process keycloak configuration by Spring Boot.
 
  * Add `spring-boot-starter-parent` artifact Id before `properties` element:
 
@@ -806,21 +806,16 @@ Let's re-deploy the catalog service to OpenShift via running the following maven
 
 `cd /projects/cloud-native-workshop-v2m3-labs/catalog`
 
-`mvn package fabric8:deploy -Popenshift -DskipTests`
+`mvn clean package spring-boot:repackage -DskipTests`
 
-Once you complete to build successfully, you have delete to `the route, healthcheck` that you already deleted because Fabric8 deployment recreates them automatically.
-Execute the following `oc commands` to remove them:
+`oc start-build catalog-springboot --from-file=target/catalog-1.0.0-SNAPSHOT.jar --follow`
 
-`oc delete route/catalog`
-
-`oc set probe dc/catalog --remove --readiness --liveness`
-
-After the catalog pod get started completely, access the catalog gateway via a new web brower then you will redirect to the login page of `RH-SSO`.
+After the catalog pod get started `completely`, access the `catalog gateway` via a new web brower then you will redirect to the login page of `RH-SSO`.
 
 Input the following credential that we created it in RH-SSO administration page eariler.
 
  * Username or email: `authuserXX`
- * Password: `openshift`
+ * Password: `r3dh4t1!`
 
 ![sso]({% image_path rhsso_catalog_redirect.png %})
 
