@@ -808,7 +808,7 @@ Let's re-deploy the catalog service to OpenShift via running the following maven
 
 `mvn clean package spring-boot:repackage -DskipTests`
 
-`oc start-build catalog-springboot --from-file=target/catalog-1.0.0-SNAPSHOT.jar --follow`
+`oc -n userXX-catalog start-build catalog-springboot --from-file=target/catalog-1.0.0-SNAPSHOT.jar --follow`
 
 After the catalog pod get started `completely`, access the `catalog gateway` via a new web brower then you will redirect to the login page of `RH-SSO`.
 
