@@ -30,7 +30,7 @@ The end-to-end architecture of the application is shown below.
 
 ---
 
-Change the empty `userXX-bookinfo` project via CodeReady Workspace `Terminal` and you should replace `userxx` with your username:
+Change the empty `userXX-bookinfo` project via CodeReady Workspaces `Terminal` and you should replace `userxx` with your username:
 
 `oc project userxx-bookinfo`
 

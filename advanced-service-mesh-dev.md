@@ -4,7 +4,7 @@ In this lab, you will develop advanced servie mesh features such as `Fault Injec
 `Rate Limit` with `Coolstore microservices`(i.e Catalog, Inventory) that you developed and deployed to OpenShift cluster 
 in `Module 1` or/and `Module 2`.
 
-If you haven't deployment in Module 1 or Module2, you can deploy the cloud-native applications easily via executing the following shell script in CodeReady Workspace Terminal:
+If you haven't deployment in Module 1 or Module2, you can deploy the cloud-native applications easily via executing the following shell script in CodeReady Workspaces Terminal:
 
 `chmod +x /projects/cloud-native-workshop-v2m3-labs/istio/scripts/*.sh`
 
@@ -143,7 +143,7 @@ Two types of faults can be injected:
 
 To test our application microservices for resiliency, we will inject a failure(`500 status`) in `50%` of requests to `inventory` microservices.
 
-Remove the route that we exposed the inventory service to manage network traffic by `Istio Ingressgateway`. Use the following command for `your own route name` at CodeReady Workspace `Terminal`:
+Remove the route that we exposed the inventory service to manage network traffic by `Istio Ingressgateway`. Use the following command for `your own route name` at CodeReady Workspaces `Terminal`:
 
 > Copy the route URL(i.e. inventory-quarkus-user1-inventory.apps.seoul-bfcf.openshiftworkshop.com) and you will reuse the URL to create a gateway in Istio.
 
@@ -206,7 +206,7 @@ spec:
 
 ![fault-injection]({% image_path inventory-default-gateway.png %})
 
-Run the following command via CodeReady Workspace `Terminal`:
+Run the following command via CodeReady Workspaces `Terminal`:
 
 `oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-default.yaml -n userXX-inventory`
 
@@ -248,7 +248,7 @@ spec:
 ![fault-injection]({% image_path inventory-vs-error.png %})
 
 Before creating a new `inventory-fault VirtualService`, we need to delete the existing `inventory-default VirtualService`.
-Run the following command via CodeReady Workspace `Terminal`:
+Run the following command via CodeReady Workspaces `Terminal`:
 
 `oc delete virtualservice/inventory-default -n userXX-inventory`
 
@@ -271,7 +271,7 @@ Open `inventory-vs-fault-delay.yaml` file in `/projects/cloud-native-workshop-v2
 > You need to replace all `YOUR_INVENTORY_GATEWAY_URL` with the previous route URL that you copied earlier.
 
 Before creating a new `inventory-fault-delay VirtualService`, we need to delete the existing `inventory-fault VirtualService`.
-Run the following command via CodeReady Workspace `Terminal`:
+Run the following command via CodeReady Workspaces `Terminal`:
 
 `oc delete virtualservice/inventory-fault -n userXX-inventory`
 
@@ -385,7 +385,7 @@ spec:
 
 ![circuit-breaker]({% image_path inventory-circuit-breaker.png %})
 
-Run the following command via CodeReady Workspace `Terminal`:
+Run the following command via CodeReady Workspaces `Terminal`:
 
 `oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-cb.yaml -n userXX-inventory`
 
@@ -429,7 +429,7 @@ That's the circuit breaker in action, limiting the number of requests to the ser
 
 ---
 
-Before moving on, stop the traffic generator by executing the following commands in CodeReady Workspace `Terminal`:
+Before moving on, stop the traffic generator by executing the following commands in CodeReady Workspaces `Terminal`:
 
 `for i in {1..50} ; do kill %${i} ; done`
 
@@ -447,7 +447,7 @@ In this step, you will learn how to enable authenticating `catalog` microservice
 [Red Hat Single Sign-On](https://access.redhat.com/products/red-hat-single-sign-on) in [Red Hat Application Runtimes](https://www.redhat.com/en/products/application-runtimes).
 
 First, let's remove the route that we exposed the catalog service to manage network traffic by `Istio Ingressgateway`. 
-Use the following command for `your own route name` at CodeReady Workspace `Terminal`:
+Use the following command for `your own route name` at CodeReady Workspaces `Terminal`:
 
 > Copy the route URL(i.e. catalog-user1-catalog.apps.seoul-0993.openshiftworkshop.com) and you will reuse the URL to create a gateway in Istio.
 
@@ -512,7 +512,7 @@ spec:
 
 ![sso]({% image_path catalog-default-gateway.png %})
 
-Run the following command via CodeReady Workspace `Terminal`:
+Run the following command via CodeReady Workspaces `Terminal`:
 
 `oc create -f /projects/cloud-native-workshop-v2m3-labs/catalog/rules/catalog-default.yaml -n userXX-catalog`
 
@@ -534,7 +534,7 @@ for identity information and your applications via standards-based tokens. The m
  * `Identity Brokering` - Integrates with 3rd-party Identity Providers including leading social networks as identity source.
  * `REST APIs and Administration GUI` - Specify user federation, role mapping, and client applications with easy-to-use Administration GUI and REST APIs.
 
-We will deploy RH-SSO in Catalog project via running the following commands in CodeReady Workspace `Terminal`:
+We will deploy RH-SSO in Catalog project via running the following commands in CodeReady Workspaces `Terminal`:
 
 You need to replace your username with `authuserXX`.
 
@@ -641,7 +641,7 @@ Open a `ccn-auth-config.yml` file in `/projects/cloud-native-workshop-v2m3-labs/
 
 > Replace all `YOUR_SSO_HTTP_ROUTE_URL` with your own HTTP route url of SSO container that you created earlier and also replace `USERXX` with your username. 
 
-You can also get the route url via executing the following commands in CodeReady Workspace `Terminal`:
+You can also get the route url via executing the following commands in CodeReady Workspaces `Terminal`:
 
 `oc get route -n userXX-catalog | grep -v secure | awk 'NR>1{print $2}' | grep sso`
 
@@ -667,11 +667,11 @@ You can also define the following fields to create a Policy in Istio.
  * `jwksUri` - URL of the provider’s public key set to validate signature of the JWT.
  * `audiences` - The list of JWT [audiences](https://tools.ietf.org/html/rfc7519#section-4.1.3). that are allowed to access. A JWT containing any of these audiences will be accepted.
 
-Then execute the following oc command in CodeReady Workspace `Terminal`:
+Then execute the following oc command in CodeReady Workspaces `Terminal`:
 
 `oc create -f /projects/cloud-native-workshop-v2m3-labs/catalog/rules/ccn-auth-config.yaml -n userXX-catalog`
 
-Now you can't access the catalog service without authentication of RH-SSO. You confirm it using CURL command with replacing USERXX in CodeReady Workspace `Terminal`:
+Now you can't access the catalog service without authentication of RH-SSO. You confirm it using CURL command with replacing USERXX in CodeReady Workspaces `Terminal`:
 
 `curl http://YOUR_CATALOG_GATEWAY_URL/services/products ; echo`
 
@@ -682,7 +682,7 @@ It normally takes `5 ~ 10 seconds` to apply the authentication policy in Istio M
 
 ![sso]({% image_path rhsso_call_catalog_noauth.png %})
 
-In order to generate a correct token, just run next curl request in CodeReady Workspace `Terminal`. This command will 
+In order to generate a correct token, just run next curl request in CodeReady Workspaces `Terminal`. This command will 
 store the output Authorization token from RH-SSO in an environment variable called `$TOKEN`. 
 
 > Replace `YOUR_SSO_HTTP_ROUTE_URL` with your own HTTP route url of SSO container that you created earlier. 
@@ -696,7 +696,7 @@ export TOKEN=$( curl -X POST 'http://YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio/p
  -d 'client_id=ccn-cli' | jq -r '.access_token')
 ~~~
 
-Once you have generated the token, re-run the curl command below with the token in CodeReady Workspace `Terminal`:
+Once you have generated the token, re-run the curl command below with the token in CodeReady Workspaces `Terminal`:
 
 `curl -H "Authorization: Bearer $TOKEN" http://YOUR_CATALOG_GATEWAY_URL/services/products ; echo`
 
@@ -724,7 +724,7 @@ However, the catalog service doesn't still work when you access to the web page 
 ![sso]({% image_path rhsso_web_catalog_noauth.png %})
 
 Let's integrate RH-SSO authentication to the presentation layer of the catalog service. 
-First, clean up all authentication configuration that we have tested in the previous steps. Run the following script to clean up in CodeReady Workspace `Terminal`:
+First, clean up all authentication configuration that we have tested in the previous steps. Run the following script to clean up in CodeReady Workspaces `Terminal`:
 
 `/projects/cloud-native-workshop-v2m3-labs/istio/scripts/cleanup.sh userXX`
 
@@ -802,7 +802,7 @@ Let's update `pom.xml` in `/projects/cloud-native-workshop-v2m3-labs/catalog/` t
 
 ![sso]({% image_path rhsso_catalog_pom_dependency.png %})
 
-Let's re-deploy the catalog service to OpenShift via running the following maven command in CodeReady Workspace `Terminal`:
+Let's re-deploy the catalog service to OpenShift via running the following maven command in CodeReady Workspaces `Terminal`:
 
 `cd /projects/cloud-native-workshop-v2m3-labs/catalog`
 
