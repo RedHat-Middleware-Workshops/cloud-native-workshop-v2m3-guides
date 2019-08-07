@@ -134,3 +134,18 @@ We will use these in future steps in this scenario!
 Check out the [Istio docs](https://istio.io/docs) for more details.
 
 Is your Istio deployment complete? If so, then you're ready to move on!
+
+#### Your Connection is not secure?
+
+---
+
+When you access OpenShift web console or the other route URL via `HTTPS` protocol, you will see `Your Connection is not secure` warning message.
+Because, OpenShift uses self-certification to create TLS termication route as default. For example, if you're using `Firefox`, you will see the following screen.
+
+Click on `Advanced > Add Exception...`.
+
+![warning]({% image_path browser_warning.png %})
+
+Then, you can access the `HTTPS` page when you click on `Confirm Security Exception`
+
+![warning]({% image_path browser_warning_confirmation.png %})
