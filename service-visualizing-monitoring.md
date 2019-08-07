@@ -23,15 +23,14 @@ With this application load running, metrics will become much more interesting in
 
 `Kiali` is a frontend for Maistra that will allow you to manage and monitor your mesh from a single UI. This UI will allow you to view configurations, monitor traffic flow and health, and analyze traces.
 
-Go to `istio-system` overview page in OpenShift Web Console and click on the `Kiali` route link:
+Go to `Networling > Routes` in the left menu and select `istio-system` in project. Click on `Kiali` route link.
 
 ![istio-kiali]({% image_path istio-kiali-route.png %})
 
-You should see `OpenShift Login` screen because Kiali itegrates OpenShift Authentication.
-Enter the username and password as below and click Log In.
+You should see `OpenShift Login` screen because Kiali itegrates OpenShift Authentication. Enter the username and password as below and click `Log In`.
 
  * Username: `userXX`
- * Password: `openshift`
+ * Password: `r3dh4t1!`
 
 ![istio-kiali]({% image_path istio-kiali-login.png %})
 
@@ -246,7 +245,7 @@ versions of a service in a random fashion, and anytime you hit `v1` version you'
 
 Let's create a default set of `virtual services` which will direct all traffic to the `reviews:v1` service version:
 
-`oc create -f cloud-native-workshop-v2m3-labs/istio/virtual-service-all-v1.yaml`
+`oc create -f /projects/cloud-native-workshop-v2m3-labs/istio/virtual-service-all-v1.yaml`
 
 You can see this default set of `virtual services` with:
 
@@ -263,7 +262,7 @@ metadata:
   creationTimestamp: "2019-07-02T15:50:36Z"
   generation: 1
   name: reviews
-  namespace: user1-bookinfo
+  namespace: userXX-bookinfo
   resourceVersion: "2899673"
   selfLink: /apis/networking.istio.io/v1alpha3/namespaces/user1-bookinfo/virtualservices/reviews
   uid: 2240fcce-9ce1-11e9-b30a-0af4213cc1b8
@@ -279,7 +278,7 @@ spec:
 
 Now, access the application again in your browser using the below link and reload the page several times - you should not see any rating stars since `reviews:v1` does not access the `ratings` service.
 
-* Bookinfo Application with no rating stars at `http://user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com/productpage`
+* Bookinfo Application with no rating stars at `http://YOUR_ISTIO_GATEWAY_URL/productpage`
 
 To verify this, open the Grafana Dashboard:
 
@@ -294,7 +293,7 @@ Scroll down to the `ratings` service and notice that the requests coming from th
 Let's enable the ratings service for a test user named `jason` by routing `productpage` traffic to `reviews:vv` and the others to `reviews:v3`, 
 but only for our test user. Execute:
 
-`oc apply -f cloud-native-workshop-v2m3-labs/istio/virtual-service-reviews-jason-v2-v3.yaml`
+`oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/virtual-service-reviews-jason-v2-v3.yaml`
 
 Confirm the rule is created:
 
@@ -324,7 +323,7 @@ This says that for any incoming HTTP request that has a cookie set to the `jason
 
 Now, access the application via your own `Gateway URL`:
 
-`http://user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com/productpage` and click `Sign In` (at the upper right) and sign in with:
+`http://YOUR_ISTIO_GATEWAY_URL/productpage` and click `Sign In` (at the upper right) and sign in with:
 
 * Username: `jason`
 * Password: `jason`

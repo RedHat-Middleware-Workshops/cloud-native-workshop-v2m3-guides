@@ -30,24 +30,24 @@ The end-to-end architecture of the application is shown below.
 
 ---
 
-Change the empty `USERXX Bookinfo` project via CodeReady Workspace `Terminal` and you should replace `userxx` with your username:
+Change the empty `userXX-bookinfo` project via CodeReady Workspace `Terminal` and you should replace `userxx` with your username:
 
 `oc project userxx-bookinfo`
 
 Deploy the `Bookinfo application` in the bookinfo project:
 
-`oc apply -f cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml`
+`oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml`
 
 Replace your onw gateway URL with `REPLACE WITH YOUR BOOKINFO APP URL` in `bookinfo-gateway.yaml`.
 
- * URL format: userXX-bookinfo-istio-system.<ROUTE SUBFFIX>
- * URL example: user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com
+ * URL format: `userXX-bookinfo-istio-system.<ROUTE SUBFFIX>`
+ * URL example: `user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com`
 
 ![gateway]({% image_path bookinfo-gateway.png %})
 
 Create the `ingress gateway` for Bookinfo:
 
-`oc apply -f cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml`
+`oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml`
 
 The application consists of the usual objects like Deployments, Services, and Routes.
 
@@ -71,13 +71,13 @@ oc rollout status -w deployment/productpage-v1 && \
 
 Confirm that Bookinfo has been `successfully` deployed via your own `Gateway URL`:
 
-`curl -o /dev/null -s -w "%{http_code}\n" http://user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com/productpage`
+`curl -o /dev/null -s -w "%{http_code}\n" http://YOUR_ISTIO_GATEWAY_URL/productpage`
 
 You should get `200` as a response.
 
 Add default destination rules:
 
-`oc apply -f cloud-native-workshop-v2m3-labs/istio/destination-rule-all.yaml`
+`oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/destination-rule-all.yaml`
 
 List all available destination rules:
 
@@ -89,7 +89,7 @@ Open the application in your browser to make sure it's working:
 
 * Bookinfo Application running with your own `Gateway URL` at 
 
-`http://userXX-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com/productpage`
+`http://YOUR_ISTIO_GATEWAY_URL/productpage`
 
 It should look something like:
 
