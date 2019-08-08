@@ -690,9 +690,9 @@ store the output Authorization token from RH-SSO in an environment variable call
 ~~~shell
 export TOKEN=$( curl -X POST 'http://YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio/protocol/openid-connect/token' \
  -H "Content-Type: application/x-www-form-urlencoded" \
- -d "username=authuser1" \
- -d 'password=openshift' \
- -d 'grant_type=redh4t1!' \
+ -d "username=authuserXX" \
+ -d 'password=r3dh4t1!' \
+ -d 'grant_type=password' \
  -d 'client_id=ccn-cli' | jq -r '.access_token')
 ~~~
 
