@@ -103,6 +103,26 @@ a command in a terminal, you can use the CodeReady Workspaces `Terminal` window.
 
 ---
 
+We'll use the CLI to deploy the components for our monolith. To deploy the monolith template using the CLI, execute the following commands via CodeReady Workspaces `Terminal` window:
+
+Copy login command and Login OpenShift cluster:
+
+![codeready-workspace-copy-login-cmd]({% image_path codeready-workspace-oc-login-copy.png %}){:width="700px"}
+
+Then you will redirect to OpenShift Login page again. 
+
+![openshift_login]({% image_path openshift_login.png %})
+
+When you login with your credential, you will see `Display Token` link in the redirected page.
+
+![openshift_login]({% image_path display_token_link.png %})
+
+Click on the link and copy the `oc login` command:
+
+![openshift_login]({% image_path your_token.png %})
+
+Paste it on CodeReady Workspaces `Terminal` window.
+
 Change the empty `userXX-bookinfo` project via CodeReady Workspaces `Terminal` and you should replace `userxx` with your username:
 
 `oc project userxx-bookinfo`
