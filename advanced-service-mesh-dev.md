@@ -444,7 +444,7 @@ Delete the circuit breaker of the Inventory service via the following commands. 
 ---
 
 In this step, you will learn how to enable authenticating `catalog` microservices with Istio, [JSON Web Token(JWT)](https://en.wikipedia.org/wiki/JSON_Web_Token), and 
-[Red Hat Single Sign-On](https://access.redhat.com/products/red-hat-single-sign-on) in [Red Hat Application Runtimes](https://www.redhat.com/en/products/application-runtimes).
+[Red Hat Single Sign-On](https://access.redhat.com/products/red-hat-single-sign-on) in [Red Hat Runtimes](https://www.redhat.com/en/products/application-runtimes).
 
 First, let's remove the route that we exposed the catalog service to manage network traffic by `Istio Ingressgateway`. 
 Use the following command for `your own route name` at CodeReady Workspaces `Terminal`:
