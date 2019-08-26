@@ -611,8 +611,8 @@ Contents, and Sessions. You don't need to update any details in this step.
 
 Go to `Credentials` tab and input the following variables:
 
- * New Password: `r3dh4t1!`
- * Password Confirmation: `r3dh4t1!`
+ * New Password: `openshift`
+ * Password Confirmation: `openshift`
  * Temporary: `OFF`
 
 Make sure to turn off the “Temporary” flag unless you want the authuserXX to have to change his password the first time he authenticates.
@@ -691,7 +691,7 @@ store the output Authorization token from RH-SSO in an environment variable call
 export TOKEN=$( curl -X POST 'http://YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio/protocol/openid-connect/token' \
  -H "Content-Type: application/x-www-form-urlencoded" \
  -d "username=authuserXX" \
- -d 'password=r3dh4t1!' \
+ -d 'password=openshift' \
  -d 'grant_type=password' \
  -d 'client_id=ccn-cli' | jq -r '.access_token')
 ~~~
@@ -815,7 +815,7 @@ After the catalog pod get started `completely`, access the `catalog gateway` via
 Input the following credential that we created it in RH-SSO administration page eariler.
 
  * Username or email: `authuserXX`
- * Password: `r3dh4t1!`
+ * Password: `openshift`
 
 ![sso]({% image_path rhsso_catalog_redirect.png %})
 
