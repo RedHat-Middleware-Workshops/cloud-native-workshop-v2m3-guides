@@ -135,11 +135,66 @@ Check out the [Istio docs](https://istio.io/docs) for more details.
 
 Is your Istio deployment complete? If so, then you're ready to move on!
 
-##### Note! Your Connection is not secure?
+#### Getting Ready for the labs
 
-When you access OpenShift web console or the other route URL via `HTTPS` protocol, you will see `Your Connection is not secure` warning message.
-Because, OpenShift uses self-certification to create TLS termication route as default. For example, if you're using `Firefox`, you will see the following screen.
+---
 
-Click on `Advanced > Add Exception...` then, you can access the `HTTPS` page when you click on `Confirm Security Exception`!!!
+##### Access Your Development Environment
+
+You will be using Red Hat CodeReady Workspaces, an online IDE based on [Eclipe Che](https://www.eclipse.org/che/){:target="_blank"}. **Changes to files are auto-saved every few seconds**, so you don't need to explicitly save changes.
+
+To get started, [access the Che instance]({{ ECLIPSE_CHE_URL }}) and log in using the username and password you've been assigned (e.g. `{{ CHE_USER_NAME }}/{{ CHE_USER_PASSWORD }}`):
+
+![cdw]({% image_path che-login.png %}){:width="700px"}
+
+Once you log in, you'll be placed on your personal dashboard. We've pre-created workspaces for you to use. Click on the name of the pre-created workspace on the left, as shown below (the name will be different depending on your assigned number). You can also click on the name of the workspace in the center, and then click on the green button that says "OPEN" on the top right hand side of the screen:
+
+![cdw]({% image_path che-precreated.png %})
+
+After a minute or two, you'll be placed in the workspace:
+
+![cdw]({% image_path che-workspace.png %})
+
+To gain extra screen space, click on the yellow arrow to hide the left menu (you won't need it):
+
+![cdw]({% image_path che-realestate.png %})
+
+Users of Eclipse, IntelliJ IDEA or Visual Studio Code will see a familiar layout: a project/file browser on the left, a code editor on the right, and a terminal at the bottom. You'll use all of these during the course of this workshop, so keep this browser tab open throughout. **If things get weird, you can simply reload the browser tab to refresh the view.**
+
+In the project explorer pane, click on the `Import Projects...` and enter the following:
+
+  * Version Control System: `GIT`
+  * URL: `{{GIT_URL}}/userXX/cloud-native-workshop-v2m3-labs.git`(IMPORTANT: replace userXX with your lab user)
+  * Check `Import recursively (for multi-module projects)`
+  * Name: `cloud-native-workshop-v2m3-labs`
+
+`Tip`: You can find GIT URL when you click on {{GIT_URL}} then login with your credentials. 
+
+![codeready-workspace-import]({% image_path codeready-workspace-import.png %}){:width="700px"}
+
+The projects are imported now into your workspace and is visible in the project explorer.
+
+CodeReady Workspaces is a full featured IDE and provides language specific capabilities for various project types. In order to 
+enable these capabilities, let's convert the imported project skeletons to a Maven projects. In the project explorer, right-click on each project and 
+then click on `Convert to Project` continuously.
+
+![codeready-workspace-convert]({% image_path codeready-workspace-convert.png %}){:width="500px"}
+
+Choose `Maven` from the project configurations and then click on `Save`.
+
+![codeready-workspace-maven]({% image_path codeready-workspace-maven.png %}){:width="700px"}
+
+Repeat the above for inventory and catalog projects.
+
+> `NOTE`: the Terminal window in CodeReady Workspaces. For the rest of these labs, anytime you need to run a command in a terminal, you can use the CodeReady Workspaces `Terminal` window.
+
+![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
+
+##### Connnecting to Openshift
+
+When you access OpenShift web console or the other route URL via HTTPS protocol, you will see `Your Connection is not secure` warning message.
+Because, OpenShift uses self-certification to create TLS termication route as default. For example, if you're using Firefox, you will see the following screen.
+
+Click on `Advanced > Add Exception...` then, you can access the HTTPS page when you click on `Confirm Security Exception`!!!
 
 ![warning]({% image_path browser_warning.png %})
