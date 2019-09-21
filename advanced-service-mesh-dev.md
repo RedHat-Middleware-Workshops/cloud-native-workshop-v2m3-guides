@@ -264,7 +264,7 @@ To make sure if the `50%` traffic is failed with `500 Error` in `Kiali Graph`. Y
 
 ![fault-injection]({% image_path inventlry-vs-error-kiali.png %})
 
-Let's make another injection in terms of you will introduce a `5 second delay` in `100% of requests` to Inventory service. Go to `Virtual Service` in `Other Resources` in OpenShift Web Console and Click on `Edit YAML` in inventory-default:
+Let's make another injection in terms of you will introduce a `5 second delay` in `100% of requests` to Inventory service. Go to `Virtual Service` in `Other Resources` in [OpenShift web console]({{ CONSOLE_URL}}) and Click on `Edit YAML` in inventory-default:
 
 Open `inventory-vs-fault-delay.yaml` file in `/projects/cloud-native-workshop-v2m3-labs/inventory/rules/` and copy the following codes.
 
@@ -549,7 +549,7 @@ oc -n userXX-catalog new-app ccn-sso72 \
 
 > If you change `SSO_ADMIN_USERNAME`, `SSO_ADMIN_PASSWORD` then you need to login RH-SSO web console with them.
 
-Once you complete to deploy `RH-SSO` in `Networking > Routes` at OpenShift web console then you will see `HTTPS/HTTP` route URL as below:
+Once you complete to deploy `RH-SSO` in `Networking > Routes` at [OpenShift web console]({{ CONSOLE_URL}}) then you will see `HTTPS/HTTP` route URL as below:
 
 ![sso]({% image_path rhsso_deployment.png %})
 

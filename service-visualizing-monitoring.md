@@ -103,7 +103,7 @@ add-on is a Prometheus server that comes pre-configured to scrape Mixer endpoint
 to collect the exposed metrics. It provides a mechanism for persistent storage
 and querying of Istio metrics.
 
-Go to `istio-system` overview page in OpenShift Web Console and click on the `Prometheus` route link:
+Go to `istio-system` overview page in [OpenShift web console]({{ CONSOLE_URL}}) and click on the `Prometheus` route link:
 
 ![istio-prometheus]({% image_path istio-prometheus-route.png %})
 
@@ -140,7 +140,7 @@ As the number of services and interactions grows in your application, this style
 overwhelming. [Grafana](https://grafana.com/) provides a visual representation of many available Prometheus
 metrics extracted from the Istio data plane and can be used to quickly spot problems and take action.
 
-Go to istio-system overview page in OpenShift Web Console and click on the `Grafana` route link:
+Go to istio-system overview page in [OpenShift web console]({{ CONSOLE_URL}}) and click on the `Grafana` route link:
 
 ![istio-grafana]({% image_path istio-grafana-route.png %})
 
