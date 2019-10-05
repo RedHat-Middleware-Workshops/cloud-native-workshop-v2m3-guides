@@ -11,10 +11,10 @@ description of the book, book details (ISBN, number of pages, and so on), and a 
 
 The BookInfo application is broken into four separate microservices:
 
-* `productpage` - The productpage microservice calls the details and reviews microservices to populate the page.
-* `details` - The details microservice contains book information.
-* `reviews` - The reviews microservice contains book reviews. It also calls the ratings microservice.
-* `ratings` - The ratings microservice contains book ranking information that accompanies a book review.
+* **productpage** - The productpage microservice calls the details and reviews microservices to populate the page.
+* **details** - The details microservice contains book information.
+* **reviews** - The reviews microservice contains book reviews. It also calls the ratings microservice.
+* **ratings** - The ratings microservice contains book ranking information that accompanies a book review.
 
 There are 3 versions of the reviews microservice:
 
@@ -30,7 +30,7 @@ The end-to-end architecture of the application is shown below.
 
 ---
 
-In order to deploy applicaitons to OpenShift via `oc` tool, we need to copy login command and Login OpenShift cluster:
+In order to deploy applicaitons to OpenShift via **oc** tool, we need to copy login command and Login OpenShift cluster:
 
 ![codeready-workspace-copy-login-cmd]({% image_path codeready-workspace-oc-login-copy.png %}){:width="700px"}
 
@@ -38,11 +38,11 @@ Then you will redirect to OpenShift Login page again.
 
 ![openshift_login]({% image_path openshift_login.png %})
 
-When you login with your credential, you will see `Display Token` link in the redirected page.
+When you login with your credential, you will see **Display Token** link in the redirected page.
 
 ![openshift_login]({% image_path display_token_link.png %})
 
-Click on the link and copy the `oc login` command:
+Click on the link and copy the **oc login** command:
 
 ![openshift_login]({% image_path your_token.png %})
 
@@ -113,13 +113,11 @@ It should look something like:
 
 ![Bookinfo App]({% image_path bookinfo.png %})
 
-Reload the page multiple times. The three different versions of the Reviews service
-show the star ratings differently - `v1` shows no stars at all, `v2` shows black stars,
-and `v3` shows red stars:
+Reload the page multiple times. The three different versions of the Reviews service show the star ratings differently - _v1_ shows no stars at all, _v2_ shows black stars, and _v3_ shows red stars:
 
-* `v1`: ![no stars]({% image_path stars-none.png %})
-* `v2`: ![black stars]({% image_path stars-black.png %})
-* `v3`: ![red stars]({% image_path stars-red.png %})
+* **v1**: ![no stars]({% image_path stars-none.png %})
+* **v2**: ![black stars]({% image_path stars-black.png %})
+* **v3**: ![red stars]({% image_path stars-red.png %})
 
 That's because there are 3 versions of reviews deployment for our reviews service. Istio’s
 load-balancer is using a _round-robin_ algorithm to iterate through the 3 instances of this service.
@@ -137,10 +135,8 @@ reviews-v2-69fd995884-qpddl   2/2     Running   0          12m
 reviews-v3-5f9d5bbd8-sz29k    2/2     Running   0          12m
 ~~~
 
-Notice that each of the microservices shows `2/2` containers ready for each service (one for the service and one for its
-sidecar).
+Notice that each of the microservices shows **2/2** containers ready for each service (one for the service and one for its sidecar).
 
-Now that we have our application deployed and linked into the Istio service mesh, let's take a look at the
-immediate value we can get out of it without touching the application code itself!
+Now that we have our application deployed and linked into the Istio service mesh, let's take a look at the immediate value we can get out of it without touching the application code itself!
 
 #####Congratulations!

@@ -36,13 +36,13 @@ Istio is an open, platform-independent service mesh designed to manage communica
 applications in a transparent way.It provides behavioral insights and operational control over the service mesh
 as a whole. It provides a number of key capabilities uniformly across a network of services:
 
-* `Traffic Management` - Control the flow of traffic and API calls between services, make calls more reliable, and make the network more robust in the face of adverse conditions.
+* **Traffic Management** - Control the flow of traffic and API calls between services, make calls more reliable, and make the network more robust in the face of adverse conditions.
 
-* `Observability` - Gain understanding of the dependencies between services and the nature and flow of traffic between them, providing the ability to quickly identify issues.
+* **Observability** - Gain understanding of the dependencies between services and the nature and flow of traffic between them, providing the ability to quickly identify issues.
 
-* `Policy Enforcement` - Apply organizational policy to the interaction between services, ensure access policies are enforced and resources are fairly distributed among consumers. Policy changes are made by configuring the mesh, not by changing application code.
+* **Policy Enforcement** - Apply organizational policy to the interaction between services, ensure access policies are enforced and resources are fairly distributed among consumers. Policy changes are made by configuring the mesh, not by changing application code.
 
-* `Service Identity and Security` - Provide services in the mesh with a verifiable identity and provide the ability to protect service traffic as it flows over networks of varying degrees of trustability.
+* **Service Identity and Security** - Provide services in the mesh with a verifiable identity and provide the ability to protect service traffic as it flows over networks of varying degrees of trustability.
 
 These capabilities greatly decrease the coupling between application code, the underlying platform, and policy. This decreased coupling not only makes services easier to implement, but also makes it simpler for operators to move application deployments between environments or to new policy schemes. Applications become inherently more portable as a result.
 
@@ -155,14 +155,14 @@ To gain extra screen space, click on the yellow arrow to hide the left menu (you
 
 Users of Eclipse, IntelliJ IDEA or Visual Studio Code will see a familiar layout: a project/file browser on the left, a code editor on the right, and a terminal at the bottom. You'll use all of these during the course of this workshop, so keep this browser tab open throughout. **If things get weird, you can simply reload the browser tab to refresh the view.**
 
-In the project explorer pane, click on the `Import Projects...` and enter the following:
+In the project explorer pane, click on the **Import Projects...** and enter the following:
 
   * Version Control System: `GIT`
   * URL: `{{GIT_URL}}/userXX/cloud-native-workshop-v2m3-labs.git`(IMPORTANT: replace userXX with your lab user)
   * Check `Import recursively (for multi-module projects)`
   * Name: `cloud-native-workshop-v2m3-labs`
 
-`Tip`: You can find GIT URL when you click on {{GIT_URL}} then login with your credentials. 
+**Tip**: You can find GIT URL when you click on {{GIT_URL}} then login with your credentials. 
 
 ![codeready-workspace-import]({% image_path codeready-workspace-import.png %}){:width="700px"}
 
@@ -170,25 +170,25 @@ The projects are imported now into your workspace and is visible in the project 
 
 CodeReady Workspaces is a full featured IDE and provides language specific capabilities for various project types. In order to 
 enable these capabilities, let's convert the imported project skeletons to a Maven projects. In the project explorer, right-click on each project and 
-then click on `Convert to Project` continuously.
+then click on **Convert to Project** continuously.
 
 ![codeready-workspace-convert]({% image_path codeready-workspace-convert.png %}){:width="500px"}
 
-Choose `Maven` from the project configurations and then click on `Save`.
+Choose **Maven** from the project configurations and then click on **Save**.
 
 ![codeready-workspace-maven]({% image_path codeready-workspace-maven.png %}){:width="700px"}
 
 Repeat the above for inventory and catalog projects.
 
-> `NOTE`: the Terminal window in CodeReady Workspaces. For the rest of these labs, anytime you need to run a command in a terminal, you can use the CodeReady Workspaces `Terminal` window.
+> NOTE: the Terminal window in CodeReady Workspaces. For the rest of these labs, anytime you need to run a command in a terminal, you can use the CodeReady Workspaces Terminal window.
 
 ![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
 
 ##### Connnecting to Openshift
 
-When you access [OpenShift web console]({{ CONSOLE_URL}}) or the other route URL via HTTPS protocol, you will see `Your Connection is not secure` warning message.
+When you access [OpenShift web console]({{ CONSOLE_URL}}) or the other route URL via HTTPS protocol, you will see **Your Connection is not secure** warning message.
 Because, OpenShift uses self-certification to create TLS termication route as default. For example, if you're using *Chrome Browser*, you will see the following screen.
 
-Click on `Advanced` then, you can access the HTTPS page when you click on `Proceed to...`!!!
+Click on **Advanced** then, you can access the HTTPS page when you click on **Proceed to...**!!!
 
 ![warning]({% image_path browser_warning.png %})

@@ -35,7 +35,7 @@ You should see _Kiali Login_ screen. Enter the username and password as below an
 
 ![istio-kiali]({% image_path istio-kiali-login.png %})
 
-Input the namespace of your `userxx-bookinfo` application(i.e. user1-bookinfo) and Enter it. 
+Input the namespace of your **userxx-bookinfo** application(i.e. user1-bookinfo) and Enter it. 
 
 ![kiali]({% image_path kiali-all-namespaces.png %})
 
@@ -45,31 +45,30 @@ Then you will only see your working namespace as below:
 
 ##### Service Graph
 
-Go to the Service Graph page on the Graph menu and check `Traffic Animation` in `Display`:
+Go to the Service Graph page on the Graph menu and check **Traffic Animation** in **Display**:
 
 ![kiali]({% image_path kiali-service-graph.png %})
 
-It shows a graph with all the microservices, connected by the requests going through then. On this page, 
-you can see how the services interact with each other.
+It shows a graph with all the microservices, connected by the requests going through then. On this page, you can see how the services interact with each other.
 
 
 ##### Applications
 
-Click on `Applications` menu in the left navigation. On this page you can view a listing of all the services that 
+Click on **Applications** menu in the left navigation. On this page you can view a listing of all the services that 
 are running in the cluster, and additional information about them, such as health status.
 
 ![kiali]({% image_path kiali-applications.png %})
 
-Click on the `productpage` application to see its details and you can also see the health of a service (a service is considered healthy) 
-on the `Health` section when it’s online and responding to requests without errors:
+Click on the **productpage** application to see its details and you can also see the health of a service (a service is considered healthy) 
+on the **Health** section when it’s online and responding to requests without errors:
 
 ![kiali]({% image_path kiali-app-productpage.png %})
 
-By clicking on `Inbound Metrics`, you can see the metrics for an application, like so:
+By clicking on **Inbound Metrics**, you can see the metrics for an application, like so:
 
 ![kiali]({% image_path kiali-app-productpage-inbound.png %})
 
-By clicking on `Outbound Metrics`, you can see the metrics for an application, like so:
+By clicking on **Outbound Metrics**, you can see the metrics for an application, like so:
 
 ![kiali]({% image_path kiali-app-productpage-outbound.png %})
 
@@ -104,7 +103,7 @@ add-on is a Prometheus server that comes pre-configured to scrape Mixer endpoint
 to collect the exposed metrics. It provides a mechanism for persistent storage
 and querying of Istio metrics.
 
-Go to **istio-system** overview page in [OpenShift web console]({{ CONSOLE_URL}}) and click on the `Prometheus` route link:
+Go to **istio-system** overview page in [OpenShift web console]({{ CONSOLE_URL}}) and click on the **Prometheus** route link:
 
 ![istio-prometheus]({% image_path istio-prometheus-route.png %})
 
@@ -140,7 +139,7 @@ As the number of services and interactions grows in your application, this style
 overwhelming. [Grafana](https://grafana.com/) provides a visual representation of many available Prometheus
 metrics extracted from the Istio data plane and can be used to quickly spot problems and take action.
 
-Go to istio-system overview page in [OpenShift web console]({{ CONSOLE_URL}}) and click on the `Grafana` route link:
+Go to istio-system overview page in [OpenShift web console]({{ CONSOLE_URL}}) and click on the **Grafana** route link:
 
 ![istio-grafana]({% image_path istio-grafana-route.png %})
 
@@ -306,7 +305,7 @@ This says that for any incoming HTTP request that has a cookie set to the _jason
 
 Now, access the application via your own _Gateway URL_:
 
-`http://YOUR_BOOK_APP_URL/productpage` and click `Sign In` (at the upper right) and sign in with:
+`http://YOUR_BOOK_APP_URL/productpage` and click **Sign In** (at the upper right) and sign in with:
 
 * Username: **jason**
 * Password: **jason**
