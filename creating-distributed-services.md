@@ -46,33 +46,35 @@ Click on the link and copy the `oc login` command:
 
 ![openshift_login]({% image_path your_token.png %})
 
-Paste it on CodeReady Workspaces `Terminal` window.
+Paste it on CodeReady Workspaces Terminal window.
 
-Change the empty `userXX-bookinfo` project via CodeReady Workspaces `Terminal` and you should replace `userxx` with your username:
+Change the empty **userXX-bookinfo** project via CodeReady Workspaces Terminal and you should replace **userXX** with your username:
 
 `oc project userxx-bookinfo`
 
-Deploy the `Bookinfo application` in the bookinfo project:
+Deploy the **Bookinfo application** in the bookinfo project:
 
 `oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml`
 
-Replace your onw gateway URL with `REPLACE WITH YOUR BOOKINFO APP URL` in `bookinfo-gateway.yaml`.
+Replace your own gateway URL with _REPLACE WITH YOUR BOOKINFO APP URL_ in bookinfo-gateway.yaml.
 
- * URL format: `userXX-bookinfo-istio-system.<ROUTE SUBFFIX>`
- * URL example: `user1-bookinfo-istio-system.apps.seoul-bfcf.openshiftworkshop.com`
+ * URL format: userXX-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}
 
 ![gateway]({% image_path bookinfo-gateway.png %})
 
-Create the `ingress gateway` for Bookinfo:
+Set the _REPLACE WITH YOUR BOOKINFO APP URL_ as an environment variable in CodeReady Workspaces Terminal:
+
+`BOOK_URL=_REPLACE WITH YOUR BOOKINFO APP URL_`
+
+Create the _ingress gateway_ for Bookinfo:
 
 `oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml`
 
 The application consists of the usual objects like Deployments, Services, and Routes.
 
-As part of the installation, we use Istio to "decorate" the application with additional
-components (the Envoy Sidecars you read about in the previous step).
+As part of the installation, we use Istio to "decorate" the application with additional components (the Envoy Sidecars you read about in the previous step).
 
-Let's wait for our application to finish deploying. Go to the overview page in `userxx BookInfo Service Mesh` project:
+Let's wait for our application to finish deploying. Go to the overview page in _userxx BookInfo Service Mesh_ project:
 
 ![bookinfo]({% image_path bookinfo-deployed.png %})
 
@@ -87,11 +89,11 @@ oc rollout status -w deployment/productpage-v1 && \
  oc rollout status -w deployment/ratings-v1
 ~~~
 
-Confirm that Bookinfo has been `successfully` deployed via your own `Gateway URL`:
+Confirm that Bookinfo has been **successfully** deployed via your own _Gateway URL_:
 
-`curl -o /dev/null -s -w "%{http_code}\n" http://YOUR_ISTIO_GATEWAY_URL/productpage`
+`curl -o /dev/null -s -w "%{http_code}\n" http://$BOOK_URL/productpage`
 
-You should get `200` as a response.
+You should get **200** as a response.
 
 Add default destination rules:
 
@@ -103,11 +105,9 @@ List all available destination rules:
 
 ####2. Access Bookinfo
 
-Open the application in your browser to make sure it's working:
+Open the application in your web browser to make sure if it's working. You will find the URL via running the following command in CodeReady Workspaces Terminal:
 
-* Bookinfo Application running with your own `Gateway URL` at 
-
-`http://YOUR_ISTIO_GATEWAY_URL/productpage`
+`echo http://$BOOK_URL/productpage`
 
 It should look something like:
 
