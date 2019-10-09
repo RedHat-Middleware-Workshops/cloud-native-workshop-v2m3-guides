@@ -35,7 +35,7 @@ You should see _Kiali Login_ screen. Enter the username and password as below an
 
 ![istio-kiali]({% image_path istio-kiali-login.png %})
 
-Input the namespace of your **userxx-bookinfo** application(i.e. user1-bookinfo) and Enter it. 
+Input the namespace of your **userxx-bookinfo** application(i.e. user1-bookinfo) and Enter it.
 
 ![kiali]({% image_path kiali-all-namespaces.png %})
 
@@ -54,12 +54,12 @@ It shows a graph with all the microservices, connected by the requests going thr
 
 ##### Applications
 
-Click on **Applications** menu in the left navigation. On this page you can view a listing of all the services that 
+Click on **Applications** menu in the left navigation. On this page you can view a listing of all the services that
 are running in the cluster, and additional information about them, such as health status.
 
 ![kiali]({% image_path kiali-applications.png %})
 
-Click on the **productpage** application to see its details and you can also see the health of a service (a service is considered healthy) 
+Click on the **productpage** application to see its details and you can also see the health of a service (a service is considered healthy)
 on the **Health** section when it’s online and responding to requests without errors:
 
 ![kiali]({% image_path kiali-app-productpage.png %})
@@ -103,7 +103,7 @@ add-on is a Prometheus server that comes pre-configured to scrape Mixer endpoint
 to collect the exposed metrics. It provides a mechanism for persistent storage
 and querying of Istio metrics.
 
-Go to **istio-system** overview page in [OpenShift web console]({{ CONSOLE_URL}}) and click on the **Prometheus** route link:
+Go to **istio-system** overview page in [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"} and click on the **Prometheus** route link:
 
 ![istio-prometheus]({% image_path istio-prometheus-route.png %})
 
@@ -136,10 +136,10 @@ There are many, many different queries you can perform to extract the data you n
 ---
 
 As the number of services and interactions grows in your application, this style of metrics may be a bit
-overwhelming. [Grafana](https://grafana.com/) provides a visual representation of many available Prometheus
+overwhelming. [Grafana](https://grafana.com/){:target="_blank"} provides a visual representation of many available Prometheus
 metrics extracted from the Istio data plane and can be used to quickly spot problems and take action.
 
-Go to istio-system overview page in [OpenShift web console]({{ CONSOLE_URL}}) and click on the **Grafana** route link:
+Go to istio-system overview page in [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"} and click on the **Grafana** route link:
 
 ![istio-grafana]({% image_path istio-grafana-route.png %})
 
@@ -175,15 +175,15 @@ You can switch to a different service or filter metrics by _client-_ and _servic
 
 ##### Istio Workload Metrics
 
-To switch to workloads dashboard, select **Home > Istio Workload Dashboard** from the drop-down list in the top left corner of the screen. 
+To switch to workloads dashboard, select **Home > Istio Workload Dashboard** from the drop-down list in the top left corner of the screen.
 You should see a screen similar to this:
 
 ![Grafana graph]({% image_path grafana-workload-metrics.png %})
 
-This dashboard shows workload’s metrics, and metrics for client- (inbound) and service (outbound) workloads. 
+This dashboard shows workload’s metrics, and metrics for client- (inbound) and service (outbound) workloads.
 You can switch to a different workload, ot filter metrics by inbound or outbound workloads by using drop-down lists at the top of the dashboard.
 
-For more on how to create, configure, and edit dashboards, please see the [Grafana documentation](http://docs.grafana.org/).
+For more on how to create, configure, and edit dashboards, please see the [Grafana documentation](http://docs.grafana.org/){:target="_blank"}.
 
 As a developer, you can get quite a bit of information from these metrics without doing anything to the application itself. Let's use our new tools in the next section to see the real power of Istio to diagnose and fix issues in applications and make them more resilient and robust.
 
@@ -205,13 +205,13 @@ Requests can be routed based on the source and destination, HTTP header fields, 
 
 Together, these features enable the service mesh to tolerate failing nodes and prevent localized failures from cascading instability to other nodes. However, applications must still be designed to deal with failures by taking appropriate fallback actions. For example, when all instances in a load balancing pool have failed, Istio will return HTTP 503. It is the responsibility of the application to implement any fallback logic that is needed to handle the HTTP 503 error code from an upstream service.
 
-If your application already provides some defensive measures (e.g. using [Netflix Hystrix](https://github.com/Netflix/Hystrix)), then that's OK. **Istio** is completely transparent to the application. A failure response returned by Istio would not be distinguishable from a failure response returned by the upstream service to which the call was made.
+If your application already provides some defensive measures (e.g. using [Netflix Hystrix](https://github.com/Netflix/Hystrix){:target="_blank"}), then that's OK. **Istio** is completely transparent to the application. A failure response returned by Istio would not be distinguishable from a failure response returned by the upstream service to which the call was made.
 
 ####6. Service Versions
 
 ---
 
-Istio introduces the concept of a service version, which is a finer-grained way to subdivide service instances by versions (_v1_, _v2_) or environment (_staging_, _prod_). These variants are not necessarily different API versions: they could be iterative changes to the same service, deployed in different environments (prod, staging, dev, etc.). Common scenarios where this is used include A/B testing or canary rollouts. Istio’s [traffic routing rules](https://istio.io/docs/concepts/traffic-management/rules-configuration.html) can refer to service versions to provide additional control over traffic between services.
+Istio introduces the concept of a service version, which is a finer-grained way to subdivide service instances by versions (_v1_, _v2_) or environment (_staging_, _prod_). These variants are not necessarily different API versions: they could be iterative changes to the same service, deployed in different environments (prod, staging, dev, etc.). Common scenarios where this is used include A/B testing or canary rollouts. Istio’s [traffic routing rules](https://istio.io/docs/concepts/traffic-management/rules-configuration.html){:target="_blank"} can refer to service versions to provide additional control over traffic between services.
 
 ![Versions]({% image_path versions.png %})
 
@@ -324,5 +324,5 @@ If you **sign out**, you'll return to the **reviews:v3** version which shows red
 
 In this lab, you used Istio to send 100% of the traffic to the v1 version of each of the BookInfo services. You then set a rule to selectively send traffic to version v2 of the reviews service based on a header (i.e., a user cookie) in a request.
 
-Once the v2 version has been tested to our satisfaction, we could use Istio to send traffic from all users to v2, optionally in a gradual fashion. 
+Once the v2 version has been tested to our satisfaction, we could use Istio to send traffic from all users to v2, optionally in a gradual fashion.
 We’ll explore this in the next step.
