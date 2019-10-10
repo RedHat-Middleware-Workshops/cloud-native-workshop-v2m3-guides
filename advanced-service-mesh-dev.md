@@ -14,7 +14,7 @@ Replace with your username before running this commands:
 
 ####1. Configuring Automatic Sidecar Injection in Coolstore Microservices
 
-Let's go to **Kiali console** once again to confirm if existing microservices(_Catalog_, _Inventory_) are running with a _side car). Click on **Applictions** on the left menu check _userXX-catalog_, _userXX-inventory_ in namespaces. You will see **Missing Sidecar** in 4 applications. 
+Let's go to **Kiali console** once again to confirm if existing microservices(_Catalog_, _Inventory_) are running with a _side car). Click on **Applictions** on the left menu check _userXX-catalog_, _userXX-inventory_ in namespaces. You will see **Missing Sidecar** in 4 applications.
 
 ![istio]({% image_path kiali_missing_sidecar.png %})
 
@@ -24,7 +24,7 @@ _Automatic injection of the sidecar_ is supported by using the _sidecar.istio.io
 
 > Upstream Istio community installations require a specific label on the namespace after which all pods in that namespace are injected with the sidecar.  The OpenShift Service Mesh approach requires you to opt in to injection using an annotation with no need to label namspaces. This method requires fewer privileges and does not conflict with other OpenShift capabilities such as builder pods.
 
-Go to **Workloads > Deployment Configs** on the left menu, select _userXX-inventory_ project and click on _inventory-database_. 
+Go to **Workloads > Deployment Configs** on the left menu, select _userXX-inventory_ project and click on _inventory-database_.
 
 ![istio]({% image_path inventory_db_dc.png %})
 
@@ -58,7 +58,7 @@ You will see **istio-proxy** container and _inventory-quarkus_ container in Pod 
 
 ![istio]({% image_path inventory_sidecar.png %})
 
-Next, go to **Workloads > Deployment Configs* on the left menu, select _userXX-catalog_ project and click on _catalog-database_. 
+Next, go to **Workloads > Deployment Configs* on the left menu, select _userXX-catalog_ project and click on _catalog-database_.
 
 ![istio]({% image_path catalog_db_dc.png %})
 
@@ -72,8 +72,8 @@ You will see **istio-proxy** container and _catalog-database_ container in Pod D
 
 ![istio]({% image_path catalog_db_sidecar.png %})
 
-Now you will inject a sidecar container to application container(Catalog) as well, 
-go to **Workloads > Deployment Configs* on the left menu, select _userXX-catalog_ project and click on _catalog-springboot_. 
+Now you will inject a sidecar container to application container(Catalog) as well,
+go to **Workloads > Deployment Configs* on the left menu, select _userXX-catalog_ project and click on _catalog-springboot_.
 
 ![istio]({% image_path catalog_dc.png %})
 
@@ -99,7 +99,7 @@ Now, reload **Applications** in Kiali console to check if the _Missing sidecar_ 
 
 ![istio]({% image_path kiali_injecting_sidecar.png %})
 
-Also, go to the Service Graph page and check _userXX-inventory_, _userXX-catalog_ in Namespace, check **Traffic Animation** in _Display_ for understanding 
+Also, go to the Service Graph page and check _userXX-inventory_, _userXX-catalog_ in Namespace, check **Traffic Animation** in _Display_ for understanding
 the traffic flow from catalog service to inventory service:
 
 ![istio]({% image_path kiali_graph_sidecar.png %})
@@ -130,7 +130,7 @@ While Istio provides a host of failure recovery mechanisms outlined above, it is
 
 Istio enables protocol-specific fault injection into the network (instead of killing pods) by delaying or corrupting packets at TCP layer.
 
-Two types of faults can be injected: 
+Two types of faults can be injected:
 
  * _Delays_ are timing failures. They mimic increased network latency or an overloaded upstream service.
  * _Aborts_ are crash failures. They mimic failures in upstream services. Aborts usually manifest in the form of HTTP error codes or TCP connection failures.
@@ -146,7 +146,7 @@ Remove the route that we exposed the inventory service to manage network traffic
 
 `oc delete route/inventory-quarkus -n userXX-inventory`
 
-Add the following label in the Inventory service to use a _virtural service_ via OpenShift Web Consle 
+Add the following label in the Inventory service to use a _virtural service_ via OpenShift Web Consle
 when you navigate _Networking > Services_ in the left menu. Select _userXX-inventory_ project and click on _inventory-quarkus_.
 
 ![fault-injection]({% image_path inventory_svc_.png %})
@@ -260,7 +260,7 @@ To make sure if the **50%** traffic is failed with _500 Error_ in **Kiali Graph*
 
 ![fault-injection]({% image_path inventlry-vs-error-kiali.png %})
 
-Let's make another injection in terms of you will introduce a **5 second delay** in _100% of requests_ to Inventory service. 
+Let's make another injection in terms of you will introduce a **5 second delay** in _100% of requests_ to Inventory service.
 
 Open **inventory-vs-fault-delay.yaml** file in _/projects/cloud-native-workshop-v2m3-labs/inventory/rules/_ and copy the following codes.
 
@@ -349,7 +349,7 @@ scale cascading failure.
 
 > Note that **HTTP2** uses a single connection and never queues (always multiplexes), so max connections and max pending requests are not applicable.
 
-Each circuit breaking limit is configurable and tracked on a per upstream cluster and per priority basis. This allows different components of the distributed system to be tuned independently and have different limits. See the [Envoy’s circuit breaker](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/circuit_breaking) for more details.
+Each circuit breaking limit is configurable and tracked on a per upstream cluster and per priority basis. This allows different components of the distributed system to be tuned independently and have different limits. See the [Envoy’s circuit breaker](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/circuit_breaking){:target="_blank"} for more details.
 
 Let's add a circuit breaker to the calls to the **Inventory service**. Instead of using a _VirtualService_ object, circuit breakers in isto are defined as _DestinationRule_ objects. DestinationRule defines policies that apply to traffic intended for a service after routing has occurred. These rules specify configuration for load balancing, connection pool size from the sidecar, and outlier detection settings to detect and evict unhealthy hosts from the load balancing pool.
 
@@ -371,7 +371,7 @@ spec:
         maxRequestsPerConnection: 1
 ~~~
 
-> If you installed/configured Istio with **mutual TLS** authentication enabled, you must add a TLS traffic policy **mode: ISTIO_MUTUAL** to the DestinationRule before applying it. 
+> If you installed/configured Istio with **mutual TLS** authentication enabled, you must add a TLS traffic policy **mode: ISTIO_MUTUAL** to the DestinationRule before applying it.
 
 ![circuit-breaker]({% image_path inventory-circuit-breaker.png %})
 
@@ -379,7 +379,7 @@ Run the following command via CodeReady Workspaces Terminal:
 
 `oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-cb.yaml -n userXX-inventory`
 
-We set the Inventory service's maximum connections to 1 and maximum pending requests to 1. Thus, if we send more than 2 requests within a short period of time to the reviews service, 1 will go through, 1 will be pending, and any additional requests will be denied until the pending request is processed. Furthermore, it will detect any hosts that return a server error (5XX) and eject the pod out of the load balancing pool for 15 minutes. You can visit here to check the [Istio spec](https://istio.io/docs/reference/config/traffic-rules/destination-policies.html#istio.proxy.v1.config.CircuitBreaker.SimpleCircuitBreakerPolicy) for more details on what each configuration parameter does.
+We set the Inventory service's maximum connections to 1 and maximum pending requests to 1. Thus, if we send more than 2 requests within a short period of time to the reviews service, 1 will go through, 1 will be pending, and any additional requests will be denied until the pending request is processed. Furthermore, it will detect any hosts that return a server error (5XX) and eject the pod out of the load balancing pool for 15 minutes. You can visit here to check the [Istio spec](https://istio.io/docs/reference/config/traffic-rules/destination-policies.html#istio.proxy.v1.config.CircuitBreaker.SimpleCircuitBreakerPolicy){:target="_blank"} for more details on what each configuration parameter does.
 
 ####4. Overload the service
 
@@ -424,10 +424,10 @@ Delete the circuit breaker of the Inventory service via the following commands. 
 
 ---
 
-In this step, you will learn how to enable authenticating **catalog** microservices with Istio, [JSON Web Token(JWT)](https://en.wikipedia.org/wiki/JSON_Web_Token), and 
-[Red Hat Single Sign-On](https://access.redhat.com/products/red-hat-single-sign-on) in [Red Hat Runtimes](https://www.redhat.com/en/products/application-runtimes).
+In this step, you will learn how to enable authenticating **catalog** microservices with Istio, [JSON Web Token(JWT)](https://en.wikipedia.org/wiki/JSON_Web_Token){:target="_blank"}, and
+[Red Hat Single Sign-On](https://access.redhat.com/products/red-hat-single-sign-on) in [Red Hat Runtimes](https://www.redhat.com/en/products/application-runtimes){:target="_blank"}.
 
-First, let's remove the route that we exposed the catalog service to manage network traffic by _Istio Ingressgateway_. 
+First, let's remove the route that we exposed the catalog service to manage network traffic by _Istio Ingressgateway_.
 
 Use the following command for `your own route name` at CodeReady Workspaces Terminal:
 
@@ -528,7 +528,7 @@ oc -n userXX-catalog new-app ccn-sso72 \
 
 > If you change **SSO_ADMIN_USERNAME**, **SSO_ADMIN_PASSWORD** then you need to login RH-SSO web console with them.
 
-Once you complete to deploy RH-SSO in _Networking > Routes_ at [OpenShift web console]({{ CONSOLE_URL}}) then you will see **HTTPS/HTTP** route URL as below:
+Once you complete to deploy RH-SSO in _Networking > Routes_ at [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"} then you will see **HTTPS/HTTP** route URL as below:
 
 ![sso]({% image_path rhsso_deployment.png %})
 
@@ -576,12 +576,12 @@ Input **ccn_auth** in _Role Name_ field and click on **Save**.
 
 ![sso]({% image_path rhsso_roles_create.png %})
 
-And update the password of your credentials(i.e. authuserXX) that is created automatically when you deployed RH-SSO earlier. 
+And update the password of your credentials(i.e. authuserXX) that is created automatically when you deployed RH-SSO earlier.
 Because the password doesn't set as defual when you create a credential in RH-SSO. Go to **Users** menu on the left side menu then click on **View all users**.
 
 ![sso]({% image_path rhsso_users.png %})
 
-If you click on ID then you will find more information such as Detials, Attributes, Credentials, Role Mappings, Groups, Contents, and Sessions. You don't need to update any details in this step. 
+If you click on ID then you will find more information such as Detials, Attributes, Credentials, Role Mappings, Groups, Contents, and Sessions. You don't need to update any details in this step.
 
 ![sso]({% image_path rhsso_istio_users_details.png %})
 
@@ -609,11 +609,11 @@ You will confirm the ccn_auth role in _Assigned Roles_ box.
 
 ![sso]({% image_path rhsso_rolemapping_assigned.png %})
 
-Well done to enable RH-SSO server! Let's create an user-facing authentication policy using JSON Web Token(JWT) token. JWT token format for authentication as defined by [RFC 7519](https://tools.ietf.org/html/rfc7519). You can find more details how [OAuth 2.0](https://tools.ietf.org/html/rfc6749) and [OIDC 1.0](https://openid.net/connect/) works in the whole authentication flow.
+Well done to enable RH-SSO server! Let's create an user-facing authentication policy using JSON Web Token(JWT) token. JWT token format for authentication as defined by [RFC 7519](https://tools.ietf.org/html/rfc7519){:target="_blank"}. You can find more details how [OAuth 2.0](https://tools.ietf.org/html/rfc6749){:target="_blank"} and [OIDC 1.0](https://openid.net/connect/){:target="_blank"} works in the whole authentication flow.
 
 Open a **ccn-auth-config.yml** file in _/projects/cloud-native-workshop-v2m3-labs/catalog/rules/_ to create an authentication policy:
 
-> Replace all **YOUR_SSO_HTTP_ROUTE_URL** with your own HTTP route url of SSO container that you created earlier and also replace **userXX** with your username. 
+> Replace all **YOUR_SSO_HTTP_ROUTE_URL** with your own HTTP route url of SSO container that you created earlier and also replace **userXX** with your username.
 
 You can also get the route url via executing the following commands in CodeReady Workspaces Terminal:
 
@@ -622,24 +622,24 @@ You can also get the route url via executing the following commands in CodeReady
 ~~~yaml
 apiVersion: authentication.istio.io/v1alpha1
 kind: Policy
-metadata: 
+metadata:
   name: auth-policy
   namespace: userXX-catalog
-spec: 
+spec:
   targets:
   - name: catalog-springboot
   origins:
   - jwt:
       issuer: http://YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio
-      jwks_uri: http://YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio/protocol/openid-connect/certs    
+      jwks_uri: http://YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio/protocol/openid-connect/certs
   principalBinding: USE_ORIGIN
 ~~~
 
 You can also define the following fields to create a Policy in Istio.
 
- * **issuer** - Identifies the issuer that issued the JWT. See [issuer](https://tools.ietf.org/html/rfc7519#section-4.1.1) usually a URL or an email address.
+ * **issuer** - Identifies the issuer that issued the JWT. See [issuer](https://tools.ietf.org/html/rfc7519#section-4.1.1){:target="_blank"} usually a URL or an email address.
  * **jwksUri** - URL of the provider’s public key set to validate signature of the JWT.
- * **audiences** - The list of JWT [audiences](https://tools.ietf.org/html/rfc7519#section-4.1.3). that are allowed to access. A JWT containing any of these audiences will be accepted.
+ * **audiences** - The list of JWT [audiences](https://tools.ietf.org/html/rfc7519#section-4.1.3){:target="_blank"}. that are allowed to access. A JWT containing any of these audiences will be accepted.
 
 Then execute the following oc command in CodeReady Workspaces Terminal:
 
@@ -649,17 +649,17 @@ Now you can't access the catalog service without authentication of RH-SSO. You c
 
 `curl http://YOUR_CATALOG_GATEWAY_URL/services/products ; echo`
 
-The expected response is here because the user has not been identified with a valid JWT token in RH-SSO. 
+The expected response is here because the user has not been identified with a valid JWT token in RH-SSO.
 It normally takes `5 ~ 10 seconds` to apply the authentication policy in Istio Mixer.
 
 > Origin authentication failed.
 
 ![sso]({% image_path rhsso_call_catalog_noauth.png %})
 
-In order to generate a correct token, just run next curl request in CodeReady Workspaces Terminal. This command will 
-store the output Authorization token from RH-SSO in an environment variable called **$TOKEN**. 
+In order to generate a correct token, just run next curl request in CodeReady Workspaces Terminal. This command will
+store the output Authorization token from RH-SSO in an environment variable called **$TOKEN**.
 
-> Replace `YOUR_SSO_HTTP_ROUTE_URL` with your own HTTP route url of SSO container that you created earlier. 
+> Replace `YOUR_SSO_HTTP_ROUTE_URL` with your own HTTP route url of SSO container that you created earlier.
 
 ~~~shell
 export TOKEN=$( curl -X POST 'http://YOUR_SSO_HTTP_ROUTE_URL/auth/realms/istio/protocol/openid-connect/token' \
@@ -678,11 +678,11 @@ You will see the following expected output:
 
 ~~~shell
 [{"itemId":"329299","name":"Red Fedora","desc":"Official Red Hat Fedora","price":34.99,"quantity":736},{"itemId":"329199","name":
-"Forge Laptop Sticker","desc":"JBoss Community Forge Project Sticker","price":8.5,"quantity":512},{"itemId":"165613","name":"Solid 
-Performance Polo","desc":"Moisture-wicking, antimicrobial 100% polyester design wicks for life of garment. No-curl, rib-knit collar; 
+"Forge Laptop Sticker","desc":"JBoss Community Forge Project Sticker","price":8.5,"quantity":512},{"itemId":"165613","name":"Solid
+Performance Polo","desc":"Moisture-wicking, antimicrobial 100% polyester design wicks for life of garment. No-curl, rib-knit collar;
 special collar band maintains crisp fold; three-button placket with dyed-to-match buttons; hemmed sleeves; even bottom with side vents;
-Import. Embroidery. Red Pepper.","price":17.8,"quantity":256},{"itemId":"165614","name":"Ogio Caliber Polo","desc":"Moisture-wicking 100% 
-polyester. Rib-knit collar and cuffs; Ogio jacquard tape inside neck; bar-tacked three-button placket with Ogio dyed-to-match buttons; 
+Import. Embroidery. Red Pepper.","price":17.8,"quantity":256},{"itemId":"165614","name":"Ogio Caliber Polo","desc":"Moisture-wicking 100%
+polyester. Rib-knit collar and cuffs; Ogio jacquard tape inside neck; bar-tacked three-button placket with Ogio dyed-to-match buttons;
 ...
 ~~~
 
@@ -697,7 +697,7 @@ However, the catalog service doesn't still work when you access to the web page 
 
 ![sso]({% image_path rhsso_web_catalog_noauth.png %})
 
-Let's integrate RH-SSO authentication to the presentation layer of the catalog service. 
+Let's integrate RH-SSO authentication to the presentation layer of the catalog service.
 First, clean up all authentication configuration that we have tested in the previous steps. Run the following script to clean up in CodeReady Workspaces Terminal:
 
 `/projects/cloud-native-workshop-v2m3-labs/istio/scripts/cleanup.sh userXX`
@@ -724,8 +724,8 @@ Let's update **pom.xml** in _/projects/cloud-native-workshop-v2m3-labs/catalog/_
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.21.RELEASE</version>
-		<relativePath/> 
-</parent>  
+		<relativePath/>
+</parent>
 ~~~
 
 ![sso]({% image_path rhsso_catalog_pom_parent.png %})
@@ -812,7 +812,7 @@ Don't forget to click on **Save**. Let's confirm the changed login page via clic
 
 ![sso]({% image_path rhsso_master_signout.png %})
 
-The page will be redirected automatically to the login page. Now you will see **Forget Password?** link under the password field. 
+The page will be redirected automatically to the login page. Now you will see **Forget Password?** link under the password field.
 You can find **New User? Register** link on the right side.
 
 ![sso]({% image_path rhsso_master_relogin.png %})
@@ -828,8 +828,8 @@ When you click on **Register** link, you will the below the page where you can c
 #### Summary
 
 In this scenario you used Istio to implement many of the
-Istio provides an easy way to create a network of deployed services with load balancing, service-to-service authentication, monitoring, and more 
-without requiring any changes in service code. You add Istio support to services by deploying a special sidecar proxy throughout your environment 
+Istio provides an easy way to create a network of deployed services with load balancing, service-to-service authentication, monitoring, and more
+without requiring any changes in service code. You add Istio support to services by deploying a special sidecar proxy throughout your environment
 that intercepts all network communication between microservices, configured and managed using Istio’s control plane functionality.
 
 Technologies like containers and container orchestration platforms like OpenShift solve the deployment of our distributed

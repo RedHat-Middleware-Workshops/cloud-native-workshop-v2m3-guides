@@ -71,7 +71,7 @@ What's happend during Istio installation eariler as below:
 
 We'll use the above components througout this scenario, so don't worry if you don't know what they do!
 
-You can also read a bit more about the [Istio](https://istio.io/docs) architecture below:
+You can also read a bit more about the [Istio](https://istio.io/docs){:target="_blank"} architecture below:
 
 #### Istio Details
 
@@ -89,7 +89,7 @@ The following diagram shows the different components that make up each plane:
 
 ##### Istio Components
 
-Istio uses an extended version of the [Envoy](https://envoyproxy.github.io/envoy/) proxy. Envoy is a high-performance proxy developed in C++ to mediate all inbound and outbound traffic for all services in the service mesh. Istio leverages Envoy’s many built-in features, for example:
+Istio uses an extended version of the [Envoy](https://envoyproxy.github.io/envoy/){:target="_blank"} proxy. Envoy is a high-performance proxy developed in C++ to mediate all inbound and outbound traffic for all services in the service mesh. Istio leverages Envoy’s many built-in features, for example:
 
  * Dynamic service discovery
  * Load balancing
@@ -109,7 +109,7 @@ Mixer includes a flexible plugin model. This model enables Istio to interface wi
 
 **Pilot** is the _control plane_ component responsible for configuring the proxies at runtime. Pilot provides service discovery for the Envoy sidecars, traffic management capabilities for intelligent routing (for example, A/B tests or canary deployments), and resiliency (timeouts, retries, and circuit breakers).
 
-Pilot converts high level routing rules that control traffic behavior into Envoy-specific configurations, and propagates them to the sidecars at runtime. Pilot abstracts platform-specific service discovery mechanisms and synthesizes them into a standard format that any sidecar conforming with the [Envoy data plane APIs](https://github.com/envoyproxy/data-plane-api) can consume. This loose coupling allows Istio to run on multiple environments such as Kubernetes, Consul, or Nomad, while maintaining the same operator interface for traffic management.
+Pilot converts high level routing rules that control traffic behavior into Envoy-specific configurations, and propagates them to the sidecars at runtime. Pilot abstracts platform-specific service discovery mechanisms and synthesizes them into a standard format that any sidecar conforming with the [Envoy data plane APIs](https://github.com/envoyproxy/data-plane-api){:target="_blank"} can consume. This loose coupling allows Istio to run on multiple environments such as Kubernetes, Consul, or Nomad, while maintaining the same operator interface for traffic management.
 
 **Citadel** is the _control plane_ component responsible for certificate issuance and rotation. Citadel provides strong service-to-service and end-user authentication with built-in identity and credential management. You can use Citadel to upgrade unencrypted traffic in the service mesh. Using Citadel, operators can enforce policies based on service identity rather than on network controls.
 
@@ -117,15 +117,15 @@ Pilot converts high level routing rules that control traffic behavior into Envoy
 
 Several **Add-ons** components are used to provide additional visualizations, metrics, and tracing functions:
 
-* [Kiali](https://www.kiali.io/) - Service mesh observability and configuration
-* [Prometheus](https://prometheus.io/) - Systems monitoring and alerting toolkit
-* [Grafana](https://grafana.com/) - Allows you to query, visualize, alert on and understand your metrics
-* [Jaeger Tracing](http://jaeger.readthedocs.io/) - Distributed tracing to gather timing data needed to troubleshoot latency problems in microservice architectures
-* [Servicegraph](https://istio.io/docs/tasks/telemetry/servicegraph.html#about-the-servicegraph-add-on) - generates and visualizes a graph of services within a mesh
+* [Kiali](https://www.kiali.io/){:target="_blank"} - Service mesh observability and configuration
+* [Prometheus](https://prometheus.io/){:target="_blank"} - Systems monitoring and alerting toolkit
+* [Grafana](https://grafana.com/){:target="_blank"} - Allows you to query, visualize, alert on and understand your metrics
+* [Jaeger Tracing](http://jaeger.readthedocs.io/){:target="_blank"} - Distributed tracing to gather timing data needed to troubleshoot latency problems in microservice architectures
+* [Servicegraph](https://istio.io/docs/tasks/telemetry/servicegraph.html#about-the-servicegraph-add-on){:target="_blank"} - generates and visualizes a graph of services within a mesh
 
 We will use these in future steps in this scenario!
 
-Check out the [Istio docs](https://istio.io/docs) for more details.
+Check out the [Istio docs](https://istio.io/docs){:target="_blank"} for more details.
 
 Is your Istio deployment complete? If so, then you're ready to move on!
 
@@ -135,9 +135,9 @@ Is your Istio deployment complete? If so, then you're ready to move on!
 
 ##### Access Your Development Environment
 
-You will be using Red Hat CodeReady Workspaces, an online IDE based on [Eclipe Che](https://www.eclipse.org/che/){:target="_blank"}. **Changes to files are auto-saved every few seconds**, so you don't need to explicitly save changes.
+You will be using Red Hat CodeReady Workspaces, an online IDE based on [Eclipe Che](https://www.eclipse.org/che/){:target="_blank"}{:target="_blank"}. **Changes to files are auto-saved every few seconds**, so you don't need to explicitly save changes.
 
-To get started, [access the Che instance]({{ ECLIPSE_CHE_URL }}) and log in using the username and password you've been assigned (e.g. `{{ CHE_USER_NAME }}/{{ CHE_USER_PASSWORD }}`):
+To get started, [access the Che instance]({{ ECLIPSE_CHE_URL }}){:target="_blank"} and log in using the username and password you've been assigned (e.g. `{{ CHE_USER_NAME }}/{{ CHE_USER_PASSWORD }}`):
 
 ![cdw]({% image_path che-login.png %})
 
@@ -162,14 +162,14 @@ In the project explorer pane, click on the **Import Projects...** and enter the 
   * Check `Import recursively (for multi-module projects)`
   * Name: `cloud-native-workshop-v2m3-labs`
 
-**Tip**: You can find GIT URL when you click on {{GIT_URL}} then login with your credentials. 
+**Tip**: You can find GIT URL when you click on {{GIT_URL}} then login with your credentials.
 
 ![codeready-workspace-import]({% image_path codeready-workspace-import.png %}){:width="700px"}
 
 The projects are imported now into your workspace and is visible in the project explorer.
 
-CodeReady Workspaces is a full featured IDE and provides language specific capabilities for various project types. In order to 
-enable these capabilities, let's convert the imported project skeletons to a Maven projects. In the project explorer, right-click on each project and 
+CodeReady Workspaces is a full featured IDE and provides language specific capabilities for various project types. In order to
+enable these capabilities, let's convert the imported project skeletons to a Maven projects. In the project explorer, right-click on each project and
 then click on **Convert to Project** continuously.
 
 ![codeready-workspace-convert]({% image_path codeready-workspace-convert.png %}){:width="500px"}
@@ -182,4 +182,17 @@ Repeat the above for inventory and catalog projects.
 
 > NOTE: the Terminal window in CodeReady Workspaces. For the rest of these labs, anytime you need to run a command in a terminal, you can use the CodeReady Workspaces Terminal window.
 
+<<<<<<< HEAD
 ![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
+=======
+![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
+
+##### Connnecting to Openshift
+
+When you access [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"} or the other route URL via HTTPS protocol, you will see **Your Connection is not secure** warning message.
+Because, OpenShift uses self-certification to create TLS termication route as default. For example, if you're using *Chrome Browser*, you will see the following screen.
+
+Click on **Advanced** then, you can access the HTTPS page when you click on **Proceed to...**!!!
+
+![warning]({% image_path browser_warning.png %})
+>>>>>>> f118fd40f79c235c3479845c8b5d9057d160f4df

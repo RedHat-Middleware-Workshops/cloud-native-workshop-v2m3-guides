@@ -2,11 +2,13 @@ config:
     renderer: markdown
 
 modules:
+  workshop-environment:
+    name: Your Workshop Environment
   getting-started-service-mesh:
     name: Getting Started with Servie Mesh
   creating-distributed-services:
     name: Creating Distributed Services
   service-visualizing-monitoring:
-    name: Service Visualization and Monitoring 
+    name: Service Visualization and Monitoring
   advanced-service-mesh-dev:
     name: Advanced Service Mesh Development
