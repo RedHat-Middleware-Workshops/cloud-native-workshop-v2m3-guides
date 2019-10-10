@@ -30,6 +30,33 @@ The end-to-end architecture of the application is shown below.
 
 ---
 
+First, open a new brower with the [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"}
+
+![openshift_login]({% image_path openshift_login.png %})
+
+Login using:
+
+* Username: `userXX`
+* Password: `r3dh4t1!`
+
+> **NOTE**: Use of self-signed certificates
+>
+> When you access the OpenShift web console]({{ CONSOLE_URL}}) or other URLs via _HTTPS_ protocol, you will see browser warnings
+> like `Your > Connection is not secure` since this workshop uses self-signed certificates (which you should not do in production!).
+> For example, if you're using **Chrome**, you will see the following screen.
+>
+> Click on `Advanced` then, you can access the HTTPS page when you click on `Proceed to...`!!!
+>
+> ![warning]({% image_path browser_warning.png %})
+>
+> Other browsers have similar procedures to accept the security exception.
+
+You will see the OpenShift landing page:
+
+![openshift_landing]({% image_path openshift_landing.png %})
+
+> The project displayed in the landing page depends on which labs you will run today. If you will develop `Service Mesh and Identity` then you will see pre-created projects as the above screeenshot.
+
 In order to deploy applicaitons to OpenShift via **oc** tool, we need to copy login command and Login OpenShift cluster:
 
 ![codeready-workspace-copy-login-cmd]({% image_path codeready-workspace-oc-login-copy.png %}){:width="700px"}
