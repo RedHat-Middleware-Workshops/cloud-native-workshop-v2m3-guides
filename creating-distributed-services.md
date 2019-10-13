@@ -57,23 +57,33 @@ You will see the OpenShift landing page:
 
 > The project displayed in the landing page depends on which labs you will run today. If you will develop `Service Mesh and Identity` then you will see pre-created projects as the above screeenshot.
 
-In order to deploy applicaitons to OpenShift via **oc** tool, we need to copy login command and Login OpenShift cluster:
+Although your Eclipse Che workspace is running on the Kubernetes cluster, it's running with a default restricted _Service Account_ that prevents you from creating most resource types. If you've completed other modules, you're probably already logged in, but let's login again: open a Terminal and issue the following command:
 
-![codeready-workspace-copy-login-cmd]({% image_path codeready-workspace-oc-login-copy.png %}){:width="700px"}
+`oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-skip-tls-verify=true`
 
-Then you will redirect to OpenShift Login page again. 
+Enter your username and password assigned to you:
 
-![openshift_login]({% image_path openshift_login.png %})
+* Username: `userXX`
+* Password: `r3dh4t1!`
 
-When you login with your credential, you will see **Display Token** link in the redirected page.
+You should see like:
 
-![openshift_login]({% image_path display_token_link.png %})
+~~~shell
+Login successful.
 
-Click on the link and copy the **oc login** command:
+You have access to the following projects and can switch between them with 'oc project <projectname>':
 
-![openshift_login]({% image_path your_token.png %})
+  * default
+    istio-system
+    user0-bookinfo
+    user0-catalog
+    user0-cloudnative-pipeline
+    user0-cloudnativeapps
+    user0-inventory
 
-Paste it on CodeReady Workspaces Terminal window.
+Using project "default".
+Welcome! See 'oc help' to get started.
+~~~
 
 Change the empty **userXX-bookinfo** project via CodeReady Workspaces Terminal and you should replace **userXX** with your username:
 

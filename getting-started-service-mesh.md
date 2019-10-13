@@ -54,12 +54,7 @@ Sounds fun, right? Let's get started!
 
 For this module we've already installed Istio into our OpenShift platform.
 
-You should note that you must be logged in as **cluster-admin** role if you want to install Istio on your own OpenShift cluster. This is required as this
-user will need to run things in a privileged way, or even with containers as root.
-
-For example, you can run the following to login as admin in OpenShift cluster:
-
-`oc login <YOUR_OPENSHIFT_MASTER_CONSOLE_URL> -u admin -p admin --insecure-skip-tls-verify=true`
+You should note that you must be logged in as **cluster-admin** role if you want to install Istio on your own OpenShift cluster. This is required as this user will need to run things in a privileged way, or even with containers as root.
 
 What's happend during Istio installation eariler as below:
 
@@ -133,7 +128,7 @@ Is your Istio deployment complete? If so, then you're ready to move on!
 
 ---
 
-##### Access Your Development Environment
+##### If this is the first module you are doing today
 
 You will be using Red Hat CodeReady Workspaces, an online IDE based on [Eclipe Che](https://www.eclipse.org/che/){:target="_blank"}{:target="_blank"}. **Changes to files are auto-saved every few seconds**, so you don't need to explicitly save changes.
 
@@ -155,14 +150,18 @@ To gain extra screen space, click on the yellow arrow to hide the left menu (you
 
 Users of Eclipse, IntelliJ IDEA or Visual Studio Code will see a familiar layout: a project/file browser on the left, a code editor on the right, and a terminal at the bottom. You'll use all of these during the course of this workshop, so keep this browser tab open throughout. **If things get weird, you can simply reload the browser tab to refresh the view.**
 
-In the project explorer pane, click on the **Import Projects...** and enter the following:
+##### Import Projects
+
+Click on the **Import Projects...** in **Workspace** menu and enter the following:
+
+![codeready-workspace-import]({% image_path codeready-workspace-menu.png %})
 
   * Version Control System: `GIT`
   * URL: `{{GIT_URL}}/userXX/cloud-native-workshop-v2m3-labs.git`(IMPORTANT: replace userXX with your lab user)
   * Check `Import recursively (for multi-module projects)`
   * Name: `cloud-native-workshop-v2m3-labs`
 
-**Tip**: You can find GIT URL when you click on {{GIT_URL}} then login with your credentials.
+**Tip**: You can find GIT URL when you click on [GIT URL]({{GIT_URL}}){:target="_blank"} then login with your credentials.
 
 ![codeready-workspace-import]({% image_path codeready-workspace-import.png %}){:width="700px"}
 
@@ -182,17 +181,4 @@ Repeat the above for inventory and catalog projects.
 
 > NOTE: the Terminal window in CodeReady Workspaces. For the rest of these labs, anytime you need to run a command in a terminal, you can use the CodeReady Workspaces Terminal window.
 
-<<<<<<< HEAD
 ![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
-=======
-![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
-
-##### Connnecting to Openshift
-
-When you access [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"} or the other route URL via HTTPS protocol, you will see **Your Connection is not secure** warning message.
-Because, OpenShift uses self-certification to create TLS termication route as default. For example, if you're using *Chrome Browser*, you will see the following screen.
-
-Click on **Advanced** then, you can access the HTTPS page when you click on **Proceed to...**!!!
-
-![warning]({% image_path browser_warning.png %})
->>>>>>> f118fd40f79c235c3479845c8b5d9057d160f4df
