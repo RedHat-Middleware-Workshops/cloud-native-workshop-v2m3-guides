@@ -101,7 +101,7 @@ Replace your own gateway URL with _REPLACE WITH YOUR BOOKINFO APP URL_ in bookin
 
 Set the _REPLACE WITH YOUR BOOKINFO APP URL_ as an environment variable in CodeReady Workspaces Terminal:
 
-`BOOK_URL=_REPLACE WITH YOUR BOOKINFO APP URL_`
+`BOOK_URL=REPLACE WITH YOUR BOOKINFO APP URL`
 
 Create the _ingress gateway_ for Bookinfo:
 
@@ -109,7 +109,7 @@ Create the _ingress gateway_ for Bookinfo:
 
 The application consists of the usual objects like Deployments, Services, and Routes.
 
-As part of the installation, we use Istio to "decorate" the application with additional components (the Envoy Sidecars you read about in the previous step).
+As part of the installation, we use Istio to **decorate** the application with additional components (the Envoy Sidecars you read about in the previous step).
 
 Let's wait for our application to finish deploying. Go to the overview page in _userxx BookInfo Service Mesh_ project:
 
