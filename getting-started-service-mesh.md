@@ -59,7 +59,7 @@ user will need to run things in a privileged way, or even with containers as roo
 
 For example, you can run the following to login as admin in OpenShift cluster:
 
-`oc login <YOUR_OPENSHIFT_MASTER_CONSOLE_URL> -u admin -p admin --insecure-skip-tls-verify=true`
+`oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT -u admin -p admin --insecure-skip-tls-verify=true`
 
 What's happend during Istio installation eariler as below:
 
@@ -157,6 +157,8 @@ Users of Eclipse, IntelliJ IDEA or Visual Studio Code will see a familiar layout
 
 In the project explorer pane, click on the **Import Projects...** and enter the following:
 
+> NOTE: If you've completed other modules already, then you can use _File > Import Project_ to import the project.
+
   * Version Control System: `GIT`
   * URL: `{{GIT_URL}}/userXX/cloud-native-workshop-v2m3-labs.git`(IMPORTANT: replace userXX with your lab user)
   * Check `Import recursively (for multi-module projects)`
@@ -182,17 +184,4 @@ Repeat the above for inventory and catalog projects.
 
 > NOTE: the Terminal window in CodeReady Workspaces. For the rest of these labs, anytime you need to run a command in a terminal, you can use the CodeReady Workspaces Terminal window.
 
-<<<<<<< HEAD
 ![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
-=======
-![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
-
-##### Connnecting to Openshift
-
-When you access [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"} or the other route URL via HTTPS protocol, you will see **Your Connection is not secure** warning message.
-Because, OpenShift uses self-certification to create TLS termication route as default. For example, if you're using *Chrome Browser*, you will see the following screen.
-
-Click on **Advanced** then, you can access the HTTPS page when you click on **Proceed to...**!!!
-
-![warning]({% image_path browser_warning.png %})
->>>>>>> f118fd40f79c235c3479845c8b5d9057d160f4df

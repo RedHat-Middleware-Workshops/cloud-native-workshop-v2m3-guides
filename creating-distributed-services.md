@@ -57,25 +57,30 @@ You will see the OpenShift landing page:
 
 > The project displayed in the landing page depends on which labs you will run today. If you will develop `Service Mesh and Identity` then you will see pre-created projects as the above screeenshot.
 
-In order to deploy applicaitons to OpenShift via **oc** tool, we need to copy login command and Login OpenShift cluster:
+In order to deploy applicaitons to OpenShift via **oc** tool, we need to login to the `oc` CLI:
 
-![codeready-workspace-copy-login-cmd]({% image_path codeready-workspace-oc-login-copy.png %}){:width="700px"}
+#### Login to OpenShift CLI
 
-Then you will redirect to OpenShift Login page again. 
+Although your Eclipse Che workspace is running on the Kubernetes cluster, it's running with a default restricted _Service Account_ that prevents you from creating most resource types. If you've completed other modules, you're probably already logged in, but let's login again: open a Terminal and issue the following command:
 
-![openshift_login]({% image_path openshift_login.png %})
+```sh
+oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-skip-tls-verify=true
+```
 
-When you login with your credential, you will see **Display Token** link in the redirected page.
+Enter your username and password assigned to you:
 
-![openshift_login]({% image_path display_token_link.png %})
+* Username: `userXX`
+* Password: `r3dh4t1!`
 
-Click on the link and copy the **oc login** command:
+You should see:
 
-![openshift_login]({% image_path your_token.png %})
+```
+Login successful.
+...
+Welcome! See 'oc help' to get started.
+```
 
-Paste it on CodeReady Workspaces Terminal window.
-
-Change the empty **userXX-bookinfo** project via CodeReady Workspaces Terminal and you should replace **userXX** with your username:
+Change to the empty **userXX-bookinfo** project via CodeReady Workspaces Terminal and you should replace **userXX** with your username:
 
 `oc project userxx-bookinfo`
 
@@ -83,7 +88,7 @@ Deploy the **Bookinfo application** in the bookinfo project:
 
 `oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml`
 
-Replace your own gateway URL with _REPLACE WITH YOUR BOOKINFO APP URL_ in bookinfo-gateway.yaml.
+Replace your own gateway URL with _REPLACE WITH YOUR BOOKINFO APP URL_ in `istio/bookinfo-gateway.yaml`.
 
  * URL format: userXX-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}
 
