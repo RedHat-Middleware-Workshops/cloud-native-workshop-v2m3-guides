@@ -1,6 +1,6 @@
 ## Service Mesh and Identity
 
-In this module, we will learn how to prevent cascading failures in a distributed environment, how to detect misbehaving services, and how to avoid having to implement resiliency and monitoring in your business logic. As we transition our applications towards a distributed architecture with microservices deployed across a distributed
+In this module, you will learn how to prevent cascading failures in a distributed environment, how to detect misbehaving services, and how to avoid having to implement resiliency and monitoring in your business logic. As we transition our applications towards a distributed architecture with microservices deployed across a distributed
 network, Many new challenges await us.
 
 Technologies like containers and container orchestration platforms like OpenShift solve the deployment of our distributed
@@ -23,7 +23,7 @@ Today, developers are responsible for taking into account these challenges, and 
 Another challenge is each runtime and language addresses these with different libraries and frameworks, and in
 some cases there may be no implementation of a particular library for your chosen language or runtime.
 
-In this scenario we'll explore how to use a new project called _Istio_ to solve many of these challenges and result in
+In this scenario we'll explore how to use the OpenShift _Service Mesh_ (based on the _Istio_ open source project) to solve many of these challenges and result in
 a much more robust, reliable, and resilient application in the face of the new world of dynamic distributed applications.
 
 #### What is Istio?
@@ -33,7 +33,7 @@ a much more robust, reliable, and resilient application in the face of the new w
 ![Logo]({% image_path istio-logo.png %}){:width="600px"}
 
 Istio is an open, platform-independent service mesh designed to manage communications between microservices and
-applications in a transparent way.It provides behavioral insights and operational control over the service mesh
+applications in a transparent way. It provides behavioral insights and operational control over the service mesh
 as a whole. It provides a number of key capabilities uniformly across a network of services:
 
 * **Traffic Management** - Control the flow of traffic and API calls between services, make calls more reliable, and make the network more robust in the face of adverse conditions.
@@ -52,24 +52,7 @@ Sounds fun, right? Let's get started!
 
 ---
 
-For this module we've already installed Istio into our OpenShift platform.
-
-You should note that you must be logged in as **cluster-admin** role if you want to install Istio on your own OpenShift cluster. This is required as this
-user will need to run things in a privileged way, or even with containers as root.
-
-For example, you can run the following to login as admin in OpenShift cluster:
-
-`oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT -u admin -p admin --insecure-skip-tls-verify=true`
-
-What's happend during Istio installation eariler as below:
-
-* Creates the project **istio-system** as the location to deploy all the components
-* Adds necessary permissions
-* Deploys Istio components
-* Deploys additional add-ons, namely **Kiali, Prometheus, Grafana, Service Graph and Jaeger Tracing**
-* Exposes routes for those add-ons and for Istio's Ingress component
-
-We'll use the above components througout this scenario, so don't worry if you don't know what they do!
+For this module we've already installed Istio into our OpenShift platform as well as as serveral useful tools to use with it. Istio is installed in the `istio-system` project, and we've also added a few other commonly used tools like Kiali and Jaeger (more on these later)
 
 You can also read a bit more about the [Istio](https://istio.io/docs){:target="_blank"} architecture below:
 
@@ -89,7 +72,7 @@ The following diagram shows the different components that make up each plane:
 
 ##### Istio Components
 
-Istio uses an extended version of the [Envoy](https://envoyproxy.github.io/envoy/){:target="_blank"} proxy. Envoy is a high-performance proxy developed in C++ to mediate all inbound and outbound traffic for all services in the service mesh. Istio leverages Envoy’s many built-in features, for example:
+Istio uses an extended version of the [Envoy](https://envoyproxy.github.io/envoy/){:target="_blank"} proxy as a _side car_ container attached to each service Pod. Envoy is a high-performance proxy developed in C++ to mediate all inbound and outbound traffic for all services in the service mesh. Istio leverages Envoy’s many built-in features, for example:
 
  * Dynamic service discovery
  * Load balancing
@@ -121,13 +104,9 @@ Several **Add-ons** components are used to provide additional visualizations, me
 * [Prometheus](https://prometheus.io/){:target="_blank"} - Systems monitoring and alerting toolkit
 * [Grafana](https://grafana.com/){:target="_blank"} - Allows you to query, visualize, alert on and understand your metrics
 * [Jaeger Tracing](http://jaeger.readthedocs.io/){:target="_blank"} - Distributed tracing to gather timing data needed to troubleshoot latency problems in microservice architectures
-* [Servicegraph](https://istio.io/docs/tasks/telemetry/servicegraph.html#about-the-servicegraph-add-on){:target="_blank"} - generates and visualizes a graph of services within a mesh
 
 We will use these in future steps in this scenario!
 
-Check out the [Istio docs](https://istio.io/docs){:target="_blank"} for more details.
-
-Is your Istio deployment complete? If so, then you're ready to move on!
 
 #### Getting Ready for the labs
 
@@ -168,14 +147,14 @@ Click on the **Import Projects...** in **Workspace** menu and enter the followin
   * Check `Import recursively (for multi-module projects)`
   * Name: `cloud-native-workshop-v2m3-labs`
 
-**Tip**: You can find GIT URL when you click on [GIT URL]({{GIT_URL}}){:target="_blank"} then login with your credentials.
+**Tip**: You can also find your Git URL when you click on [GIT URL]({{GIT_URL}}){:target="_blank"} then login with your credentials.
 
 ![codeready-workspace-import]({% image_path codeready-workspace-import.png %}){:width="700px"}
 
-The projects are imported now into your workspace and is visible in the project explorer.
+The project will be imported into your workspace and visible in the project explorer.
 
 CodeReady Workspaces is a full featured IDE and provides language specific capabilities for various project types. In order to
-enable these capabilities, let's convert the imported project skeletons to a Maven projects. In the project explorer, right-click on each project and
+enable these capabilities for this Java-based Maven app, let's convert the imported project to a Maven project. In the project explorer, right-click on each project and
 then click on **Convert to Project** continuously.
 
 ![codeready-workspace-convert]({% image_path codeready-workspace-convert.png %}){:width="500px"}
@@ -186,6 +165,6 @@ Choose **Maven** from the project configurations and then click on **Save**.
 
 Repeat the above for inventory and catalog projects.
 
-> NOTE: the Terminal window in CodeReady Workspaces. For the rest of these labs, anytime you need to run a command in a terminal, you can use the CodeReady Workspaces Terminal window.
+> NOTE: For the rest of these labs, anytime you need to run a command in a terminal, you can use the CodeReady Workspaces Terminal window. Be sure you're in the correct directory for the command(s) you wish to run!
 
 ![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
