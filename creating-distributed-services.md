@@ -57,28 +57,33 @@ You will see the OpenShift landing page:
 
 > The project displayed in the landing page depends on which labs you will run today. If you will develop `Service Mesh and Identity` then you will see pre-created projects as the above screeenshot.
 
-In order to deploy applicaitons to OpenShift via **oc** tool, we need to login to the `oc` CLI:
-
-#### Login to OpenShift CLI
-
 Although your Eclipse Che workspace is running on the Kubernetes cluster, it's running with a default restricted _Service Account_ that prevents you from creating most resource types. If you've completed other modules, you're probably already logged in, but let's login again: open a Terminal and issue the following command:
 
-```sh
-oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-skip-tls-verify=true
-```
+`oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-skip-tls-verify=true`
 
 Enter your username and password assigned to you:
 
 * Username: `userXX`
 * Password: `r3dh4t1!`
 
-You should see:
+You should see like:
 
-```
+~~~shell
 Login successful.
-...
+
+You have access to the following projects and can switch between them with 'oc project <projectname>':
+
+  * default
+    istio-system
+    user0-bookinfo
+    user0-catalog
+    user0-cloudnative-pipeline
+    user0-cloudnativeapps
+    user0-inventory
+
+Using project "default".
 Welcome! See 'oc help' to get started.
-```
+~~~
 
 Change to the empty **userXX-bookinfo** project via CodeReady Workspaces Terminal and you should replace **userXX** with your username:
 
@@ -96,7 +101,7 @@ Replace your own gateway URL with _REPLACE WITH YOUR BOOKINFO APP URL_ in `istio
 
 Set the _REPLACE WITH YOUR BOOKINFO APP URL_ as an environment variable in CodeReady Workspaces Terminal:
 
-`BOOK_URL=_REPLACE WITH YOUR BOOKINFO APP URL_`
+`BOOK_URL=REPLACE WITH YOUR BOOKINFO APP URL`
 
 Create the _ingress gateway_ for Bookinfo:
 
@@ -104,7 +109,7 @@ Create the _ingress gateway_ for Bookinfo:
 
 The application consists of the usual objects like Deployments, Services, and Routes.
 
-As part of the installation, we use Istio to "decorate" the application with additional components (the Envoy Sidecars you read about in the previous step).
+As part of the installation, we use Istio to **decorate** the application with additional components (the Envoy Sidecars you read about in the previous step).
 
 Let's wait for our application to finish deploying. Go to the overview page in _userxx BookInfo Service Mesh_ project:
 

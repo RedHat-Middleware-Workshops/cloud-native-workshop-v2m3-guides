@@ -2,15 +2,15 @@
 
 In this lab, you will develop advanced servie mesh features such as **Fault Injection**, **Traffic Shifting**, **Circuit Breaker**, **Rate Limi** with Coolstore microservices(i.e Catalog, Inventory) that you developed and deployed to OpenShift cluster in _Module 1_ or/and _Module 2_.
 
-If you haven't deployment in Module 1 or Module2, you can deploy the cloud-native applications easily via executing the following shell script in CodeReady Workspaces Terminal:
+##### If this is the first module you are doing today
 
-`chmod +x /projects/cloud-native-workshop-v2m3-labs/istio/scripts/*.sh`
+If you haven't deployment in Module 1 or Module2, you can deploy the cloud-native applications easily via executing the following shell script in CodeReady Workspaces Terminal:
 
 Replace with your username before running this commands:
 
-`/projects/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-inventory.sh userXX`
+`sh /projects/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-inventory.sh userXX`
 
-`/projects/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-catalog.sh userXX`
+`sh /projects/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-catalog.sh userXX`
 
 ####1. Configuring Automatic Sidecar Injection in Coolstore Microservices
 
@@ -538,8 +538,8 @@ Click on **HTTPS** URL(i.e. _secure-sso-user0-catalog.apps.cluster-seoul-a30e.se
 
 Click on _Administration Console_ to configure **Istio** Ream then input usename and password that you deployed.
 
- * Username or email: admin
- * Password: admin
+ * Username or email: **admin**
+ * Password: **admin**
 
  > If you change the credential when you deployed the RH-SSO container, you need to use them for this.
 
@@ -587,7 +587,7 @@ If you click on ID then you will find more information such as Detials, Attribut
 
 Go to **Credentials** tab and input the following variables:
 
- * New Password: **openshif!**
+ * New Password: **openshift**
  * Password Confirmation: **openshift**
  * Temporary: **OFF**
 

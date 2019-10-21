@@ -133,7 +133,7 @@ Is your Istio deployment complete? If so, then you're ready to move on!
 
 ---
 
-##### Access Your Development Environment
+##### If this is the first module you are doing today
 
 You will be using Red Hat CodeReady Workspaces, an online IDE based on [Eclipe Che](https://www.eclipse.org/che/){:target="_blank"}{:target="_blank"}. **Changes to files are auto-saved every few seconds**, so you don't need to explicitly save changes.
 
@@ -155,7 +155,11 @@ To gain extra screen space, click on the yellow arrow to hide the left menu (you
 
 Users of Eclipse, IntelliJ IDEA or Visual Studio Code will see a familiar layout: a project/file browser on the left, a code editor on the right, and a terminal at the bottom. You'll use all of these during the course of this workshop, so keep this browser tab open throughout. **If things get weird, you can simply reload the browser tab to refresh the view.**
 
-In the project explorer pane, click on the **Import Projects...** and enter the following:
+##### Import Projects
+
+Click on the **Import Projects...** in **Workspace** menu and enter the following:
+
+![codeready-workspace-import]({% image_path codeready-workspace-menu.png %})
 
 > NOTE: If you've completed other modules already, then you can use _File > Import Project_ to import the project.
 
@@ -164,7 +168,7 @@ In the project explorer pane, click on the **Import Projects...** and enter the 
   * Check `Import recursively (for multi-module projects)`
   * Name: `cloud-native-workshop-v2m3-labs`
 
-**Tip**: You can find GIT URL when you click on {{GIT_URL}} then login with your credentials.
+**Tip**: You can find GIT URL when you click on [GIT URL]({{GIT_URL}}){:target="_blank"} then login with your credentials.
 
 ![codeready-workspace-import]({% image_path codeready-workspace-import.png %}){:width="700px"}
 

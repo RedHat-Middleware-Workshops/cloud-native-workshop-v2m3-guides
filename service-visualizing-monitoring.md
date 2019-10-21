@@ -6,11 +6,11 @@ In this lba, we will visualize your service mesh using **Kiali**, **Prometheus**
 
 ---
 
-To get a better idea of the power of metrics, let's setup an endless loop that will continually access the application and generate load. We'll open up a separate terminal just for this purpose. Set the _REPLACE WITH YOUR BOOKINFO APP URL_ as an environment variable in CodeReady Workspaces Terminal as you did in the previous lab:
-
-`BOOK_URL=_REPLACE WITH YOUR BOOKINFO APP URL_`
+To get a better idea of the power of metrics, let's setup an endless loop that will continually access the application and generate load. We'll open up a separate terminal just for this purpose. 
 
 Open a new _Terminal_ and execute this command with your own _Bookinfo App URL_:
+
+`BOOK_URL=REPLACE WITH YOUR BOOKINFO APP URL`
 
 `while true; do curl -o /dev/null -s -w "%{http_code}\n" http://$BOOK_URL/productpage ; sleep .2 ; done`
 
