@@ -450,6 +450,8 @@ Select the YAML tab and add the following label in the catalog service to use a 
 
 `service: catalog-springboot`
 
+Also, since [Istio requires service names](https://istio.io/docs/setup/additional-setup/requirements/) to be named with specific identifiers, change the name of the `8080-tcp` to be named `http` as shown:
+
 ![sso]({% image_path catalog_svc_add_label.png %})
 
 Click on **Save**.
