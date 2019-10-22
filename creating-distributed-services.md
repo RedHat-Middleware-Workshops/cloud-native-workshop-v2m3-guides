@@ -92,6 +92,10 @@ Deploy the **Bookinfo application** in the bookinfo project:
 
 `oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml`
 
+Since Istio will prevent HTTP-based health checks from working properly unless explicitly denoted, let's just disable them for now. Run the following command:
+
+`oc set probe dc --all --readiness --liveness --remove -n userXX-bookinfo` (replace `userXX` with your username)
+
 Next, open the `istio/bookinfo-gateway.yaml` file in CodeReady.
 
 Look for the _REPLACE WITH YOUR BOOKINFO APP URL_ (there are 2 of them) and replace them with your custom url:
@@ -108,7 +112,7 @@ And then create the _ingress gateway_ for Bookinfo:
 
 For your conveience, set an environment variable in the CodeReady Workspaces Terminal:
 
-`export BOOK_URL=REPLACE WITH YOUR BOOKINFO APP URL` (again, replace the same value as above)
+`export BOOK_URL=REPLACE WITH YOUR BOOKINFO APP URL` (again, replace the same value as above).
 
 When the app is installed, each Pod will get an additional _sidecar_ container as described earlier.
 

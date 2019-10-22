@@ -14,11 +14,13 @@ If you haven't done Module 1 or Module 2 today, you should deploy the applicatio
 
 `sh /projects/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-catalog.sh userXX`
 
-This will build and deploy the inventory and catalog components into the `userXX-inventory` and `userXX-catalog` projects in OpenShift.
+This will build and deploy the inventory and catalog components into the `userXX-inventory` and `userXX-catalog` projects in OpenShift. They won't automatically get Istio sidecar proxy containers yet, but you'll add that in the next step!
 
 ####1. Configuring Automatic Sidecar Injection in Coolstore Microservices
 
-Let's go to **Kiali console** once again to confirm if existing microservices (_Catalog_, _Inventory_) are running with a _sidecar_ and are visible in the service mesh). Click on **Applictions** on the left menu check _userXX-catalog_, _userXX-inventory_ in namespaces. You will see **Missing Sidecar** in 4 applications.
+Let's go to the [Kiali console](https://kiali-istio-system.{{ROUTE_SUBDOMAIN}}/) once again to confirm that the microservices (_Catalog_, _Inventory_) are not running with a _sidecar_ and are not yet visible in the service mesh.
+
+Click on **Applications** on the left menu. Then, using the `Namespace` drop-down at the top, type in `userXX` (your username) to filter the list, and check the `userXX-catalog` and `userXX-inventory` namespaces, and de-select the `userXX-bookinfo` namespace. You will see **Missing Sidecar** in 4 applications.
 
 ![istio]({% image_path kiali_missing_sidecar.png %})
 
@@ -28,13 +30,15 @@ _Automatic injection of the sidecar_ is supported by using the _sidecar.istio.io
 
 > Upstream Istio community installations require a specific label on the namespace after which all pods in that namespace are injected with the sidecar.  The OpenShift Service Mesh approach requires you to opt in to injection using an annotation with no need to label namspaces. This method requires fewer privileges and does not conflict with other OpenShift capabilities such as builder pods.
 
-In the OpenShift console, select the _userXX-inventory_ project in the project drop-down, then go to **Workloads > Deployment Configs** on the left menu, and click on _inventory-database_ and then click the _YAML_ tab.
+Back in the the [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"}, select the _userXX-inventory_ project in the project drop-down, then go to **Workloads > Deployment Configs** on the left menu, and click on _inventory-database_ and then click the _YAML_ tab.
 
 ![istio]({% image_path inventory_db_dc.png %})
 
 Add the following annotation in `spec.template.metadata.annotations` path in the YAML and click on **Save**.
 
 `sidecar.istio.io/inject: "true"`
+
+> **NOTE** Be sure to place this annotation in the correct `annotations` block under _spec > template > metadata > annotations_ and match the same indentation as the annotation immediately above!
 
 ![istio]({% image_path inventory_db_inject_sidecar.png %})
 
@@ -60,9 +64,11 @@ We'll add the same annotation as before:
 
 `sidecar.istio.io/inject: "true"`
 
+> **NOTE** Be sure to place this annotation in the correct `annotations` block under _spec > template > metadata > annotations_ and match the same indentation as the annotation immediately above!
+
 ![istio]({% image_path inventory_inject_sidecar.png %})
 
-AGain you will see **istio-proxy** container and _inventory-quarkus_ container in the "Pod Details" page when you navigate _Workloads > Pods > inventory-quarkus-xxxxx_:
+Again you will see **istio-proxy** container and _inventory-quarkus_ container in the "Pod Details" page when you navigate _Workloads > Pods > inventory-quarkus-xxxxx_:
 
 ![istio]({% image_path inventory_sidecar.png %})
 
@@ -148,12 +154,6 @@ Two types of faults can be injected:
 
 To test our application microservices for resiliency, we will inject a failure in **50%** of the requests to the _inventory_ service, causing the service to appear to fail (and return `HTTP 5xx` errors).
 
-<!-- First, remove the OpenShift Route that exposes the inventory service since we want to manage network traffic through the _Istio Ingress Gateway_. Run the following in a CodeReady Workspaces Terminal:
-
-> Copy the route URL(i.e. inventory-quarkus-user1-inventory.apps.seoul-bfcf.openshiftworkshop.com) and you will reuse the URL to create a gateway in Istio.
-
-`oc delete route/inventory-quarkus -n userXX-inventory` -->
-
 First, add the following label in the Inventory service to use a _virtual service_. In the OpenShift Web Consle, select the _userXX-inventory_ project in the project selector drop-down, then navigate to _Networking > Services_ in the left menu, and select _inventory-quarkus_.
 
 ![fault-injection]({% image_path inventory_svc_.png %})
@@ -168,7 +168,7 @@ Click on **Save**.
 
 In CodeReady, open the empty **inventory-default.yaml** file in the `/projects/cloud-native-workshop-v2m3-labs/inventory/rules/ `directory. Add the below code to the file to create a gateway and virtual service:
 
-> You'll need to replace `YOUR_INVENTORY_GATEWAY_URL` with the route URL for the inventory service, which looks like `inventory-quarkus-userXX-inventory.{{ROUTE_SUBDOMAIN}}`. There are two places to make this substitution, so do them both!
+> You'll need to replace `YOUR_INVENTORY_GATEWAY_URL` with the route URL for the inventory service, which looks like `inventory-quarkus-userXX-inventory.{{ROUTE_SUBDOMAIN}}` (replace `userXX` with your username). There are two places to make this substitution, so do them both!
 
 ~~~yaml
 apiVersion: networking.istio.io/v1alpha3
@@ -220,7 +220,7 @@ Create the new Istio-powered route by running the following command via CodeRead
 
 Now, you can test if the inventory service works correctly via accessing the **YOUR_INVENTORY_GATEWAY_URL** in your browser:
 
-`i.e. http://inventory-quarkus-user0-inventory.apps.cluster-seoul-a30e.seoul-a30e.openshiftworkshop.com`
+`i.e. http://inventory-quarkus-userXX-inventory.{{ ROUTE_SUBDOMAIN }}` (replace `userXX` with your username)
 
 ![fault-injection]({% image_path inventory-ui-gateway.png %})
 
@@ -267,7 +267,7 @@ Let's find out if the fault injection works corectly via accessing the Inventory
 
 ![fault-injection]({% image_path inventory-dead-ok.png %})
 
-In the **Kiali** console you will also see failures for 50% of traffic bound for the `inventory `service. You will see `red` traffic from _istio-ingressgateway_ as well as around 50% of requests are displayed as _5xx_ on the right side, _HTTP Traffic_. It may not be *exactly* 50% since some traffic is coming from the catalog and ingress gateway at the same time.
+In the **Kiali** console you will also see failures for 50% of traffic bound for the `inventory `service. You will see `red` traffic from _istio-ingressgateway_ as well as around 50% of requests are displayed as _5xx_ on the right side, _HTTP Traffic_. It may not be *exactly* 50% since some traffic is coming from the catalog and ingress gateway at the same time, but it will approach 50% over time.
 
 ![fault-injection]({% image_path inventlry-vs-error-kiali.png %})
 
@@ -332,6 +332,7 @@ Before we will move to the next step, clean up the fault injection and set the d
 
 `oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-default.yaml -n userXX-inventory`
 
+Also, close the tabs in your browser for the Inventory and Catalog services to avoid unnecessary load, and stop the endless `for` loop you started in the beginning of this lab in CodeReady by closing the Terminal window that was running it.
 
 ####3. Enable Circuit Breaker
 
@@ -408,7 +409,7 @@ Execute this to simulate a number of users attampting to access the gateway URL 
 ~~~
 
 Due to the very conservative circuit breaker, many of these calls will fail with HTTP 503 (Server Unavailable). To see this,
-open the _Istio Service Mesh Dashboard_ in Grafana console and select `inventory-quarkus.userXX-inventory.svc.cluster.local` service:
+open the _Istio Service Mesh Dashboard_ in the [Grafana console](https://grafana-istio-system.{{ROUTE_SUBDOMAIN}}/) and select `inventory-quarkus.userXX-inventory.svc.cluster.local` service:
 
 > `NOTE`: It make take 10-20 seconds before the evidence of the circuit breaker is visible within the Grafana dashboard, due to the not-quite-realtime nature of Prometheus metrics and Grafana refresh periods and general network latency.
 
@@ -441,7 +442,7 @@ First, let's remove the direct route to the catalog service. We want traffic to 
 
 `oc delete route/catalog-springboot -n userXX-catalog`
 
-In the OpenShift console, select the `userXX-catalog` project, then navigate to _Networking > Services_ from the left menu, select the `catalog-springboot` service
+In the [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"}, select the `userXX-catalog` project, then navigate to _Networking > Services_ from the left menu, select the `catalog-springboot` service
 
 ![sso]({% image_path catalog_svc_vs.png %})
 
@@ -505,7 +506,7 @@ Then create this object in OpenShift by running the following command via CodeRe
 
 Now, you can test if the catalog service works correctly by accessing the **YOUR_CATALOG_GATEWAY_URL** without _authentication_ in your browser:
 
-`i.e. http://catalog-userXX-catalog.{{ROUTE_SUBDOMAIN}}`
+`i.e. http://catalog-springboot-userXX-catalog.{{ROUTE_SUBDOMAIN}}`
 
 ![sso]({% image_path catalog-ui-gateway.png %})
 
@@ -520,7 +521,7 @@ _Red Hat Single Sign-On (RH-SSO)_ is based on the **Keycloak** project and enabl
 
 We will deploy RH-SSO in Catalog project. Run the following commands in CodeReady Workspaces Terminal:
 
-> Note: You need to replace your `authuserXX` below with your username plus `auth` prefix. For example, `authuser12` or `authuser2`.
+> Note: You need to replace `userXX` with your username and replace `authuserXX` below with your username plus `auth` prefix. For example, `authuser12` or `authuser2`.
 
 ~~~shell
 oc -n userXX-catalog new-app ccn-sso72 \
@@ -533,9 +534,9 @@ oc -n userXX-catalog new-app ccn-sso72 \
 
 Wait for RH-SSO to be deployed using this command:
 
-`oc rollout status -w dc/keycloak -n userXX-catalog` (replace `userXX` with your username)
+`oc rollout status -w dc/sso -n userXX-catalog` (replace `userXX` with your username)
 
-Once this finishes, in the [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"} navigate to _Networking > Routes_ and you will see the route URL as below (in the `userXX-catalog` project):
+Once this finishes (it may take a minute or two), in the [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"} navigate to _Networking > Routes_ and you will see the route URL as below (in the `userXX-catalog` project):
 
 
 ![sso]({% image_path rhsso_deployment.png %})
@@ -568,11 +569,13 @@ Input **ccn-cli** in _Client ID_ field and click on **Save**.
 
 On the next screen, you will see details on the **Settings** tab, the only thing you need to do is to input _Valid Redirect URIs_ that can be used after successful login or logout for clients.
 
-> Replace **YOUR_CATALOG_GATEWAY_URL** with your own ingress gateway URL of the catalog service and please note to add **http://** at the front as well as ***/*** at the end of URL.
+> Replace **YOUR_CATALOG_GATEWAY_URL** with your own ingress gateway URL of the catalog service and please note to add **http://** at the front as well as `/*` at the end of URL.
 
- * Valid Redirect URIs: `http://catalog-userXX-catalog.{{ ROUTE_SUBDOMAIN }}/*` (replace `userXX` with your username!)
+ * Valid Redirect URIs: `http://catalog-springboot-userXX-catalog.{{ ROUTE_SUBDOMAIN }}/*` (replace `userXX` with your username!)
 
 ![sso]({% image_path rhsso_clients_settings.png %})
+
+Don't forget to click **Save**!
 
 Now, let's define a role that will be assigned to your credentials, let’s create a simple role called **ccn_auth**. Go to **Roles** in the left menu then click on _Add Role_.
 
@@ -582,7 +585,7 @@ Input **ccn_auth** in _Role Name_ field and click on **Save**.
 
 ![sso]({% image_path rhsso_roles_create.png %})
 
-Next let's update the password policy for our _authuser_/
+Next let's update the password policy for our _authuser_.
 
 Go to **Users** menu on the left side menu then click on **View all users**.
 
@@ -658,9 +661,9 @@ Then execute the following oc command in CodeReady Workspaces Terminal to create
 
 Now you can't access the catalog service without authentication of RH-SSO. You confirm it using a curl command  (replacing `userXX` with your username) in CodeReady Workspaces Terminal:
 
-`curl http://YOUR_CATALOG_GATEWAY_URL/services/products ; echo`
+`curl -i http://YOUR_CATALOG_GATEWAY_URL/services/products ; echo`
 
-You should get `Origin authentication failed.`.
+You should get and `HTTP 401 Unauthorized` and `Origin authentication failed.` messages.
 
 The expected response is here because the user has not been identified with a valid JWT token in RH-SSO.
 It normally takes `5 ~ 10 seconds` to initialize the authentication policy in Istio Mixer. After this things go quickly as policies are cached for some period of time.
@@ -805,7 +808,7 @@ Let's re-deploy the catalog service to OpenShift by running the following maven 
 
 Wait for the catalog pod to restart:
 
-`oc rollout status -w dc/catalog -n userXX-catalog`  (replace `userXX` with your username)
+`oc rollout status -w dc/catalog-springboot -n userXX-catalog`  (replace `userXX` with your username)
 
 After the catalog pod is started, access the _catalog gateway_ via a new web brower then you will redirect to the login page of **RH-SSO**.
 

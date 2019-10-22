@@ -140,10 +140,8 @@ Click on the **Import Projects...** in **Workspace** menu and enter the followin
 
 ![codeready-workspace-import]({% image_path codeready-workspace-menu.png %})
 
-> NOTE: If you've completed other modules already, then you can use _File > Import Project_ to import the project.
-
   * Version Control System: `GIT`
-  * URL: `{{GIT_URL}}/userXX/cloud-native-workshop-v2m3-labs.git`(IMPORTANT: replace userXX with your lab user)
+  * URL: `{{GIT_URL}}/userXX/cloud-native-workshop-v2m3-labs.git`(IMPORTANT: replace `userXX` with your lab user)
   * Check `Import recursively (for multi-module projects)`
   * Name: `cloud-native-workshop-v2m3-labs`
 
@@ -156,6 +154,14 @@ The project will be imported into your workspace and visible in the project expl
 CodeReady Workspaces is a full featured IDE and provides language specific capabilities for various project types. In order to
 enable these capabilities for this Java-based Maven app, let's convert the imported project to a Maven project. In the project explorer, right-click on each project and
 then click on **Convert to Project** continuously.
+
+> **NOTE**
+>
+> **If you do not see the _Convert to Project_** menu item, your projects may already be converted! Look for a small blue Maven icon next to the `catalog` and `inventory` project names. If you see these, you do not need to convert the projects!
+>
+> ![maven-icon]({% image_path maven-icon.png %}){:width="900px"}
+
+If you need to convert, do it like this:
 
 ![codeready-workspace-convert]({% image_path codeready-workspace-convert.png %}){:width="500px"}
 

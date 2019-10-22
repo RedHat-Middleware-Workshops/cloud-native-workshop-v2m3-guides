@@ -5,7 +5,7 @@ modules:
   workshop-environment:
     name: Your Workshop Environment
   getting-started-service-mesh:
-    name: Getting Started with Servie Mesh
+    name: Getting Started with Service Mesh
   creating-distributed-services:
     name: Creating Distributed Services
   service-visualizing-monitoring:

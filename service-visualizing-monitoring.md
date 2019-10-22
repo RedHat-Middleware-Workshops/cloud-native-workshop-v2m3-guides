@@ -12,7 +12,7 @@ Open a new _Terminal_ and execute this command with your own _Bookinfo App URL_:
 
 `BOOK_URL=REPLACE WITH YOUR BOOKINFO APP URL`
 
-`while true; do curl -o /dev/null -s -w "%{http_code}\n" http://$BOOK_URL/productpage ; sleep .2 ; done`
+`while true; do curl -o /dev/null -s -w "%{http_code}\n" http://$BOOK_URL/productpage ; sleep .5 ; done`
 
 This command will endlessly access the application and report the HTTP status result in a separate terminal window.
 
@@ -123,9 +123,9 @@ You can also graph the results over time by clicking on the _Graph_ tab (adjust 
 
 Other expressions to try:
 
-* Total count of all requests to _productpage_ service: **istio_request_duration_seconds_count{destination_service=~"productpage.*"}**
-* Total count of all requests to _v3_ of the _reviews_ service: **istio_request_duration_seconds_count{destination_service=~"reviews.*", destination_version="v3"}**
-* Rate of requests over the past 5 minutes to all _productpage_ services: **rate(istio_request_duration_seconds_count{destination_service=~"productpage.*", response_code="200"}[5m])**
+* Total count of all requests to _productpage_ service: **istio_request_duration_seconds_count{destination_service=~'productpage.*'}**
+* Total count of all requests to _v3_ of the _reviews_ service: **istio_request_duration_seconds_count{destination_service=~'reviews.*', destination_version='v3'}**
+* Rate of requests over the past 5 minutes to all _productpage_ services: **rate(istio_request_duration_seconds_count{destination_service=~'productpage.*', response_code='200'}[5m])**
 
 There are many, many different queries you can perform to extract the data you need. Consult the
 [Prometheus documentation](https://prometheus.io/docs) for more detail.
@@ -148,7 +148,7 @@ You should see Grafana home screen, similar to this:
 
 ##### Istio Mesh Metrics
 
-Select **Home > Istio Mesh Dashboard** to see Istio mesh metrics:
+Select **Home > Istio > Istio Mesh Dashboard** to see Istio mesh metrics:
 
 ![Grafana graph]({% image_path grafana-mesh-metrics-select.png %})
 
@@ -158,7 +158,7 @@ You will see the built-in Istio metrics dashboard::
 
 ##### Istio Service Metrics
 
-Let's see detailed metrics of the **Productpage**service. Click on _productpage.userXX-bookinfo.svc.cluster.local_ and the service dashboard will look similar to this:
+Let's see detailed metrics of the **productpage** service. Click on **productpage.userXX-bookinfo.svc.cluster.local** and the service dashboard will look similar to this:
 
 ![Grafana graph]({% image_path grafana-service-metrics.png %})
 
@@ -176,6 +176,8 @@ You can switch to a different service or filter metrics by _client-_ and _servic
 
 To switch to the workloads dashboard, select **Home > Istio Workload Dashboard** from the drop-down list in the top left corner of the screen.
 You should see a screen similar to this:
+
+> You should select your own userXX-bookinfo in the `Namespace` selector at the top to avoid noise from other workloads on the cluster!
 
 ![Grafana graph]({% image_path grafana-workload-metrics.png %})
 
@@ -224,7 +226,9 @@ In addition to the usual OpenShift object types like _BuildConfig_, _DeploymentC
 
 For our application, without an explicit default route set, Istio will route requests to all available versions of a service in a round-robin  fashion, and anytime you hit _v1_ version you'll get no stars.
 
-Let's create a default set of **virtual services** which will direct all traffic to the _reviews:v1_ service version:
+Let's create a default set of **virtual services** which will direct all traffic to the _reviews:v1_ service version.
+
+Open a new Terminal (while your other endless `for` loop continues to run) and execute this command to route all traffic to `v1`:
 
 `oc create -f /projects/cloud-native-workshop-v2m3-labs/istio/virtual-service-all-v1.yaml`
 
@@ -257,6 +261,8 @@ spec:
 
 Now, access the application again in your web browser using the below link and reload the page several times - you should not see any rating stars since **reviews:v1** does not access the _ratings_ service.
 
+> **NOTE** - It may take a minute or two for the new routing to take effect. If you still see red or black stars, wait a minute and try again. Eventually it should no longer show any red/black stars.
+
 * Bookinfo Application with no rating stars at `http://$BOOK_URL/productpage`
 
 To verify this, open the Grafana Dashboard (find this URL via _Networking > Routes_)
@@ -273,7 +279,7 @@ Let's enable the ratings service for a test user named _jason_ by routing `produ
 
 `oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/virtual-service-reviews-jason-v2-v3.yaml`
 
-'Tip': You can ignore warnings like _Warning: oc apply should be used on resource created by either oc create --save-config or oc apply_.
+> **TIP**: You can ignore warnings like _Warning: oc apply should be used on resource created by either oc create --save-config or oc apply_.
 
 Confirm the rule is created:
 
