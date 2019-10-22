@@ -124,7 +124,7 @@ You can also graph the results over time by clicking on the _Graph_ tab (adjust 
 Other expressions to try:
 
 * Total count of all requests to _productpage_ service: **istio_request_duration_seconds_count{destination_service=~\'productpage.*\'}**
-* Total count of all requests to _v3_ of the _reviews_ service: **istio_request_duration_seconds_count{destination_service=~\'reviews.*\', destination_version=\'v3\'}**
+* Total count of all requests to _v3_ of the _reviews_ serviceaaaa: **istio_request_duration_seconds_count{destination_service=~\'reviews.*\', destination_version=\'v3\'}**
 * Rate of requests over the past 5 minutes to all _productpage_ services: **rate(istio_request_duration_seconds_count{destination_service=~\'productpage.*\', response_code=\'200\'}[5m])**
 
 There are many, many different queries you can perform to extract the data you need. Consult the
