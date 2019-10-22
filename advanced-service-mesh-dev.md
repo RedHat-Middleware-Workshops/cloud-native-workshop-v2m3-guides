@@ -728,6 +728,8 @@ First, clean up all authentication configuration that we have tested in the prev
 
 Next, open the **application-default.properties** in `/projects/cloud-native-workshop-v2m3-labs/catalog/src/main/resources/` and add the following settings at the bottom of the file:
 
+Replace **YOUR_SSO_HTTP_ROUTE_URL/**
+
 ~~~yaml
 #TODO: Set RH-SSO authentication
 keycloak.auth-server-url=http://YOUR_SSO_HTTP_ROUTE_URL/auth
@@ -744,12 +746,12 @@ Let's update **pom.xml** in `/projects/cloud-native-workshop-v2m3-labs/catalog/`
  * Add _spring-boot-starter-parent_ artifact Id before _properties_ element:
 
 ~~~xml
-<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.21.RELEASE</version>
-		<relativePath/>
-</parent>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.21.RELEASE</version>
+        <relativePath/>
+    </parent>
 ~~~
 
 ![sso]({% image_path rhsso_catalog_pom_parent.png %})
@@ -759,29 +761,29 @@ Let's update **pom.xml** in `/projects/cloud-native-workshop-v2m3-labs/catalog/`
 **From:**
 
 ~~~yaml
-<dependencyManagement>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>me.snowdrop</groupId>
+                <artifactId>spring-boot-bom</artifactId>
+                <version>${spring-boot.bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
-            <groupId>me.snowdrop</groupId>
-            <artifactId>spring-boot-bom</artifactId>
-            <version>${spring-boot.bom.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
-    </dependencies>
-</dependencyManagement>
-<dependencies>
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter</artifactId>
-    </dependency>
 ~~~
 
 **To:**
 
 ~~~yaml
-<dependencyManagement>
-      <dependencies>
+    <dependencyManagement>
+       <dependencies>
           <dependency>
               <groupId>org.keycloak.bom</groupId>
               <artifactId>keycloak-adapter-bom</artifactId>
@@ -790,12 +792,12 @@ Let's update **pom.xml** in `/projects/cloud-native-workshop-v2m3-labs/catalog/`
               <scope>import</scope>
           </dependency>
       </dependencies>
-  </dependencyManagement>
-  <dependencies>
+    </dependencyManagement>
+    <dependencies>
         <dependency>
           <groupId>org.keycloak</groupId>
           <artifactId>keycloak-spring-boot-starter</artifactId>
-      </dependency>
+        </dependency>
 ~~~
 
 ![sso]({% image_path rhsso_catalog_pom_dependency.png %})
