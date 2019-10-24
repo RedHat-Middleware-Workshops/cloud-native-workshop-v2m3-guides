@@ -18,7 +18,7 @@ This will build and deploy the inventory and catalog components into the `userXX
 
 ####1. Configuring Automatic Sidecar Injection in Coolstore Microservices
 
-Let's go to the [Kiali console](https://kiali-istio-system.{{ROUTE_SUBDOMAIN}}/) once again to confirm that the microservices (_Catalog_, _Inventory_) are not running with a _sidecar_ and are not yet visible in the service mesh.
+Let's go to the [Kiali console](https://kiali-istio-system.{{ROUTE_SUBDOMAIN}}/){:target="_blank"} once again to confirm that the microservices (_Catalog_, _Inventory_) are not running with a _sidecar_ and are not yet visible in the service mesh.
 
 Click on **Applications** on the left menu. Then, using the `Namespace` drop-down at the top, type in `userXX` (your username) to filter the list, and check the `userXX-catalog` and `userXX-inventory` namespaces, and de-select the `userXX-bookinfo` namespace. You will see **Missing Sidecar** in 4 applications.
 
@@ -101,17 +101,17 @@ You will see **istio-proxy** container and _catalog-springboot_ container in the
 
 ![istio]({% image_path catalog_sidecar.png %})
 
-Let's make sure if inventory and catalog services are working correctly via accessing _Catalog Route URL_ in your browser. You will find the URL via _Networking > Routes_ in OpenShift web console:
+Let's make sure if inventory and catalog services are working correctly via accessing _Catalog Route URL_ in your browser. You can also find the URL via _Networking > Routes_ in OpenShift web console, after selecting the `userXX-catalog` from the _namespace_ dropdown menu. Open the URL in your browser:
 
-* URL example: http://catalog-springboot-user0-catalog.apps.cluster-seoul-a30e.seoul-a30e.openshiftworkshop.com/
+* Catalog UI (replace `userXX` with your username): http://catalog-springboot-userXX-catalog.{{ROUTE_SUBDOMAIN}}
 
-Click on it and you will see the following web page including **Inventory Quantity** if the catalog service can access the inventory service via _Istio proxy sidecar_:
+You will see the following web page including **Inventory Quantity** if the catalog service can access the inventory service via _Istio proxy sidecar_:
 
 ![istio]({% image_path catalog_route_sidecar.png %})
 
 > Leave this page open as the _Catalog UI browser_ creates traffic (every 2 seconds) between services, which is useful for testing.
 
-Now, reload **Applications** in Kiali console and verify that the _Missing sidecar_ warning is no longer present:
+Now, reload **Applications** in [Kiali console](https://kiali-istio-system.{{ROUTE_SUBDOMAIN}}/){:target="_blank"} and verify that the _Missing sidecar_ warning is no longer present:
 
 ![istio]({% image_path kiali_injecting_sidecar.png %})
 

@@ -24,9 +24,7 @@ With this application load running, metrics will become much more interesting in
 
 **Kiali** allows you to manage and monitor your mesh from a single UI. This UI will allow you to view configurations, monitor traffic flow and health, and analyze traces.
 
-In the [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"}, Select the `istio-system` project in the project drop-down. Then, go to **Networking > Routes** and click on _Kiali_ route link.
-
-![istio-kiali]({% image_path istio-kiali-route.png %})
+Open the [Kiali console](https://kiali-istio-system.{{ROUTE_SUBDOMAIN}}/){:target="_blank"}.
 
 You should see _Kiali Login_ screen. Enter the username and password as below and click _Log In_.
 
@@ -35,7 +33,7 @@ You should see _Kiali Login_ screen. Enter the username and password as below an
 
 ![istio-kiali]({% image_path istio-kiali-login.png %})
 
-Input the namespace of your **userXX-bookinfo** application (e.g. user1-bookinfo) and enter it.
+In the namespace selector at the top, enter your **userXX-bookinfo** application (e.g. user1-bookinfo) and press enter to filter to only show your bookinfo project.
 
 ![kiali]({% image_path kiali-all-namespaces.png %})
 
@@ -43,13 +41,15 @@ This way you will only see your personal working namespace as below:
 
 ![kiali]({% image_path kiali-bookinfo-namespaces.png %}){:width="800px"}
 
+Click on the "4 Applications" link.
+
 ##### Service Graph
 
-Go to the _Service Graph_ page on the _Graph_ menu and check **Traffic Animation** in **Display**:
+Click on the _Graph_ page on the left and check **Traffic Animation** in **Display**:
 
 ![kiali]({% image_path kiali-service-graph.png %})
 
-It shows a graph with all the microservices, connected by the requests going through then. On this page, you can see how services interact with each other.
+It shows a graph with all the microservices, connected by the requests going through then. On this page, you can see how services interact with each other. Observe that traffic from `productpage` to `reviews` is equally hitting all three versions of the `reviews` service, and that `v2` and `v3` are in turn hitting the `ratings` service (while `v1` does not, so therefore you get no "stars" when you get load-balanced to `v1`).
 
 
 ##### Applications
@@ -103,9 +103,7 @@ add-on for Istio is a Prometheus server that comes pre-configured to _scrape_ Is
 to collect its exposed metrics. It provides a mechanism for persistent storage
 and querying of those metrics metrics.
 
-Go to **istio-system** overview page in [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"} and click on the **Prometheus** route link:
-
-![istio-prometheus]({% image_path istio-prometheus-route.png %})
+Open the [Prometheus console](https://prometheus-istio-system.{{ROUTE_SUBDOMAIN}}/)
 
 You should see Prometheus home screen, similar to this:
 
@@ -123,9 +121,9 @@ You can also graph the results over time by clicking on the _Graph_ tab (adjust 
 
 Other expressions to try:
 
-* Total count of all requests to _productpage_ service: **istio_request_duration_seconds_count{destination_service=~\'productpage.*\'}**
-* Total count of all requests to _v3_ of the _reviews_ service: **istio_request_duration_seconds_count{destination_service=~\'reviews.*\', destination_version=\'v3\'}**
-* Rate of requests over the past 5 minutes to all _productpage_ services: **rate(istio_request_duration_seconds_count{destination_service=~\'productpage.*\', response_code=\'200\'}[5m])**
+* Total count of all requests to _productpage_ service: `istio_request_duration_seconds_count{destination_service=~\'productpage.*\'}`
+* Total count of all requests to _v3_ of the _reviews_ service: `istio_request_duration_seconds_count{destination_service=~\'reviews.*\', destination_version=\'v3\'}`
+* Rate of requests over the past 5 minutes to all _productpage_ services: `rate(istio_request_duration_seconds_count{destination_service=~\'productpage.*\', response_code=\'200\'}[5m])`
 
 There are many, many different queries you can perform to extract the data you need. Consult the
 [Prometheus documentation](https://prometheus.io/docs) for more detail.
@@ -138,9 +136,7 @@ As the number of services and interactions grows in your application, this style
 overwhelming. [Grafana](https://grafana.com/){:target="_blank"} provides a visual representation of many available Prometheus
 metrics extracted from the Istio data plane and can be used to quickly spot problems and take action.
 
-On the [OpenShift web console]({{ CONSOLE_URL}}){:target="_blank"}, navigate to `Networking > Routes` and click on the **Grafana** route link:
-
-![istio-grafana]({% image_path istio-grafana-route.png %})
+Open the [Grafana console](https://grafana-istio-system.{{ROUTE_SUBDOMAIN}}/){:target="_blank"}
 
 You should see Grafana home screen, similar to this:
 
