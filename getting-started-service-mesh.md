@@ -110,6 +110,10 @@ We will use these in future steps in this scenario!
 
 #### Getting Ready for the labs
 
+> **NOTE**
+>
+> If you've already completed the **Optimizing Existing Applications** module then you will simply need to import the code for this module. Skip down to the **Import Projects** section.
+
 ---
 
 ##### If this is the first module you are doing today
@@ -145,8 +149,6 @@ Click on the **Import Projects...** in **Workspace** menu and enter the followin
   * Check `Import recursively (for multi-module projects)`
   * Name: `cloud-native-workshop-v2m3-labs`
 
-**Tip**: You can also find your Git URL when you click on [GIT URL]({{GIT_URL}}){:target="_blank"} then login with your credentials.
-
 ![codeready-workspace-import]({% image_path codeready-workspace-import.png %}){:width="700px"}
 
 The project will be imported into your workspace and visible in the project explorer.
@@ -157,11 +159,10 @@ then click on **Convert to Project** continuously.
 
 > **NOTE**
 >
-> **If you do not see the _Convert to Project_** menu item, your projects may already be converted! Look for a small blue Maven icon next to the `catalog` and `inventory` project names. If you see these, you do not need to convert the projects!
->
-> ![maven-icon]({% image_path maven-icon.png %}){:width="900px"}
+> If you do not see the `Convert to Project` then your projects are already converted, and you should see a small icon next to each project:
+> ![codeready-workspace-convert]({% image_path maven-icon.png %}){:width="600px"}
 
-If you need to convert, do it like this:
+If not, then convert them:
 
 ![codeready-workspace-convert]({% image_path codeready-workspace-convert.png %}){:width="500px"}
 
@@ -169,8 +170,9 @@ Choose **Maven** from the project configurations and then click on **Save**.
 
 ![codeready-workspace-maven]({% image_path codeready-workspace-maven.png %}){:width="700px"}
 
-Repeat the above for inventory and catalog projects.
+Repeat the above for `inventory` and `catalog` projects.
 
 > NOTE: For the rest of these labs, anytime you need to run a command in a terminal, you can use the CodeReady Workspaces Terminal window. Be sure you're in the correct directory for the command(s) you wish to run!
 
 ![codeready-workspace-terminal]({% image_path codeready-workspace-terminal.png %})
+

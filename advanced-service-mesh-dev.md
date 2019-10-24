@@ -6,7 +6,7 @@ In this lab, you will use advanced service mesh features such as **Fault Injecti
 
 If you have already deployed the _inventory_ and _catalog_ microservices from Module 1, you can skip this step!
 
-If you haven't done Module 1 or Module 2 today, you should deploy the application by executing the following shell script in CodeReady Workspaces Terminal:
+If you haven't done Module 1 or Module 2 today, **or you didn't quite complete them**, you should deploy the coolstore application and microservices by executing the following shell scripts in CodeReady Workspaces Terminal:
 
 > Replace `userXX` with your username before running these commands:
 
