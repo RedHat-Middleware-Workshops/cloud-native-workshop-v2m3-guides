@@ -103,7 +103,7 @@ add-on for Istio is a Prometheus server that comes pre-configured to _scrape_ Is
 to collect its exposed metrics. It provides a mechanism for persistent storage
 and querying of those metrics metrics.
 
-Open the [Prometheus console](https://prometheus-istio-system.{{ROUTE_SUBDOMAIN}}/)
+Open the [Prometheus console](http://prometheus-istio-system.{{ROUTE_SUBDOMAIN}}/)
 
 You should see Prometheus home screen, similar to this:
 
@@ -136,7 +136,7 @@ As the number of services and interactions grows in your application, this style
 overwhelming. [Grafana](https://grafana.com/){:target="_blank"} provides a visual representation of many available Prometheus
 metrics extracted from the Istio data plane and can be used to quickly spot problems and take action.
 
-Open the [Grafana console](https://grafana-istio-system.{{ROUTE_SUBDOMAIN}}/){:target="_blank"}
+Open the [Grafana console](http://grafana-istio-system.{{ROUTE_SUBDOMAIN}}/){:target="_blank"}
 
 You should see Grafana home screen, similar to this:
 
