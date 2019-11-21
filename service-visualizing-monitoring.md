@@ -12,7 +12,7 @@ Open a new _Terminal_ and execute this command with your own _Bookinfo App URL_:
 
 `BOOK_URL=REPLACE WITH YOUR BOOKINFO APP URL`
 
-`while true; do curl -o /dev/null -s -w "%{http_code}\n" http://$BOOK_URL/productpage ; sleep .5 ; done`
+`for i in {1..1000} ; do curl -o /dev/null -s -w "%{http_code}\n" http://$BOOK_URL/productpage ; sleep 2 ; done`
 
 This command will endlessly access the application and report the HTTP status result in a separate terminal window.
 
