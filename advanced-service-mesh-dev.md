@@ -316,7 +316,7 @@ Go to the **Kiali Graph** you opened earlier and you will see that the `green` t
 
 If the Inventory’s front page was set to correctly handle delays, we expect it to load within
 approximately 5 seconds. To see the web page response times, open the Developer Tools menu in
-IE, Chrome or Firefox (typically, key combination **Ctrl**+**Shift**+**I** or **Alt**+**Cmd**+**I**), select the `Network` tab, and reload the bookinfo web page.
+IE, Chrome or Firefox (typically, key combination **Ctrl**+**Shift**+**I** or **Alt**+**Cmd**+**I**), select the `Network` tab, and reload the inventory web page.
 
 You will see and feel that the webpage loads in about 5 seconds:
 
@@ -403,15 +403,15 @@ Execute this to simulate a number of users attampting to access the gateway URL 
 > Replace `YOUR_IVENTORY_GATEWAY_URL` with your custom inventory URL, e.g. `http://inventory-quarkus-userXX-inventory.{{ ROUTE_SUBDOMAIN }}`.
 
 ~~~shell
-    for i in {1..50} ; do
+    for i in {1..1000} ; do
         curl 'http://YOUR_IVENTORY_GATEWAY_URL/services/inventory' >& /dev/null &
     done
 ~~~
 
 Due to the very conservative circuit breaker, many of these calls will fail with HTTP 503 (Server Unavailable). To see this,
-open the _Istio Service Mesh Dashboard_ in the [Grafana console](https://grafana-istio-system.{{ROUTE_SUBDOMAIN}}/) and select `inventory-quarkus.userXX-inventory.svc.cluster.local` service:
+open the _Istio Service Dashboard_ in the [Grafana console](https://grafana-istio-system.{{ROUTE_SUBDOMAIN}}/) and select `inventory-quarkus.userXX-inventory.svc.cluster.local` service:
 
-> `NOTE`: It make take 10-20 seconds before the evidence of the circuit breaker is visible within the Grafana dashboard, due to the not-quite-realtime nature of Prometheus metrics and Grafana refresh periods and general network latency.
+> `NOTE`: It may take 10-20 seconds before the evidence of the circuit breaker is visible within the Grafana dashboard, due to the not-quite-realtime nature of Prometheus metrics and Grafana refresh periods and general network latency.
 
 ![circuit-breaker]({% image_path inventory-circuit-breaker-grafana.png %})
 
@@ -740,6 +740,8 @@ keycloak.public-client=true
 keycloak.security-constraints[0].authRoles[0]=ccn_auth
 keycloak.security-constraints[0].securityCollections[0].patterns[0]=/*
 ~~~
+
+> Also make sure to update `inventory.ribbon.listOfServers=inventory-quarkus.userXX-inventory.svc.cluster.local:8080` by replacing `userXX` with your user id
 
 Let's update **pom.xml** in `/projects/cloud-native-workshop-v2m3-labs/catalog/` to add the needed keycloak dependency to our app:.
 
