@@ -263,7 +263,7 @@ Now, access the application again in your web browser using the below link and r
 
 To verify this, open the Grafana Dashboard (find this URL via _Networking > Routes_)
 
-Scroll down to the **ratings** service in _Istio Service Metrics Dashboard_ and notice that the requests coming from the reviews service have stopped:
+Scroll down to the **ratings** service in _Istio Service Dashboard_ and notice that the requests coming from the reviews service have stopped:
 
 ![Versions]({% image_path ratings-stopped.png %})
 
