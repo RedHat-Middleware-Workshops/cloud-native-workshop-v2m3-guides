@@ -41,7 +41,7 @@ Login using:
 
 > **NOTE**: Use of self-signed certificates
 >
-> When you access the OpenShift web console]({{ CONSOLE_URL}}) or other URLs via _HTTPS_ protocol, you will see browser warnings
+> When you access the [OpenShift web console]({{ CONSOLE_URL}}) or other URLs via _HTTPS_ protocol, you will see browser warnings
 > like `Your Connection is not secure` since this workshop uses self-signed certificates (which you should not do in production!).
 > For example, if you're using **Chrome**, to accept the warning,
 > Click on `Advanced` then `Proceed to...` to access the page.
