@@ -404,7 +404,7 @@ Execute this to simulate a number of users attampting to access the gateway URL 
 
 ~~~shell
 	for i in {1..50} ; do
-		curl 'http://YOUR_IVENTORY_GATEWAY_URL/services/inventory' >& /dev/null &
+		curl 'http://YOUR_INVENTORY_GATEWAY_URL/services/inventory' >& /dev/null &
 	done
 ~~~
 
@@ -631,7 +631,7 @@ In CodeReady, open the blank **ccn-auth-config.yml** file in `/projects/cloud-na
 
 You can also get the route url via executing the following commands in CodeReady Workspaces Terminal:
 
-`oc get route -n userXX-catalog secure-sso --template '{{.spec.host}} '`
+`oc get route -n userXX-catalog secure-sso --template '{{.spec.host}}{{"\n"}}'`
 
 Use this value to replace `YOUR_SSO_HTTP_ROUTE_URL`. You will also use this later!
 
