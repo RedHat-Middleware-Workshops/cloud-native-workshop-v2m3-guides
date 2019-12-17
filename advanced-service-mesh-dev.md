@@ -390,7 +390,7 @@ Run the following command via CodeReady Workspaces Terminal to then create the r
 
 `oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-cb.yaml -n userXX-inventory`
 
-We set the Inventory service's maximum connections to 1 and maximum pending requests to 1. Thus, if we send more than 2 requests within a short period of time to the inventory service, 1 will go through, 1 will be pending, and any additional requests will be denied until the pending request is processed. Furthermore, it will detect any hosts that return a server error (HTTP 5xx) and eject the pod out of the load balancing pool for 15 minutes. You can visit here to check the [Istio spec](https://istio.io/docs/reference/config/traffic-rules/destination-policies.html#istio.proxy.v1.config.CircuitBreaker.SimpleCircuitBreakerPolicy){:target="_blank"} for more details on what each configuration parameter does.
+We set the Inventory service's maximum connections to 1 and maximum pending requests to 1. Thus, if we send more than 2 requests within a short period of time to the inventory service, 1 will go through, 1 will be pending, and any additional requests will be denied until the pending request is processed. Furthermore, it will detect any hosts that return a server error (HTTP 5xx) and eject the pod out of the load balancing pool for 15 minutes. You can visit here to check the [Istio spec](https://istio.io/docs/tasks/traffic-management/circuit-breaking){:target="_blank"} for more details on what each configuration parameter does.
 
 ####4. Overload the service
 
