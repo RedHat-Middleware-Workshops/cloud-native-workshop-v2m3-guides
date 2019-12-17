@@ -103,7 +103,7 @@ add-on for Istio is a Prometheus server that comes pre-configured to _scrape_ Is
 to collect its exposed metrics. It provides a mechanism for persistent storage
 and querying of those metrics metrics.
 
-Open the [Prometheus console](http://prometheus-istio-system.{{ROUTE_SUBDOMAIN}}/)
+Open the [Prometheus console](http://prometheus-istio-system.{{ROUTE_SUBDOMAIN}}/){:target="_blank"}.
 
 You should see Prometheus home screen, similar to this:
 
