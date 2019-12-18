@@ -364,7 +364,7 @@ scale cascading failure.
 
 Each circuit breaking limit is configurable and tracked on a per upstream cluster and per priority basis. This allows different components of the distributed system to be tuned independently and have different limits. See the [Envoy’s circuit breaker](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/circuit_breaking){:target="_blank"} for more details.
 
-Let's add a circuit breaker to the calls to the **Inventory service**. Instead of using a _VirtualService_ object, circuit breakers in isto are defined as _DestinationRule_ objects. DestinationRule defines policies that apply to traffic intended for a service after routing has occurred. These rules specify configuration for load balancing, connection pool size from the sidecar, and outlier detection settings to detect and evict unhealthy hosts from the load balancing pool.
+Let's add a circuit breaker to the calls to the **Inventory service**. Instead of using a _VirtualService_ object, circuit breakers in Istio are defined as _DestinationRule_ objects. DestinationRule defines policies that apply to traffic intended for a service after routing has occurred. These rules specify configuration for load balancing, connection pool size from the sidecar, and outlier detection settings to detect and evict unhealthy hosts from the load balancing pool.
 
 Open the empty **inventory-cb.yaml** file in `/projects/cloud-native-workshop-v2m3-labs/inventory/rules/` and add this code to the file to enable circuit breaking when calling the Inventory service:
 
@@ -390,7 +390,7 @@ Run the following command via CodeReady Workspaces Terminal to then create the r
 
 `oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-cb.yaml -n userXX-inventory`
 
-We set the Inventory service's maximum connections to 1 and maximum pending requests to 1. Thus, if we send more than 2 requests within a short period of time to the inventory service, 1 will go through, 1 will be pending, and any additional requests will be denied until the pending request is processed. Furthermore, it will detect any hosts that return a server error (HTTP 5xx) and eject the pod out of the load balancing pool for 15 minutes. You can visit here to check the [Istio spec](https://istio.io/docs/reference/config/traffic-rules/destination-policies.html#istio.proxy.v1.config.CircuitBreaker.SimpleCircuitBreakerPolicy){:target="_blank"} for more details on what each configuration parameter does.
+We set the Inventory service's maximum connections to 1 and maximum pending requests to 1. Thus, if we send more than 2 requests within a short period of time to the inventory service, 1 will go through, 1 will be pending, and any additional requests will be denied until the pending request is processed. Furthermore, it will detect any hosts that return a server error (HTTP 5xx) and eject the pod out of the load balancing pool for 15 minutes. You can visit here to check the [Istio spec](https://istio.io/docs/tasks/traffic-management/circuit-breaking){:target="_blank"} for more details on what each configuration parameter does.
 
 ####4. Overload the service
 
@@ -400,12 +400,12 @@ Let's use simple **curl** commands to send multiple concurrent requests to our a
 
 Execute this to simulate a number of users attampting to access the gateway URL simultaneously in CodeReady Workspaces Terminal.
 
-> Replace `YOUR_IVENTORY_GATEWAY_URL` with your custom inventory URL, e.g. `http://inventory-quarkus-userXX-inventory.{{ ROUTE_SUBDOMAIN }}`.
+> Replace `YOUR_INVENTORY_GATEWAY_URL` with your custom inventory URL, e.g. `http://inventory-quarkus-userXX-inventory.{{ ROUTE_SUBDOMAIN }}`.
 
 ~~~shell
-    for i in {1..50} ; do
-        curl 'http://YOUR_IVENTORY_GATEWAY_URL/services/inventory' >& /dev/null &
-    done
+	for i in {1..50} ; do
+		curl 'http://YOUR_INVENTORY_GATEWAY_URL/services/inventory' >& /dev/null &
+	done
 ~~~
 
 Due to the very conservative circuit breaker, many of these calls will fail with HTTP 503 (Server Unavailable). To see this,
@@ -631,7 +631,7 @@ In CodeReady, open the blank **ccn-auth-config.yml** file in `/projects/cloud-na
 
 You can also get the route url via executing the following commands in CodeReady Workspaces Terminal:
 
-`oc get route -n userXX-catalog | grep -v secure | awk 'NR>1{print $2}' | grep sso`
+`oc get route -n userXX-catalog secure-sso --template '{{.spec.host}}{{"\n"}}'`
 
 Use this value to replace `YOUR_SSO_HTTP_ROUTE_URL`. You will also use this later!
 
@@ -717,7 +717,7 @@ Congratulations! You've integrated RH-SSO with Istio to protect service mesh tra
 
 ---
 
-Unfortunately, the catalog service still doesn't work when you access via the web page because the applicaion has no authentication configuration yet:
+Unfortunately, the catalog service still doesn't work when you access via the web page because the application has no authentication configuration yet:
 
 ![sso]({% image_path rhsso_web_catalog_noauth.png %})
 
