@@ -41,7 +41,7 @@ Login using:
 
 > **NOTE**: Use of self-signed certificates
 >
-> When you access the OpenShift web console]({{ CONSOLE_URL}}) or other URLs via _HTTPS_ protocol, you will see browser warnings
+> When you access the [OpenShift web console]({{ CONSOLE_URL}}) or other URLs via _HTTPS_ protocol, you will see browser warnings
 > like `Your Connection is not secure` since this workshop uses self-signed certificates (which you should not do in production!).
 > For example, if you're using **Chrome**, to accept the warning,
 > Click on `Advanced` then `Proceed to...` to access the page.
@@ -108,11 +108,11 @@ And then create the _ingress gateway_ for Bookinfo:
 
 For your conveience, set an environment variable in the CodeReady Workspaces Terminal:
 
-`export BOOK_URL=REPLACE WITH YOUR BOOKINFO APP URL` (again, replace the same value as above).
+`echo "export BOOK_URL=REPLACE WITH YOUR BOOKINFO APP URL" >> ~/.bashrc && source ~/.bashrc` (again, replace the same value as above).
 
 When the app is installed, each Pod will get an additional _sidecar_ container as described earlier.
 
-Let's wait for our application to finish deploying. Go to the overview page in _userxx BookInfo Service Mesh_ project:
+Let's wait for our application to finish deploying. Go to the overview page in _userxx-bookinfo_ project:
 
 ![bookinfo]({% image_path bookinfo-deployed.png %})
 

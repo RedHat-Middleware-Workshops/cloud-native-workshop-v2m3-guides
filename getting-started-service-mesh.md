@@ -1,7 +1,7 @@
 ## Service Mesh and Identity
 
 In this module, you will learn how to prevent cascading failures in a distributed environment, how to detect misbehaving services, and how to avoid having to implement resiliency and monitoring in your business logic. As we transition our applications towards a distributed architecture with microservices deployed across a distributed
-network, Many new challenges await us.
+network, many new challenges await us.
 
 Technologies like containers and container orchestration platforms like OpenShift solve the deployment of our distributed
 applications quite well, but are still catching up to addressing the service communication necessary to fully take advantage
@@ -145,7 +145,7 @@ Click on the **Import Projects...** in **Workspace** menu and enter the followin
 ![codeready-workspace-import]({% image_path codeready-workspace-menu.png %})
 
   * Version Control System: `GIT`
-  * URL: `https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m3-labs.git`
+  * URL: `{{GIT_URL}}/userXX/cloud-native-workshop-v2m3-labs.git` (**IMPORTANT**: replace userXX with your lab user)
   * Check `Import recursively (for multi-module projects)`
   * Name: `cloud-native-workshop-v2m3-labs`
 
