@@ -1,7 +1,7 @@
 ## Service Mesh and Identity
 
 In this module, you will learn how to prevent cascading failures in a distributed environment, how to detect misbehaving services, and how to avoid having to implement resiliency and monitoring in your business logic. As we transition our applications towards a distributed architecture with microservices deployed across a distributed
-network, Many new challenges await us.
+network, many new challenges await us.
 
 Technologies like containers and container orchestration platforms like OpenShift solve the deployment of our distributed
 applications quite well, but are still catching up to addressing the service communication necessary to fully take advantage
