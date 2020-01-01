@@ -404,7 +404,7 @@ Execute this to simulate a number of users attampting to access the gateway URL 
 
 ~~~shell
 	for i in {1..1000} ; do
-		curl 'http://YOUR_INVENTORY_GATEWAY_URL/services/inventory' >& /dev/null &
+		curl 'http://YOUR_INVENTORY_GATEWAY_URL/services/inventory' > /dev/null &
 	done
 ~~~
 
