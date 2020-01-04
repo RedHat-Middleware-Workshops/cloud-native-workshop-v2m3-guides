@@ -37,7 +37,7 @@ First, open a new browser with the [OpenShift web console]({{ CONSOLE_URL}}){:ta
 Login using:
 
 * Username: `userXX`
-* Password: `r3dh4t1!`
+* Password: `openshift`
 
 > **NOTE**: Use of self-signed certificates
 >
