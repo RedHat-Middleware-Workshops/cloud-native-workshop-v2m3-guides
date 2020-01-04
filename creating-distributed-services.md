@@ -106,6 +106,8 @@ And then create the _ingress gateway_ for Bookinfo:
 
 `oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml`
 
+`oc expose svc/istio-ingressgateway --name=bookinfo-istio-system --hostname=userXX-bookinfo-istio-system.{{ ROUTE_SUBDOMAIN }} --port=8080 -n userXX-smcp`
+
 For your conveience, set an environment variable in the CodeReady Workspaces Terminal:
 
 `echo "export BOOK_URL=REPLACE WITH YOUR BOOKINFO APP URL" >> ~/.bashrc && source ~/.bashrc` (again, replace the same value as above).

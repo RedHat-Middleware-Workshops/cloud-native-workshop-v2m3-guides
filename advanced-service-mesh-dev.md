@@ -218,6 +218,8 @@ Create the new Istio-powered route by running the following command via CodeRead
 
 `oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-default.yaml -n userXX-inventory`
 
+`oc expose svc/istio-ingressgateway --name=inventory-quarkus --hostname=inventory-quarkus-userXX-inventory.{{ ROUTE_SUBDOMAIN }} --port=8080 -n userXX-smcp`
+
 Now, you can test if the inventory service works correctly via accessing the **YOUR_INVENTORY_GATEWAY_URL** in your browser:
 
 `i.e. http://inventory-quarkus-userXX-inventory.{{ ROUTE_SUBDOMAIN }}` (replace `userXX` with your username)
@@ -506,6 +508,10 @@ Then create this object in OpenShift by running the following command via CodeRe
 
 `oc create -f /projects/cloud-native-workshop-v2m3-labs/catalog/rules/catalog-default.yaml -n userXX-catalog` (replace `userXX` with your username!)
 
+Create a route in userXX-smcp:
+
+`oc expose svc/istio-ingressgateway --name=catalog-springboot --hostname=catalog-springboot-userXX-catalog.{{ ROUTE_SUBDOMAIN }}  --port=8080 -n userXX-smcp`  (replace `userXX` with your username!)
+
 Now, you can test if the catalog service works correctly by accessing the **YOUR_CATALOG_GATEWAY_URL** without _authentication_ in your browser:
 
 `i.e. http://catalog-springboot-userXX-catalog.{{ROUTE_SUBDOMAIN}}`
@@ -533,6 +539,30 @@ oc -n userXX-catalog new-app ccn-sso72 \
    -p SSO_SERVICE_USERNAME=authuserXX \
    -p SSO_SERVICE_PASSWORD=openshift
 ~~~
+
+for openshift 4.2, service mesh is GA, but this road show is for TP, so we need to fix router issue.
+
+`oc delete route sso -n userXX-catalog`
+
+`oc delete route secure-sso -n userXX-catalog`
+
+for network policy, add belows to the end of /projects/cloud-native-workshop-v2m3-labs/catalog/rules/catalog-default.yaml
+
+~~~yaml
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: web-allow-external
+spec:
+  podSelector:
+    matchLabels:
+      app: ccn-sso72
+  ingress:
+    - {}
+~~~
+
+`oc apply -f /projects/cloud-native-workshop-v2m3-labs/catalog/rules/catalog-default.yaml -n userXX-catalog`
 
 Wait for RH-SSO to be deployed using this command:
 
