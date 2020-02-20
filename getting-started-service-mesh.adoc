@@ -220,7 +220,7 @@ Step through the prompts, using the following value for **Repository URL**:
 
 [source,none,role="copypaste"]
 ----
-https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m4-labs.git
+https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m3-labs.git
 ----
 
 image::crw-clone-repo.png[crw, 600, align="center"]
