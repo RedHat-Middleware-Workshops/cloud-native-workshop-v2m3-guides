@@ -229,4 +229,4 @@ Now that we have our application deployed and linked into the Istio
 service mesh, let’s take a look at the immediate value we can get out of
 it without touching the application code itself!
 
-#####Congratulations!
+##### Congratulations!
