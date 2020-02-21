@@ -33,7 +33,7 @@ to 5 *red* stars.
 
 The end-to-end architecture of the application is shown below.
 
-image:istio_bookinfo.png[Bookinfo
+image::istio_bookinfo.png[Bookinfo
 Architecture]
 
 ####1. Deploy Bookinfo Application
@@ -44,7 +44,7 @@ First, open a new browser with the
 link:{{ CONSOLE_URL }}[OpenShift web
 console, window="_blank"]
 
-image:openshift_login.png[openshift_login]
+image::openshift_login.png[openshift_login]
 
 Login using:
 
@@ -70,7 +70,7 @@ Other browsers have similar procedures to accept the security exception.
 
 Once logged in, uou will see the OpenShift landing page:
 
-image:openshift_landing.png[openshift_landing]
+image::openshift_landing.png[openshift_landing]
 
 
 The project displayed in the landing page depends on which labs you will
@@ -128,11 +128,13 @@ and replace them with your custom url:
 
 `{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}`
 
-________________________________________________________
-Be sure to substitute your username for `{{ USER_ID }}`!
-________________________________________________________
+image::bookinfo-gateway.png[gateway]
 
-image:bookinfo-gateway.png[gateway]
+[TIP]
+====
+Be sure to substitute your username for `{{ USER_ID }}`!
+====
+
 
 And then create the _ingress gateway_ for Bookinfo:
 
@@ -150,7 +152,7 @@ container as described earlier.
 Let’s wait for our application to finish deploying. Go to the overview
 page in _{{ USER_ID }}-bookinfo_ project:
 
-image:bookinfo-deployed.png[bookinfo]
+image::bookinfo-deployed.png[bookinfo]
 
 Or you can execute the following commands to wait for the deployment to
 complete and result `successfully rolled out`:
@@ -191,15 +193,15 @@ Workspaces Terminal:
 
 It should look something like:
 
-image:bookinfo.png[Bookinfo App]
+image::bookinfo.png[Bookinfo App]
 
 Reload the page multiple times. The three different versions of the
 Reviews service show the star ratings differently - _v1_ shows no stars
 at all, _v2_ shows black stars, and _v3_ shows red stars:
 
-* *v1*: image:stars-none.png[no stars]
-* *v2*: image:stars-black.png[black stars]
-* *v3*: image:stars-red.png[red stars]
+* *v1*: image::stars-none.png[no stars]
+* *v2*: image::stars-black.png[black stars]
+* *v3*: image::stars-red.png[red stars]
 
 That’s because there are 3 versions of reviews deployment for our
 reviews service. Istio’s load-balancer is using a _round-robin_

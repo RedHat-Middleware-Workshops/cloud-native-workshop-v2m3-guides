@@ -28,7 +28,7 @@ In this section we'll explore how to use the OpenShift _Service Mesh_. Service M
 
 '''''
 
-image::images/istio-logo.png[Logo, 600, align="center"]
+image::istio-logo.png[Logo, 600, align="center"]
 
 Istio is an open, platform-independent service mesh designed to manage
 communications between microservices and applications in a transparent
@@ -94,7 +94,7 @@ to route traffic, as well as enforcing policies at runtime.
 The following diagram shows the different components that make up each
 plane:
 
-image::images/arch.png[Istio Arch, 600, align="center"]
+image::arch.png[Istio Arch, 600, align="center"]
 
 ==== Istio Components
 
@@ -186,7 +186,7 @@ save changes.
 To get started, {{ ECLIPSE_CHE_URL }}[access the Che instance, window=_blank] and log in using the username
 and password you’ve been assigned (e.g. `{{ USER_ID }}/{{ CHE_USER_PASSWORD }}`):
 
-image::images/che-login.png[cdw, 700]
+image::che-login.png[cdw, 700]
 
 Once you log in, you’ll be placed on your personal dashboard. Click on the name of
 the pre-created workspace on the left, as shown below (the name will be different depending on your assigned number). You can also
@@ -195,13 +195,13 @@ of the screen.
 
 After a minute or two, you’ll be placed in the workspace:
 
-image::images/che-workspace.png[cdw, 600, align="center"]
+image::che-workspace.png[cdw, 600, align="center"]
 
 This IDE is based on Eclipse Che (which is in turn based on MicroSoft VS Code editor).
 
 You can see icons on the left for navigating between project explorer, search, version control (e.g. Git), debugging, and other plugins.  You’ll use these during the course of this workshop. Feel free to click on them and see what they do:
 
-image::images/crw-icons.png[cdw, 400, align="center"]
+image::crw-icons.png[cdw, 400, align="center"]
 
 [NOTE]
 ====
@@ -214,7 +214,7 @@ If you ever need to run commands that you don't see in a menu, you can press kbd
 
 Let's import our first project. Click on **Git Clone..** (or type kbd:[F1], enter 'git' and click on the auto-completed _Git Clone.._ )
 
-image::images/che-workspace-gitclone.png[cdw, 600, align="center"]
+image::che-workspace-gitclone.png[cdw, 600, align="center"]
 
 Step through the prompts, using the following value for **Repository URL**:
 
@@ -223,11 +223,11 @@ Step through the prompts, using the following value for **Repository URL**:
 https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m3-labs.git
 ----
 
-image::images/crw-clone-repo.png[crw, 600, align="center"]
+image::crw-clone-repo.png[crw, 600, align="center"]
 
 Next, select `/projects` in the drop-down menu for destination directory:
 
-image::images/crw-clone-dest.png[crw, 600, align="center"]
+image::crw-clone-dest.png[crw, 600, align="center"]
 
 And click *Select Repository Location*.
 
@@ -235,7 +235,7 @@ Once imported, choose **Add to existing workspace** when prompted.
 
 The project is imported into your workspace and is visible in the project explorer:
 
-image::images/crw-clone-explorer.png[crw, 600, align="center"]
+image::crw-clone-explorer.png[crw, 600, align="center"]
 
 [NOTE]
 ====
@@ -243,4 +243,4 @@ The Terminal window in CodeReady Workspaces. You can open a terminal window for 
 terminal, you can use the **>_ New Terminal** command on the right:
 ====
 
-image::images/codeready-workspace-terminal.png[codeready-workspace-terminal, 600, align="center"]
+image::codeready-workspace-terminal.png[codeready-workspace-terminal, 600, align="center"]

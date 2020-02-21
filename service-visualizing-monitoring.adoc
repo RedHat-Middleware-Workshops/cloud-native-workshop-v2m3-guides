@@ -4,7 +4,7 @@ In this lab you will visualize your service mesh using *Kiali*,
 *Prometheus*, *Grafana* and you will lean how to configure basic *Istio
 funtionalities* such as *VirtualService* and *A/B Testing*.
 
-####1. Generating application load
+#### 1. Generating application load
 
 '''''
 
@@ -25,7 +25,7 @@ status result in a separate terminal window.
 With this application load running, metrics will become much more
 interesting in the next few steps.
 
-####2. Examine Kiali
+#### 2. Examine Kiali
 
 '''''
 
@@ -42,17 +42,17 @@ below and click _Log In_.
 * Username: `admin`
 * Password: `admin`
 
-image:%7B%%20image_path%20istio-kiali-login.png%20%%7D[istio-kiali]
+image::istio-kiali-login.png[istio-kiali]
 
 In the namespace selector at the top, enter your *{{ USER_ID
 }}-bookinfo* application (e.g. user1-bookinfo) and press enter to filter
 to only show your bookinfo project.
 
-image:%7B%%20image_path%20kiali-all-namespaces.png%20%%7D[kiali]
+image::kiali-all-namespaces.png[kiali]
 
 This way you will only see your personal working namespace as below:
 
-image:%7B%%20image_path%20kiali-bookinfo-namespaces.png%20%%7D[kiali]\{:width=``800px''}
+image::kiali-bookinfo-namespaces.png[kiali]\{:width=``800px''}
 
 Click on the ``4 Applications'' link.
 
@@ -61,7 +61,7 @@ Click on the ``4 Applications'' link.
 Click on the _Graph_ page on the left and check *Traffic Animation* in
 *Display*:
 
-image:%7B%%20image_path%20kiali-service-graph.png%20%%7D[kiali]
+image::kiali-service-graph.png[kiali]
 
 It shows a graph with all the microservices, connected by the requests
 going through then. On this page, you can see how services interact with
@@ -77,23 +77,23 @@ Click on *Applications* menu in the left navigation. On this page you
 can view a listing of all the services that are running in the cluster,
 and additional information about them, such as health status.
 
-image:%7B%%20image_path%20kiali-applications.png%20%%7D[kiali]
+image::kiali-applications.png[kiali]
 
 Click on the *productpage* application to see its details. You can also
 see the health of a service on the *Health* section when it’s online and
 responding to requests without errors:
 
-image:%7B%%20image_path%20kiali-app-productpage.png%20%%7D[kiali]
+image::kiali-app-productpage.png[kiali]
 
 By clicking on *Inbound Metrics*, you can see the metrics for an
 application, like this:
 
-image:%7B%%20image_path%20kiali-app-productpage-inbound.png%20%%7D[kiali]
+image::kiali-app-productpage-inbound.png[kiali]
 
 By clicking on *Outbound Metrics*, you can see the metrics for an
 application, like this:
 
-image:%7B%%20image_path%20kiali-app-productpage-outbound.png%20%%7D[kiali]
+image::kiali-app-productpage-outbound.png[kiali]
 
 === Workloads
 
@@ -101,12 +101,12 @@ Click on the *Workloads* menu in the left navigation. On this page you
 can view a listing of all the workloads that are present in your
 application.
 
-image:%7B%%20image_path%20kiali-app-productpage-workload.png%20%%7D[kiali]
+image::kiali-app-productpage-workload.png[kiali]
 
 Click on the *productpage-v1* workload. Here you can see details for the
 workload, such as the pods and services that are included in it:
 
-image:%7B%%20image_path%20kiali-app-productpage-workload-v1.png%20%%7D[kiali]
+image::kiali-app-productpage-workload-v1.png[kiali]
 
 By clicking _Inbound Metrics_, you can check the metrics for the
 workload. The metrics are the same as the _Application_ ones.
@@ -116,15 +116,15 @@ workload. The metrics are the same as the _Application_ ones.
 Click on *Services* menu in the left navigation. Here, you can see the
 listing of all services.
 
-image:%7B%%20image_path%20kiali-services.png%20%%7D[kiali]
+image::kiali-services.png[kiali]
 
 Click on *productpage* service which will show you the details of the
 service, such as metrics, traces, workloads, virtual services,
 destination rules and more:
 
-image:%7B%%20image_path%20kiali-services-productpage.png%20%%7D[kiali]
+image::kiali-services-productpage.png[kiali]
 
-####3. Querying Metrics with Prometheus
+#### 3. Querying Metrics with Prometheus
 
 '''''
 
@@ -136,12 +136,11 @@ endpoints to collect its exposed metrics. It provides a mechanism for
 persistent storage and querying of those metrics metrics.
 
 Open the
-http://prometheus-istio-system.%7B%7BROUTE_SUBDOMAIN%7D%7D/[Prometheus
-console, window="_blank"].
+http://prometheus-istio-system.%7B%7BROUTE_SUBDOMAIN%7D%7D/[Prometheus console, window="_blank"].
 
 You should see Prometheus home screen, similar to this:
 
-image:%7B%%20image_path%20istio-prometheus-landing.png%20%%7D[istio-prometheus]
+image::istio-prometheus-landing.png[istio-prometheus]
 
 In the ``Expression'' input box at the top of the web page, enter the
 text: *istio_request_duration_seconds_count*. Then, click the *Execute*
@@ -150,13 +149,13 @@ button.
 You should see a listing of each of the application’s services along
 with a count of how many times it was accessed.
 
-image:%7B%%20image_path%20istio-prometheus-console.png%20%%7D[Prometheus
+image::istio-prometheus-console.png[Prometheus
 console]
 
 You can also graph the results over time by clicking on the _Graph_ tab
 (adjust the timeframe from 1 hour to 1 minute for example):
 
-image:%7B%%20image_path%20istio-prometheus-graph.png%20%%7D[Prometheus
+image::istio-prometheus-graph.png[Prometheus
 graph]
 
 Other expressions to try:
@@ -173,7 +172,7 @@ There are many, many different queries you can perform to extract the
 data you need. Consult the https://prometheus.io/docs[Prometheus
 documentation] for more detail.
 
-####4. Visualizing Metrics with Grafana
+#### 4. Visualizing Metrics with Grafana
 
 '''''
 
@@ -185,23 +184,22 @@ Istio data plane and can be used to quickly spot problems and take
 action.
 
 Open the
-http://grafana-istio-system.%7B%7BROUTE_SUBDOMAIN%7D%7D/[Grafana
-console, window="_blank"]
+http://grafana-istio-system.%7B%7BROUTE_SUBDOMAIN%7D%7D/[Grafana console, window="_blank"]
 
 You should see Grafana home screen, similar to this:
 
-image:%7B%%20image_path%20grafana-home.png%20%%7D[Grafana graph]
+image::grafana-home.png[Grafana graph]
 
 === Istio Mesh Metrics
 
 Select *Home > Istio > Istio Mesh Dashboard* to see Istio mesh metrics:
 
-image:%7B%%20image_path%20grafana-mesh-metrics-select.png%20%%7D[Grafana
+image::grafana-mesh-metrics-select.png[Grafana
 graph]
 
 You will see the built-in Istio metrics dashboard::
 
-image:%7B%%20image_path%20grafana-mesh-metrics.png%20%%7D[Grafana graph]
+image::grafana-mesh-metrics.png[Grafana graph]
 
 === Istio Service Metrics
 
@@ -209,7 +207,7 @@ Let’s see detailed metrics of the *productpage* service. Click on
 *productpage.{{ USER_ID }}-bookinfo.svc.cluster.local* and the service
 dashboard will look similar to this:
 
-image:%7B%%20image_path%20grafana-service-metrics.png%20%%7D[Grafana
+image::grafana-service-metrics.png[Grafana
 graph]
 
 The Grafana Dashboard for Istio consists of three main sections:
@@ -221,10 +219,13 @@ Summary View, allowing per-service filtering and selection.
 * _Individual Services View_ provides metrics about requests and
 responses for each individual service within the mesh (HTTP and TCP).
 
-Note that _TCP Bandwidth_ metrics are empty, as Bookinfo uses http-based
+[NOTE]
+====
+that _TCP Bandwidth_ metrics are empty, as Bookinfo uses http-based
 services only. Lower down on this dashboard are metrics for workloads
 that call this service (labeled ``Client Workloads'') and for workloads
 that process requests from the service (labeled _Service Workloads_).
+====
 
 You can switch to a different service or filter metrics by _client-_ and
 _service-workloads_ by using drop-down lists at the top of the
@@ -236,13 +237,13 @@ To switch to the workloads dashboard, select *Home > Istio Workload
 Dashboard* from the drop-down list in the top left corner of the screen.
 You should see a screen similar to this:
 
-______________________________________________________________________________________________________________________________________________
+[NOTE]
+====___________________
 You should select your own {{ USER_ID }}-bookinfo in the `Namespace`
 selector at the top to avoid noise from other workloads on the cluster!
-______________________________________________________________________________________________________________________________________________
+====___________________
 
-image:%7B%%20image_path%20grafana-workload-metrics.png%20%%7D[Grafana
-graph]
+image::grafana-workload-metrics.png[Grafana graph]
 
 This dashboard shows workload’s metrics, and metrics for client-
 (inbound) and service (outbound) workloads. You can switch to a
@@ -257,7 +258,7 @@ metrics without doing anything to the application itself. Let’s use our
 new tools in the next section to see the real power of Istio to diagnose
 and fix issues in applications and make them more resilient and robust.
 
-####5. Request Routing
+#### 5. Request Routing
 
 '''''
 
@@ -298,7 +299,7 @@ failure response returned by Istio would not be distinguishable from a
 failure response returned by the upstream service to which the call was
 made.
 
-####6. Service Versions
+#### 6. Service Versions
 
 '''''
 
@@ -313,7 +314,7 @@ https://istio.io/docs/concepts/traffic-management/rules-configuration.html[traff
 routing rules, window="_blank"] can refer to service versions to
 provide additional control over traffic between services.
 
-image:%7B%%20image_path%20versions.png%20%%7D[Versions]
+image::versions.png[Versions]
 
 As illustrated in the figure above, clients of a service have no
 knowledge of different versions of the service. They can continue to
@@ -321,7 +322,7 @@ access the services using the hostname/IP address of the service. The
 Envoy sidecar/proxy intercepts and forwards all requests/responses
 between the client and the service.
 
-####7. VirtualService objects
+#### 7. VirtualService objects
 
 '''''
 
@@ -376,11 +377,12 @@ Now, access the application again in your web browser using the below
 link and reload the page several times - you should not see any rating
 stars since *reviews:v1* does not access the _ratings_ service.
 
-___________________________________________________________________________________________________________________________________________________________________________________________________
-*NOTE* - It may take a minute or two for the new routing to take effect.
+[NOTE]
+====
+It may take a minute or two for the new routing to take effect.
 If you still see red or black stars, wait a minute and try again.
 Eventually it should no longer show any red/black stars.
-___________________________________________________________________________________________________________________________________________________________________________________________________
+====
 
 * Bookinfo Application with no rating stars at
 `http://$BOOK_URL/productpage`
@@ -391,7 +393,7 @@ _Networking > Routes_)
 Scroll down to the *ratings* service in _Istio Service Dashboard_ and
 notice that the requests coming from the reviews service have stopped:
 
-image:%7B%%20image_path%20ratings-stopped.png%20%%7D[Versions]
+image::ratings-stopped.png[Versions]
 
 ####8. A/B Testing with Istio
 
@@ -403,10 +405,13 @@ _reviews:v3_. Execute:
 
 `oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/virtual-service-reviews-jason-v2-v3.yaml`
 
-________________________________________________________________________________________________________________________________________
-*TIP*: You can ignore warnings like _Warning: oc apply should be used on
+
+[TIP]
+====
+You can ignore warnings like _Warning: oc apply should be used on
 resource created by either oc create –save-config or oc apply_.
-________________________________________________________________________________________________________________________________________
+====
+
 
 Confirm the rule is created:
 
@@ -443,23 +448,22 @@ right) and sign in with:
 * Username: *jason*
 * Password: *jason*
 
-___________________________________________________________________________________________________________________________
+[NOTE]
+====
 If you get any certificate security exceptions, just accept them and
 continue. This is due to the use of self-signed certs.
-___________________________________________________________________________________________________________________________
+====
 
 Once you login, refresh a few times - you should always see the black
 ratings stars coming from *ratings:v2* since you’re signed in as
 `jason`.
 
-image:%7B%%20image_path%20ratings-testuser.png%20%%7D[Ratings for Test
-User]
+image::ratings-testuser.png[Ratings for Test User]
 
 If you *sign out*, you’ll return to the *reviews:v3* version which shows
 red ratings stars.
 
-image:%7B%%20image_path%20ratings-signout.png%20%%7D[Ratings for Test
-User]
+image::ratings-signout.png[Ratings for Test User]
 
 #####Congratulations!
 
