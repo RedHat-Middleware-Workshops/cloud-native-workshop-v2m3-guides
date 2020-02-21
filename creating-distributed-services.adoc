@@ -111,8 +111,8 @@ Using project "default".
 Welcome! See 'oc help' to get started.
 ----
 
-Change to the empty *\{\{ USER_ID }}-bookinfo* project via CodeReady
-Workspaces Terminal and this command (you should replace *\{\{ USER_ID
+Change to the empty *{{ USER_ID }}-bookinfo* project via CodeReady
+Workspaces Terminal and this command (you should replace *{{ USER_ID
 }}* with your username):
 
 `oc project {{ USER_ID }}-bookinfo`
@@ -148,7 +148,7 @@ When the app is installed, each Pod will get an additional _sidecar_
 container as described earlier.
 
 Let’s wait for our application to finish deploying. Go to the overview
-page in _\{\{ USER_ID }}-bookinfo_ project:
+page in _{{ USER_ID }}-bookinfo_ project:
 
 image:bookinfo-deployed.png[bookinfo]
 

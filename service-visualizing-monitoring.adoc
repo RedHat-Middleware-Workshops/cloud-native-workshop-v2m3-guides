@@ -44,7 +44,7 @@ below and click _Log In_.
 
 image:%7B%%20image_path%20istio-kiali-login.png%20%%7D[istio-kiali]
 
-In the namespace selector at the top, enter your *\{\{ USER_ID
+In the namespace selector at the top, enter your *{{ USER_ID
 }}-bookinfo* application (e.g. user1-bookinfo) and press enter to filter
 to only show your bookinfo project.
 
@@ -206,7 +206,7 @@ image:%7B%%20image_path%20grafana-mesh-metrics.png%20%%7D[Grafana graph]
 === Istio Service Metrics
 
 Let’s see detailed metrics of the *productpage* service. Click on
-*productpage.\{\{ USER_ID }}-bookinfo.svc.cluster.local* and the service
+*productpage.{{ USER_ID }}-bookinfo.svc.cluster.local* and the service
 dashboard will look similar to this:
 
 image:%7B%%20image_path%20grafana-service-metrics.png%20%%7D[Grafana
@@ -237,7 +237,7 @@ Dashboard* from the drop-down list in the top left corner of the screen.
 You should see a screen similar to this:
 
 ______________________________________________________________________________________________________________________________________________
-You should select your own \{\{ USER_ID }}-bookinfo in the `Namespace`
+You should select your own {{ USER_ID }}-bookinfo in the `Namespace`
 selector at the top to avoid noise from other workloads on the cluster!
 ______________________________________________________________________________________________________________________________________________
 

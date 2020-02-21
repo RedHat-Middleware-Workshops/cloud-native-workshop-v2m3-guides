@@ -69,7 +69,7 @@ OpenShift capabilities such as builder pods.
 _______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 Back in the the link:%7B%7B%20CONSOLE_URL%7D%7D[OpenShift web
-console, window="_blank"], select the _\{\{ USER_ID }}-inventory_
+console, window="_blank"], select the _{{ USER_ID }}-inventory_
 project in the project drop-down, then go to *Workloads > Deployment
 Configs* on the left menu, and click on _inventory-database_ and then
 click the _YAML_ tab.
@@ -140,7 +140,7 @@ Pods > inventory-quarkus-xxxxx_:
 image:%7B%%20image_path%20inventory_sidecar.png%20%%7D[istio]
 
 Next, do the same for the catalog and catalog’s database. Go to
-**Workloads > Deployment Configs* on the left menu, select _\{\{ USER_ID
+**Workloads > Deployment Configs* on the left menu, select _{{ USER_ID
 }}-catalog_ project and click on _catalog-database_.
 
 image:%7B%%20image_path%20catalog_db_dc.png%20%%7D[istio]
@@ -160,7 +160,7 @@ image:%7B%%20image_path%20catalog_db_sidecar.png%20%%7D[istio]
 
 Next, let’s inject a sidecar container to application container
 (Catalog) as well, go to **Workloads > Deployment Configs* on the left
-menu, select _\{\{ USER_ID }}-catalog_ project and click on
+menu, select _{{ USER_ID }}-catalog_ project and click on
 _catalog-springboot_.
 
 image:%7B%%20image_path%20catalog_dc.png%20%%7D[istio]
@@ -184,7 +184,7 @@ the `{{ USER_ID }}-catalog` from the _namespace_ dropdown menu. Open the
 URL in your browser:
 
 * Catalog UI (replace `{{ USER_ID }}` with your username):
-http://catalog-springboot-\{\{ USER_ID }}-catalog.\{\{ROUTE_SUBDOMAIN}}
+http://catalog-springboot-{{ USER_ID }}-catalog.\{\{ROUTE_SUBDOMAIN}}
 
 You will see the following web page including *Inventory Quantity* if
 the catalog service can access the inventory service via _Istio proxy
@@ -204,8 +204,8 @@ warning is no longer present:
 
 image:%7B%%20image_path%20kiali_injecting_sidecar.png%20%%7D[istio]
 
-Also, go to the Service Graph page and check _\{\{ USER_ID
-}}-inventory_, _\{\{ USER_ID }}-catalog_ in Namespace, check *Traffic
+Also, go to the Service Graph page and check _{{ USER_ID
+}}-inventory_, _{{ USER_ID }}-catalog_ in Namespace, check *Traffic
 Animation* in _Display_ for understanding the traffic flow from catalog
 service to inventory service:
 
@@ -268,7 +268,7 @@ failure in *50%* of the requests to the _inventory_ service, causing the
 service to appear to fail (and return `HTTP 5xx` errors).
 
 First, add the following label in the Inventory service to use a
-_virtual service_. In the OpenShift Web Consle, select the _\{\{ USER_ID
+_virtual service_. In the OpenShift Web Consle, select the _{{ USER_ID
 }}-inventory_ project in the project selector drop-down, then navigate
 to _Networking > Services_ in the left menu, and select
 _inventory-quarkus_.
@@ -899,7 +899,7 @@ Go to *Credentials* tab and input the following variables:
 * Temporary: *OFF*
 
 Make sure to turn off the ``Temporary'' flag unless you want the
-auth\{\{ USER_ID }} to have to change his password the first time they
+auth{{ USER_ID }} to have to change his password the first time they
 authenticate.
 
 Click on *Reset Password*.
@@ -935,7 +935,7 @@ authentication policy:
 
 ___________________________________________________________________________________________________________________________________________________________________
 Replace all *YOUR_SSO_HTTP_ROUTE_URL* with your own HTTP route url of
-SSO container that you created earlier and also replace *\{\{ USER_ID
+SSO container that you created earlier and also replace *{{ USER_ID
 }}* with your username.
 ___________________________________________________________________________________________________________________________________________________________________
 
@@ -1183,7 +1183,7 @@ web brower then you will redirect to the login page of *RH-SSO*.
 Input the following credential that we created it in RH-SSO
 administration page eariler.
 
-* Username or email: *auth\{\{ USER_ID }}* (replace with your auth user,
+* Username or email: *auth{{ USER_ID }}* (replace with your auth user,
 e.g. `authuser34`)
 * Password: *openshift*
 
