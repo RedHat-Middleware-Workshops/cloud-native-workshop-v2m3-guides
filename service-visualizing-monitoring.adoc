@@ -48,9 +48,9 @@ image::kiali-all-namespaces.png[kiali]
 
 This way you will only see your personal working namespace as below:
 
-image::kiali-bookinfo-namespaces.png[kiali]\{:width=``800px''}
+image::kiali-bookinfo-namespaces.png[kiali, 800]
 
-Click on the ``4 Applications'' link.
+Click on the 4 Applications link.
 
 === Service Graph
 
@@ -262,15 +262,24 @@ Let’s create a default set of *virtual services* which will direct all traffic
 
 Open a new Terminal (while your other endless `for` loop continues to run) and execute this command to route all traffic to `v1`:
 
-`oc create -f /projects/cloud-native-workshop-v2m3-labs/istio/virtual-service-all-v1.yaml`
+[source, shell, role="copypaste"]
+----
+oc create -f /projects/cloud-native-workshop-v2m3-labs/istio/virtual-service-all-v1.yaml
+----
 
 You can see this default set of _virtual services_ with:
 
-`oc get virtualservices -o yaml`
+[source, shell, role="copypaste"]
+----
+oc get virtualservices -o yaml
+----
 
 There are default _virtual services_ for each service, such as the one that forces all traffic to the _v1_ version of the _reviews_ service:
 
-`oc get virtualservices/reviews -o yaml`
+[source, shell, role="copypaste"]
+----
+oc get virtualservices/reviews -o yaml
+----
 
 [source, yaml, role="copypaste"]
 ----

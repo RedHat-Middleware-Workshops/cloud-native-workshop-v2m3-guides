@@ -121,16 +121,16 @@ image::inventory_db_sidecar.png[istio]
 Now let's inject a sidecar container to application container (Inventory) as well. First, we need to remove the healhcheck of the
 inventory service as it will also be proxied and as we have no route for it, will be rejected (and the pod killed since Kubernetes cannot access the health check!). Alternative health checks involve running commands directly in the container but we’ll just remove it for now. Remove it with:
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
 oc set probe dc/inventory-quarkus --remove --readiness --liveness -n {{ USER_ID }}-inventory
 ----
 
 Ensure the new deployemnt is successfully rolled out by using the following command
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc rollout status -w dc/inventory-quarkus -n {{ USER_ID }}-inventory`
+oc rollout status -w dc/inventory-quarkus -n {{ USER_ID }}-inventory
 ----
 
 Next:
@@ -356,16 +356,16 @@ image::inventory-default-gateway.png[fault-injection]
 
 Delete the old direct route that was setup earlier with:
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc delete route/inventory-quarkus -n {{ USER_ID }}-inventory`
+oc delete route/inventory-quarkus -n {{ USER_ID }}-inventory
 ----
 
 Create the new Istio-powered route by running the following command via CodeReady Workspaces Terminal to create this object in OpenShift:
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-default.yaml -n {{ USER_ID }}-inventory`
+oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-default.yaml -n {{ USER_ID }}-inventory
 ----
 
 Now, you can test if the inventory service works correctly via accessing the *YOUR_INVENTORY_GATEWAY_URL* in your browser:
@@ -414,17 +414,17 @@ image::inventory-vs-error.png[fault-injection]
 Before creating a new *inventory-fault VirtualService*, we need to
 delete the existing inventory-default virtualService. Run the following command via CodeReady Workspaces Terminal:
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc delete virtualservice/inventory-default -n {{ USER_ID }}-inventory`
+oc delete virtualservice/inventory-default -n {{ USER_ID }}-inventory
 
 ----
 
 Then create a new virtualservice and gateway with this command:
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-vs-fault.yaml -n {{ USER_ID }}-inventory`
+oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-vs-fault.yaml -n {{ USER_ID }}-inventory
 ----
 
 Let’s find out if the fault injection works corectly via accessing the
@@ -477,16 +477,16 @@ image::inventory-vs-delay.png[fault-injection]
 
 Before creating a new *inventory-fault-delay VirtualService*, we need to delete the existing inventory-fault VirtualService. Run the following command via CodeReady Workspaces Terminal:
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc delete virtualservice/inventory-fault -n {{ USER_ID }}-inventory`
+oc delete virtualservice/inventory-fault -n {{ USER_ID }}-inventory
 ----
 
 Then create a new virtualservice and gateway.
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-vs-fault-delay.yaml -n {{ USER_ID }}-inventory`
+oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-vs-fault-delay.yaml -n {{ USER_ID }}-inventory
 ----
 
 Go to the *Kiali Graph* you opened earlier and you will see that the
@@ -510,17 +510,17 @@ Before we will move to the next step, clean up the fault injection and
 set the default virtual service once again using these commands in a
 Terminal:
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc delete virtualservice/inventory-fault-delay -n {{ USER_ID }}-inventory`
+oc delete virtualservice/inventory-fault-delay -n {{ USER_ID }}-inventory
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc delete gateway/inventory-gateway -n {{ USER_ID }}-inventory`
+oc delete gateway/inventory-gateway -n {{ USER_ID }}-inventory
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-default.yaml -n {{ USER_ID }}-inventory`
+oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-default.yaml -n {{ USER_ID }}-inventory
 ----
 
 Also, close the tabs in your browser for the Inventory and Catalog
@@ -591,9 +591,9 @@ image::inventory-circuit-breaker.png[circuit-breaker]
 
 Run the following command via CodeReady Workspaces Terminal to then create the rule:
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-cb.yaml -n {{ USER_ID }}-inventory`
+oc create -f /projects/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-cb.yaml -n {{ USER_ID }}-inventory
 ----
 
 We set the Inventory service’s maximum connections to 1 and maximum
@@ -648,9 +648,9 @@ That’s the circuit breaker in action, limiting the number of requests to the s
 
 Before moving on, stop the traffic generator by executing the following commands in CodeReady Workspaces Terminal:
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-for i in {1..50} ; do kill %${i} ; done`
+for i in {1..50} ; do kill %${i} ; done
 ----
 
 image::inventory-circuit-breaker-stop.png[circuit-breaker]
@@ -658,9 +658,9 @@ image::inventory-circuit-breaker-stop.png[circuit-breaker]
 Delete the circuit breaker of the Inventory service via the following
 commands. 
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc delete destinationrule/inventory-cb -n {{ USER_ID }}-inventory`
+oc delete destinationrule/inventory-cb -n {{ USER_ID }}-inventory
 ----
 
 #### 6. Enable Authentication using Single Sign-on
@@ -682,9 +682,9 @@ Lets start by removing the direct route to the catalog service. We want traffic 
 
 Use the following command in the CodeReady Workspaces Terminal:
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc delete route/catalog-springboot -n {{ USER_ID }}-catalog`
+oc delete route/catalog-springboot -n {{ USER_ID }}-catalog
 ----
 
 <1> Open the link:{{CONSOLE_URL}}[OpenShift web console, window="_blank"]
@@ -765,10 +765,9 @@ image::catalog-default-gateway.png[sso]
 Now create this object in OpenShift by running the following command
 via CodeReady Workspaces Terminal:
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc create -f /projects/cloud-native-workshop-v2m3-labs/catalog/rules/catalog-default.yaml -n {{ USER_ID }}-catalog`
-(!)
+oc create -f /projects/cloud-native-workshop-v2m3-labs/catalog/rules/catalog-default.yaml -n {{ USER_ID }}-catalog
 ----
 
 Time to test if the catalog service works correctly by accessing
@@ -805,9 +804,9 @@ oc -n {{ USER_ID }}-catalog new-app ccn-sso72 \
 
 Wait for RH-SSO to be deployed using this command:
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc rollout status -w dc/sso -n {{ USER_ID }}-catalog`
+oc rollout status -w dc/sso -n {{ USER_ID }}-catalog
 ----
 
 Once this finishes (it may take a minute or two), in the
@@ -919,9 +918,9 @@ Now let's replace all *YOUR_SSO_HTTP_ROUTE_URL* with your own HTTP route url of 
 You can also get the route url via executing the following commands in
 CodeReady Workspaces Terminal
 
-[source, terminal, role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc get route -n {{ USER_ID }}-catalog secure-sso --template '{{.spec.host}}{{"\n"}}'`
+oc get route -n {{ USER_ID }}-catalog secure-sso --template '{{.spec.host}}{{"\n"}}'
 ----
 
 Use this value to replace `YOUR_SSO_HTTP_ROUTE_URL`. You will also use
@@ -960,9 +959,9 @@ be accepted.
 Then execute the following oc command in CodeReady Workspaces Terminal
 to create this object:
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
-oc create -f /projects/cloud-native-workshop-v2m3-labs/catalog/rules/ccn-auth-config.yaml -n {{ USER_ID }}-catalog`
+oc create -f /projects/cloud-native-workshop-v2m3-labs/catalog/rules/ccn-auth-config.yaml -n {{ USER_ID }}-catalog
 ----
 
 Now you can’t access the catalog service without authentication of
@@ -1131,7 +1130,7 @@ image::rhsso_catalog_pom_dependency.png[sso]
 
 Let’s re-deploy the catalog service to OpenShift by running the following maven command in CodeReady Workspaces Terminal:
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
 cd /projects/cloud-native-workshop-v2m3-labs/catalog
 
@@ -1142,7 +1141,7 @@ oc -n {{ USER_ID }}-catalog start-build catalog-springboot --from-file=target/ca
 
 Wait for the catalog pod to restart:
 
-[source,terminal,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
 oc rollout status -w dc/catalog-springboot -n {{ USER_ID }}-catalog
 ----
