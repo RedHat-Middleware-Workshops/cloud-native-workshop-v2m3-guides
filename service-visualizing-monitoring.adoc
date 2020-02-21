@@ -34,7 +34,7 @@ This UI will allow you to view configurations, monitor traffic flow and
 health, and analyze traces.
 
 Open the https://kiali-istio-system.%7B%7BROUTE_SUBDOMAIN%7D%7D/[Kiali
-console]\{:target="_blank"}.
+console, window="_blank"].
 
 You should see _Kiali Login_ screen. Enter the username and password as
 below and click _Log In_.
@@ -137,7 +137,7 @@ persistent storage and querying of those metrics metrics.
 
 Open the
 http://prometheus-istio-system.%7B%7BROUTE_SUBDOMAIN%7D%7D/[Prometheus
-console]\{:target="_blank"}.
+console, window="_blank"].
 
 You should see Prometheus home screen, similar to this:
 
@@ -179,14 +179,14 @@ documentation] for more detail.
 
 As the number of services and interactions grows in your application,
 this style of metrics may be a bit overwhelming.
-https://grafana.com/[Grafana]\{:target="_blank"} provides a visual
+https://grafana.com/[Grafana, window="_blank"] provides a visual
 representation of many available Prometheus metrics extracted from the
 Istio data plane and can be used to quickly spot problems and take
 action.
 
 Open the
 http://grafana-istio-system.%7B%7BROUTE_SUBDOMAIN%7D%7D/[Grafana
-console]\{:target="_blank"}
+console, window="_blank"]
 
 You should see Grafana home screen, similar to this:
 
@@ -250,7 +250,7 @@ different workload, ot filter metrics by inbound or outbound workloads
 by using drop-down lists at the top of the dashboard.
 
 For more on how to create, configure, and edit dashboards, please see
-the http://docs.grafana.org/[Grafana documentation]\{:target="_blank"}.
+the http://docs.grafana.org/[Grafana documentation, window="_blank"].
 
 As a developer, you can get quite a bit of information from these
 metrics without doing anything to the application itself. Let’s use our
@@ -292,7 +292,7 @@ fallback logic that is needed to handle the HTTP 503 error code from an
 upstream service.
 
 If your application already provides some defensive measures (e.g. using
-https://github.com/Netflix/Hystrix[Netflix Hystrix]\{:target="_blank"}),
+https://github.com/Netflix/Hystrix[Netflix Hystrix, window="_blank"]),
 then that’s OK. *Istio* is completely transparent to the application. A
 failure response returned by Istio would not be distinguishable from a
 failure response returned by the upstream service to which the call was
@@ -310,7 +310,7 @@ the same service, deployed in different environments (prod, staging,
 dev, etc.). Common scenarios where this is used include A/B testing or
 canary rollouts. Istio’s
 https://istio.io/docs/concepts/traffic-management/rules-configuration.html[traffic
-routing rules]\{:target="_blank"} can refer to service versions to
+routing rules, window="_blank"] can refer to service versions to
 provide additional control over traffic between services.
 
 image:%7B%%20image_path%20versions.png%20%%7D[Versions]

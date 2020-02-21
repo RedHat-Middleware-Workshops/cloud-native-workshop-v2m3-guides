@@ -33,7 +33,7 @@ to 5 *red* stars.
 
 The end-to-end architecture of the application is shown below.
 
-image:%7B%%20image_path%20istio_bookinfo.png%20%%7D[Bookinfo
+image:istio_bookinfo.png[Bookinfo
 Architecture]
 
 ####1. Deploy Bookinfo Application
@@ -41,40 +41,42 @@ Architecture]
 '''''
 
 First, open a new browser with the
-link:%7B%7B%20CONSOLE_URL%7D%7D[OpenShift web
-console]\{:target="_blank"}
+link:{{ CONSOLE_URL }}[OpenShift web
+console, window="_blank"]
 
-image:%7B%%20image_path%20openshift_login.png%20%%7D[openshift_login]
+image:openshift_login.png[openshift_login]
 
 Login using:
 
 * Username: `{{ USER_ID }}`
 * Password: `r3dh4t1!`
 
-________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
-*NOTE*: Use of self-signed certificates
 
-When you access the link:%7B%7B%20CONSOLE_URL%7D%7D[OpenShift web
+[IMPORTANT]
+====
+When you access the link:{{ CONSOLE_URL }}[OpenShift web
 console] or other URLs via _HTTPS_ protocol, you will see browser
 warnings like `Your Connection is not secure` since this workshop uses
 self-signed certificates (which you should not do in production!). For
 example, if you’re using *Chrome*, to accept the warning, Click on
 `Advanced` then `Proceed to...` to access the page.
+====
 
-image:%7B%%20image_path%20browser_warning.png%20%%7D[warning]
+images/browser_warning.png[warning]
+
 
 Other browsers have similar procedures to accept the security exception.
-________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
 
 Once logged in, uou will see the OpenShift landing page:
 
-image:%7B%%20image_path%20openshift_landing.png%20%%7D[openshift_landing]
+image:openshift_landing.png[openshift_landing]
 
-____________________________________________________________________________________________________________________________________________________________________________________________________
+
 The project displayed in the landing page depends on which labs you will
 run today. If you will develop `Service Mesh and Identity` then you will
 see pre-created projects as the above screeenshot.
-____________________________________________________________________________________________________________________________________________________________________________________________________
+
 
 Although your Eclipse Che workspace is running on the Kubernetes
 cluster, it’s running with a default restricted _Service Account_ that
@@ -130,7 +132,7 @@ ________________________________________________________
 Be sure to substitute your username for `{{ USER_ID }}`!
 ________________________________________________________
 
-image:%7B%%20image_path%20bookinfo-gateway.png%20%%7D[gateway]
+image:bookinfo-gateway.png[gateway]
 
 And then create the _ingress gateway_ for Bookinfo:
 
@@ -148,7 +150,7 @@ container as described earlier.
 Let’s wait for our application to finish deploying. Go to the overview
 page in _\{\{ USER_ID }}-bookinfo_ project:
 
-image:%7B%%20image_path%20bookinfo-deployed.png%20%%7D[bookinfo]
+image:bookinfo-deployed.png[bookinfo]
 
 Or you can execute the following commands to wait for the deployment to
 complete and result `successfully rolled out`:
@@ -189,15 +191,15 @@ Workspaces Terminal:
 
 It should look something like:
 
-image:%7B%%20image_path%20bookinfo.png%20%%7D[Bookinfo App]
+image:bookinfo.png[Bookinfo App]
 
 Reload the page multiple times. The three different versions of the
 Reviews service show the star ratings differently - _v1_ shows no stars
 at all, _v2_ shows black stars, and _v3_ shows red stars:
 
-* *v1*: image:%7B%%20image_path%20stars-none.png%20%%7D[no stars]
-* *v2*: image:%7B%%20image_path%20stars-black.png%20%%7D[black stars]
-* *v3*: image:%7B%%20image_path%20stars-red.png%20%%7D[red stars]
+* *v1*: image:stars-none.png[no stars]
+* *v2*: image:stars-black.png[black stars]
+* *v3*: image:stars-red.png[red stars]
 
 That’s because there are 3 versions of reviews deployment for our
 reviews service. Istio’s load-balancer is using a _round-robin_

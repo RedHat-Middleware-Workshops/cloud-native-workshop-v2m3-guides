@@ -35,7 +35,7 @@ Microservices
 
 Let’s go to the
 https://kiali-istio-system.%7B%7BROUTE_SUBDOMAIN%7D%7D/[Kiali
-console]\{:target="_blank"} once again to confirm that the microservices
+console, window="_blank"] once again to confirm that the microservices
 (_Catalog_, _Inventory_) are not running with a _sidecar_ and are not
 yet visible in the service mesh.
 
@@ -69,7 +69,7 @@ OpenShift capabilities such as builder pods.
 _______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 Back in the the link:%7B%7B%20CONSOLE_URL%7D%7D[OpenShift web
-console]\{:target="_blank"}, select the _\{\{ USER_ID }}-inventory_
+console, window="_blank"], select the _\{\{ USER_ID }}-inventory_
 project in the project drop-down, then go to *Workloads > Deployment
 Configs* on the left menu, and click on _inventory-database_ and then
 click the _YAML_ tab.
@@ -199,7 +199,7 @@ ________________________________________________________________________________
 
 Now, reload *Applications* in
 https://kiali-istio-system.%7B%7BROUTE_SUBDOMAIN%7D%7D/[Kiali
-console]\{:target="_blank"} and verify that the _Missing sidecar_
+console, window="_blank"] and verify that the _Missing sidecar_
 warning is no longer present:
 
 image:%7B%%20image_path%20kiali_injecting_sidecar.png%20%%7D[istio]
@@ -546,7 +546,7 @@ upstream cluster and per priority basis. This allows different
 components of the distributed system to be tuned independently and have
 different limits. See the
 https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/circuit_breaking[Envoy’s
-circuit breaker]\{:target="_blank"} for more details.
+circuit breaker, window="_blank"] for more details.
 
 Let’s add a circuit breaker to the calls to the *Inventory service*.
 Instead of using a _VirtualService_ object, circuit breakers in Istio
@@ -593,7 +593,7 @@ request is processed. Furthermore, it will detect any hosts that return
 a server error (HTTP 5xx) and eject the pod out of the load balancing
 pool for 15 minutes. You can visit here to check the
 https://istio.io/docs/tasks/traffic-management/circuit-breaking[Istio
-spec]\{:target="_blank"} for more details on what each configuration
+spec, window="_blank"] for more details on what each configuration
 parameter does.
 
 ####4. Overload the service
@@ -673,7 +673,7 @@ Use the following command in the CodeReady Workspaces Terminal:
 `oc delete route/catalog-springboot -n {{ USER_ID }}-catalog`
 
 In the link:%7B%7B%20CONSOLE_URL%7D%7D[OpenShift web
-console]\{:target="_blank"}, select the `{{ USER_ID }}-catalog` project,
+console, window="_blank"], select the `{{ USER_ID }}-catalog` project,
 then navigate to _Networking > Services_ from the left menu, select the
 `catalog-springboot` service
 
@@ -808,7 +808,7 @@ Wait for RH-SSO to be deployed using this command:
 
 Once this finishes (it may take a minute or two), in the
 link:%7B%7B%20CONSOLE_URL%7D%7D[OpenShift web
-console]\{:target="_blank"} navigate to _Networking > Routes_ and you
+console, window="_blank"] navigate to _Networking > Routes_ and you
 will see the route URL as below (in the `{{ USER_ID }}-catalog`
 project):
 
@@ -968,12 +968,12 @@ The following fields are used above to create a Policy in Istio and are
 described here:
 
 * *issuer* - Identifies the issuer that issued the JWT. See
-https://tools.ietf.org/html/rfc7519#section-4.1.1[issuer]\{:target="_blank"}
+https://tools.ietf.org/html/rfc7519#section-4.1.1[issuer, window="_blank"]
 usually a URL or an email address.
 * *jwksUri* - URL of the provider’s public key set to validate signature
 of the JWT.
 * *audiences* - The list of JWT
-https://tools.ietf.org/html/rfc7519#section-4.1.3[audiences]\{:target="_blank"}.
+https://tools.ietf.org/html/rfc7519#section-4.1.3[audiences, window="_blank"].
 that are allowed to access. A JWT containing any of these audiences will
 be accepted.
 

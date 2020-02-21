@@ -74,7 +74,7 @@ _Kiali_ is an observability console for Istio with service mesh configuration ca
 _Jaeger_ inspired by Dapper and OpenZipkin, is a distributed tracing system released as open source by Uber Technologies. It is used for monitoring and troubleshooting microservices-based distributed systems.
 
 You can also read a bit more about the
-https://istio.io/docs[Istio]\{:target="_blank"} architecture below:
+https://istio.io/docs[Istio, window="_blank"] architecture below:
 
 === Istio Details
 
@@ -99,7 +99,7 @@ image::images/arch.png[Istio Arch, 600, align="center"]
 ==== Istio Components
 
 Istio uses an extended version of the
-https://envoyproxy.github.io/envoy/[Envoy]\{:target="_blank"} proxy as a
+https://envoyproxy.github.io/envoy/[Envoy, window="_blank"] proxy as a
 _side car_ container attached to each service Pod. Envoy is a
 high-performance proxy developed in C++ to mediate all inbound and
 outbound traffic for all services in the service mesh. Istio leverages
@@ -144,7 +144,7 @@ into Envoy-specific configurations, and propagates them to the sidecars
 at runtime. Pilot abstracts platform-specific service discovery
 mechanisms and synthesizes them into a standard format that any sidecar
 conforming with the https://github.com/envoyproxy/data-plane-api[Envoy
-data plane APIs]\{:target="_blank"} can consume. This loose coupling
+data plane APIs, window="_blank"] can consume. This loose coupling
 allows Istio to run on multiple environments such as Kubernetes, Consul,
 or Nomad, while maintaining the same operator interface for traffic
 management.
@@ -164,13 +164,13 @@ the underlying platform (e.g. Kubernetes).
 Several *Add-ons* components are used to provide additional
 visualizations, metrics, and tracing functions:
 
-* https://www.kiali.io/[Kiali]\{:target="_blank"} - Service mesh
+* https://www.kiali.io/[Kiali, window="_blank"] - Service mesh
 observability and configuration
-* https://prometheus.io/[Prometheus]\{:target="_blank"} - Systems
+* https://prometheus.io/[Prometheus, window="_blank"] - Systems
 monitoring and alerting toolkit
-* https://grafana.com/[Grafana]\{:target="_blank"} - Allows you to
+* https://grafana.com/[Grafana, window="_blank"] - Allows you to
 query, visualize, alert on and understand your metrics
-* http://jaeger.readthedocs.io/[Jaeger Tracing]\{:target="_blank"} -
+* http://jaeger.readthedocs.io/[Jaeger Tracing, window="_blank"] -
 Distributed tracing to gather timing data needed to troubleshoot latency
 problems in microservice architectures
 
