@@ -1,23 +1,22 @@
-== Lab2 - Service Visualization and Monitoring
+== Lab 2 - Service Visualization and Monitoring
 
-In this lab you will visualize your service mesh using *Kiali*,
-*Prometheus*, *Grafana* and you will lean how to configure basic *Istio
-funtionalities* such as *VirtualService* and *A/B Testing*.
+In this lab you will visualize your service mesh using *Kiali*, *Prometheus*, *Grafana* and you will lean how to configure basic *Istio funtionalities* such as *VirtualService* and *A/B Testing*.
 
 #### 1. Generating application load
 
 '''''
 
-To get a better idea of the power of metrics, let’s setup an endless
-loop that will continually access the application and generate load.
-We’ll open up a separate terminal just for this purpose.
+To get a better idea of the power of metrics, let’s setup an endless loop that will continually access the application and generate load. We’ll open up a separate terminal just for this purpose.
 
 Open a new _Terminal_ and execute this command with your own _Bookinfo
 App URL_:
 
+[source, shell, role="copypaste"]
+----
 `BOOK_URL=REPLACE WITH YOUR BOOKINFO APP URL`
 
 `for i in {1..1000} ; do curl -o /dev/null -s -w "%{http_code}\n" http://$BOOK_URL/productpage ; sleep 2 ; done`
+----
 
 This command will endlessly access the application and report the HTTP
 status result in a separate terminal window.
@@ -33,8 +32,7 @@ interesting in the next few steps.
 This UI will allow you to view configurations, monitor traffic flow and
 health, and analyze traces.
 
-Open the https://kiali-istio-system.%7B%7BROUTE_SUBDOMAIN%7D%7D/[Kiali
-console, window="_blank"].
+Open the https://kiali-istio-system.{{ ROUTE_SUBDOMAIN }}/[Kiali console, window="_blank"].
 
 You should see _Kiali Login_ screen. Enter the username and password as
 below and click _Log In_.
@@ -44,9 +42,7 @@ below and click _Log In_.
 
 image::istio-kiali-login.png[istio-kiali]
 
-In the namespace selector at the top, enter your *{{ USER_ID
-}}-bookinfo* application (e.g. user1-bookinfo) and press enter to filter
-to only show your bookinfo project.
+In the namespace selector at the top, enter your _{{ USER_ID }}-bookinfo_ application (e.g. user1-bookinfo) and press enter to filter to only show your bookinfo project.
 
 image::kiali-all-namespaces.png[kiali]
 
@@ -63,43 +59,30 @@ Click on the _Graph_ page on the left and check *Traffic Animation* in
 
 image::kiali-service-graph.png[kiali]
 
-It shows a graph with all the microservices, connected by the requests
-going through then. On this page, you can see how services interact with
-each other. Observe that traffic from `productpage` to `reviews` is
-equally hitting all three versions of the `reviews` service, and that
-`v2` and `v3` are in turn hitting the `ratings` service (while `v1` does
-not, so therefore you get no ``stars'' when you get load-balanced to
-`v1`).
+It shows a graph with all the microservices, connected by the requests going through then. On this page, you can see how services interact with each other. Observe that traffic from `productpage` to `reviews` is equally hitting all three versions of the `reviews` service, and that `v2` and `v3` are in turn hitting the `ratings` service (while `v1` does not, so therefore you get no ``stars'' when you get load-balanced to `v1`).
 
 === Applications
 
-Click on *Applications* menu in the left navigation. On this page you
-can view a listing of all the services that are running in the cluster,
-and additional information about them, such as health status.
+Click on *Applications* menu in the left navigation. On this page you can view a listing of all the services that are running in the cluster, and additional information about them, such as health status.
 
 image::kiali-applications.png[kiali]
 
-Click on the *productpage* application to see its details. You can also
-see the health of a service on the *Health* section when it’s online and
-responding to requests without errors:
+Click on the *productpage* application to see its details. You can also see the health of a service on the *Health* section when it’s online and responding to requests without errors:
 
 image::kiali-app-productpage.png[kiali]
 
-By clicking on *Inbound Metrics*, you can see the metrics for an
-application, like this:
+By clicking on *Inbound Metrics*, you can see the metrics for an application, like this:
 
 image::kiali-app-productpage-inbound.png[kiali]
 
-By clicking on *Outbound Metrics*, you can see the metrics for an
-application, like this:
+By clicking on *Outbound Metrics*, you can see the metrics for an application, like this:
 
 image::kiali-app-productpage-outbound.png[kiali]
 
 === Workloads
 
 Click on the *Workloads* menu in the left navigation. On this page you
-can view a listing of all the workloads that are present in your
-application.
+can view a listing of all the workloads that are present in your application.
 
 image::kiali-app-productpage-workload.png[kiali]
 
@@ -108,19 +91,15 @@ workload, such as the pods and services that are included in it:
 
 image::kiali-app-productpage-workload-v1.png[kiali]
 
-By clicking _Inbound Metrics_, you can check the metrics for the
-workload. The metrics are the same as the _Application_ ones.
+By clicking _Inbound Metrics_, you can check the metrics for the workload. The metrics are the same as the _Application_ ones.
 
 === Services
 
-Click on *Services* menu in the left navigation. Here, you can see the
-listing of all services.
+Click on *Services* menu in the left navigation. Here, you can see the listing of all services.
 
 image::kiali-services.png[kiali]
 
-Click on *productpage* service which will show you the details of the
-service, such as metrics, traces, workloads, virtual services,
-destination rules and more:
+Click on *productpage* service which will show you the details of the service, such as metrics, traces, workloads, virtual services, destination rules and more:
 
 image::kiali-services-productpage.png[kiali]
 
@@ -128,35 +107,23 @@ image::kiali-services-productpage.png[kiali]
 
 '''''
 
-https://prometheus.io/[Prometheus] will periodically _scrape_
-applications to retrieve their metrics (by default on the `/metrics`
-endpoint of the application). The Prometheus add-on for Istio is a
-Prometheus server that comes pre-configured to _scrape_ Istio Mixer
-endpoints to collect its exposed metrics. It provides a mechanism for
-persistent storage and querying of those metrics metrics.
+https://prometheus.io/[Prometheus] will periodically _scrape_ applications to retrieve their metrics (by default on the `/metrics` endpoint of the application). The Prometheus add-on for Istio is a Prometheus server that comes pre-configured to _scrape_ Istio Mixer endpoints to collect its exposed metrics. It provides a mechanism for persistent storage and querying of those metrics metrics.
 
-Open the
-http://prometheus-istio-system.%7B%7BROUTE_SUBDOMAIN%7D%7D/[Prometheus console, window="_blank"].
+Open the http://prometheus-istio-system.{{ ROUTE_SUBDOMAIN }}/[Prometheus console, window="_blank"]
 
 You should see Prometheus home screen, similar to this:
 
 image::istio-prometheus-landing.png[istio-prometheus]
 
-In the ``Expression'' input box at the top of the web page, enter the
-text: *istio_request_duration_seconds_count*. Then, click the *Execute*
-button.
+In the ``Expression'' input box at the top of the web page, enter the text: *istio_request_duration_seconds_count*. Then, click the *Execute* button.
 
-You should see a listing of each of the application’s services along
-with a count of how many times it was accessed.
+You should see a listing of each of the application’s services along with a count of how many times it was accessed.
 
-image::istio-prometheus-console.png[Prometheus
-console]
+image::istio-prometheus-console.png[Prometheus console]
 
-You can also graph the results over time by clicking on the _Graph_ tab
-(adjust the timeframe from 1 hour to 1 minute for example):
+You can also graph the results over time by clicking on the _Graph_ tab (adjust the timeframe from 1 hour to 1 minute for example):
 
-image::istio-prometheus-graph.png[Prometheus
-graph]
+image::istio-prometheus-graph.png[Prometheus graph]
 
 Other expressions to try:
 
@@ -168,23 +135,16 @@ Other expressions to try:
 services:
 `rate(istio_request_duration_seconds_count{destination_service=~"productpage.*", response_code="200"}[5m])`
 
-There are many, many different queries you can perform to extract the
-data you need. Consult the https://prometheus.io/docs[Prometheus
-documentation] for more detail.
+There are many, many different queries you can perform to extract the data you need. Consult the https://prometheus.io/docs[Prometheus documentation] for more detail.
 
 #### 4. Visualizing Metrics with Grafana
 
 '''''
 
 As the number of services and interactions grows in your application,
-this style of metrics may be a bit overwhelming.
-https://grafana.com/[Grafana, window="_blank"] provides a visual
-representation of many available Prometheus metrics extracted from the
-Istio data plane and can be used to quickly spot problems and take
-action.
+this style of metrics may be a bit overwhelming. https://grafana.com/[Grafana, window="_blank"] provides a visual representation of many available Prometheus metrics extracted from the Istio data plane and can be used to quickly spot problems and take action.
 
-Open the
-http://grafana-istio-system.%7B%7BROUTE_SUBDOMAIN%7D%7D/[Grafana console, window="_blank"]
+Open the http://grafana-istio-system.{{ ROUTE_SUBDOMAIN }}/[Grafana console, window="_blank"]
 
 You should see Grafana home screen, similar to this:
 
@@ -194,8 +154,7 @@ image::grafana-home.png[Grafana graph]
 
 Select *Home > Istio > Istio Mesh Dashboard* to see Istio mesh metrics:
 
-image::grafana-mesh-metrics-select.png[Grafana
-graph]
+image::grafana-mesh-metrics-select.png[Grafana graph]
 
 You will see the built-in Istio metrics dashboard::
 
@@ -203,12 +162,9 @@ image::grafana-mesh-metrics.png[Grafana graph]
 
 === Istio Service Metrics
 
-Let’s see detailed metrics of the *productpage* service. Click on
-*productpage.{{ USER_ID }}-bookinfo.svc.cluster.local* and the service
-dashboard will look similar to this:
+Let’s see detailed metrics of the *productpage* service. Click on *productpage.{{ USER_ID }}-bookinfo.svc.cluster.local* and the service dashboard will look similar to this:
 
-image::grafana-service-metrics.png[Grafana
-graph]
+image::grafana-service-metrics.png[Grafana graph]
 
 The Grafana Dashboard for Istio consists of three main sections:
 
@@ -233,30 +189,22 @@ dashboard.
 
 === Istio Workload Metrics
 
-To switch to the workloads dashboard, select *Home > Istio Workload
-Dashboard* from the drop-down list in the top left corner of the screen.
-You should see a screen similar to this:
+To switch to the workloads dashboard, select *Home > Istio Workload Dashboard* from the drop-down list in the top left corner of the screen. You should see a screen similar to this:
 
 [NOTE]
-====___________________
+====
 You should select your own {{ USER_ID }}-bookinfo in the `Namespace`
 selector at the top to avoid noise from other workloads on the cluster!
-====___________________
+====
 
 image::grafana-workload-metrics.png[Grafana graph]
 
-This dashboard shows workload’s metrics, and metrics for client-
-(inbound) and service (outbound) workloads. You can switch to a
-different workload, ot filter metrics by inbound or outbound workloads
-by using drop-down lists at the top of the dashboard.
+This dashboard shows workload’s metrics, and metrics for client-(inbound) and service (outbound) workloads. You can switch to a different workload, ot filter metrics by inbound or outbound workloads by using drop-down lists at the top of the dashboard.
 
 For more on how to create, configure, and edit dashboards, please see
 the http://docs.grafana.org/[Grafana documentation, window="_blank"].
 
-As a developer, you can get quite a bit of information from these
-metrics without doing anything to the application itself. Let’s use our
-new tools in the next section to see the real power of Istio to diagnose
-and fix issues in applications and make them more resilient and robust.
+As a developer, you can get quite a bit of information from these metrics without doing anything to the application itself. Let’s use our new tools in the next section to see the real power of Istio to diagnose and fix issues in applications and make them more resilient and robust.
 
 #### 5. Request Routing
 
@@ -278,69 +226,41 @@ pool
 * _Fine-grained circuit breakers_ (passive health checks) – applied per
 instance in the load balancing pool
 
-Requests can be routed based on the source and destination, HTTP header
-fields, and weights associated with individual service versions. For
-example, a route rule could route requests to different versions of a
-service.
+Requests can be routed based on the source and destination, HTTP header fields, and weights associated with individual service versions. For example, a route rule could route requests to different versions of a service.
 
-Together, these features enable the service mesh to tolerate failing
-nodes and prevent localized failures from cascading instability to other
-nodes. However, applications must still be designed to deal with
-failures by taking appropriate fallback actions. For example, when all
-instances in a load balancing pool have failed, Istio will return HTTP
-503. It is the responsibility of the application to implement any
-fallback logic that is needed to handle the HTTP 503 error code from an
-upstream service.
+Together, these features enable the service mesh to tolerate failing nodes and prevent localized failures from cascading instability to other nodes. However, applications must still be designed to deal with failures by taking appropriate fallback actions. For example, when all instances in a load balancing pool have failed, Istio will return HTTP 503. It is the responsibility of the application to implement any fallback logic that is needed to handle the HTTP 503 error code from an upstream service.
 
-If your application already provides some defensive measures (e.g. using
-https://github.com/Netflix/Hystrix[Netflix Hystrix, window="_blank"]),
-then that’s OK. *Istio* is completely transparent to the application. A
-failure response returned by Istio would not be distinguishable from a
-failure response returned by the upstream service to which the call was
-made.
+If your application already provides some defensive measures (e.g. using https://github.com/Netflix/Hystrix[Netflix Hystrix, window="_blank"]), then that’s OK. *Istio* is completely transparent to the application. A failure response returned by Istio would not be distinguishable from a failure response returned by the upstream service to which the call was made.
 
 #### 6. Service Versions
 
 '''''
 
-Istio introduces the concept of a service version, which is a
-finer-grained way to subdivide service instances by versions (_v1_,
-_v2_) or environment (_staging_, _prod_). These variants are not
-necessarily different API versions: they could be iterative changes to
-the same service, deployed in different environments (prod, staging,
-dev, etc.). Common scenarios where this is used include A/B testing or
-canary rollouts. Istio’s
-https://istio.io/docs/concepts/traffic-management/rules-configuration.html[traffic
-routing rules, window="_blank"] can refer to service versions to
-provide additional control over traffic between services.
+Istio introduces the concept of a service version, which is a finer-grained way to subdivide service instances by versions (_v1_,
+_v2_) or environment (_staging_, _prod_). These variants are not necessarily different API versions: they could be iterative changes to
+the same service, deployed in different environments (prod, staging, dev, etc.). Common scenarios where this is used include A/B testing or
+canary rollouts. Istio’s https://istio.io/docs/concepts/traffic-management/rules-configuration.html[traffic routing rules, window="_blank"] can refer to service versions to provide additional control over traffic between services.
 
 image::versions.png[Versions]
 
-As illustrated in the figure above, clients of a service have no
-knowledge of different versions of the service. They can continue to
-access the services using the hostname/IP address of the service. The
-Envoy sidecar/proxy intercepts and forwards all requests/responses
+As illustrated in the figure above, clients of a service have no knowledge of different versions of the service. They can continue to
+access the services using the hostname/IP address of the service. The Envoy sidecar/proxy intercepts and forwards all requests/responses
 between the client and the service.
 
 #### 7. VirtualService objects
 
 '''''
 
-In addition to the usual OpenShift object types like _BuildConfig_,
-_DeploymentConfig_, _Service_ and _Route_, you also have new object
-types installed as part of Istio like _VirtualService_. Adding these
-objects to the running OpenShift cluster is how you configure routing
+In addition to the usual OpenShift object types like _BuildConfig_, _DeploymentConfig_, _Service_ and _Route_, you also have new object
+types installed as part of Istio like _VirtualService_. Adding these objects to the running OpenShift cluster is how you configure routing
 rules for Istio.
 
-For our application, without an explicit default route set, Istio will
-route requests to all available versions of a service in a round-robin
+For our application, without an explicit default route set, Istio will route requests to all available versions of a service in a round-robin
 fashion, and anytime you hit _v1_ version you’ll get no stars.
 
-Let’s create a default set of *virtual services* which will direct all
-traffic to the _reviews:v1_ service version.
+Let’s create a default set of *virtual services* which will direct all traffic to the _reviews:v1_ service version.
 
-Open a new Terminal (while your other endless `for` loop continues to
-run) and execute this command to route all traffic to `v1`:
+Open a new Terminal (while your other endless `for` loop continues to run) and execute this command to route all traffic to `v1`:
 
 `oc create -f /projects/cloud-native-workshop-v2m3-labs/istio/virtual-service-all-v1.yaml`
 
@@ -348,12 +268,11 @@ You can see this default set of _virtual services_ with:
 
 `oc get virtualservices -o yaml`
 
-There are default _virtual services_ for each service, such as the one
-that forces all traffic to the _v1_ version of the _reviews_ service:
+There are default _virtual services_ for each service, such as the one that forces all traffic to the _v1_ version of the _reviews_ service:
 
 `oc get virtualservices/reviews -o yaml`
 
-[source,yaml]
+[source, yaml, role="copypaste"]
 ----
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
@@ -373,38 +292,35 @@ spec:
         subset: v1
 ----
 
-Now, access the application again in your web browser using the below
-link and reload the page several times - you should not see any rating
+Now, access the application again in your web browser using the below link and reload the page several times - you should not see any rating
 stars since *reviews:v1* does not access the _ratings_ service.
 
 [NOTE]
 ====
-It may take a minute or two for the new routing to take effect.
-If you still see red or black stars, wait a minute and try again.
+It may take a minute or two for the new routing to take effect. If you still see red or black stars, wait a minute and try again.
 Eventually it should no longer show any red/black stars.
 ====
 
 * Bookinfo Application with no rating stars at
 `http://$BOOK_URL/productpage`
 
-To verify this, open the Grafana Dashboard (find this URL via
-_Networking > Routes_)
+To verify this, open the Grafana Dashboard (find this URL via _Networking > Routes_)
 
-Scroll down to the *ratings* service in _Istio Service Dashboard_ and
-notice that the requests coming from the reviews service have stopped:
+Scroll down to the *ratings* service in _Istio Service Dashboard_ and notice that the requests coming from the reviews service have stopped:
 
 image::ratings-stopped.png[Versions]
 
-####8. A/B Testing with Istio
+#### 8. A/B Testing with Istio
 
 '''''
 
-Let’s enable the ratings service for a test user named _jason_ by
-routing `productpage` traffic to _reviews:v2_ and any others to
+Let’s enable the ratings service for a test user named _jason_ by routing `productpage` traffic to _reviews:v2_ and any others to
 _reviews:v3_. Execute:
 
-`oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/virtual-service-reviews-jason-v2-v3.yaml`
-
+[source, shell, role="copypaste"]
+----
+oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/virtual-service-reviews-jason-v2-v3.yaml
+----
 
 [TIP]
 ====
@@ -415,11 +331,14 @@ resource created by either oc create –save-config or oc apply_.
 
 Confirm the rule is created:
 
-`oc get virtualservices/reviews -o yaml`
+[source, shell, role="copypaste"]
+----
+oc get virtualservices/reviews -o yaml
+----
 
 Notice the _match_ element:
 
-[source,yaml]
+[source,yaml, role="copypaste"]
 ----
 http:
   - match:
@@ -465,7 +384,7 @@ red ratings stars.
 
 image::ratings-signout.png[Ratings for Test User]
 
-#####Congratulations!
+##### Congratulations!
 
 In this lab, you used Istio to send 100% of the traffic to the a
 specific version of one of the application’s services. You then set a

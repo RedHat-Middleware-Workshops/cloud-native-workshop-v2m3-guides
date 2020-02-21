@@ -1,4 +1,4 @@
-== Lab1 - Creating Distributed Services
+== Lab 1 - Creating Distributed Services
 
 In this step, we’ll install a sample application into the system. This
 application is included in Istio itself for demonstrating various

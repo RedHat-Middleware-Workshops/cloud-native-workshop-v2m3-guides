@@ -1,4 +1,4 @@
-== Lab3 - Advanced Service Mesh Development
+== Lab 3 - Advanced Service Mesh Development
 
 In this lab, we will learn the advanced usecases of service mesh. The lab showcases features such as 
   
