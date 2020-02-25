@@ -178,7 +178,7 @@ Workspaces Terminal:
 
 [source,shell, role="copypaste"]
 ----
-echo "export BOOK_URL=REPLACE WITH YOUR BOOKINFO APP URL" >> ~/.bashrc && source ~/.bashrc
+echo "export BOOK_URL={{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}" >> ~/.bashrc && source ~/.bashrc
 ----
 
 When the app is installed, each Pod will get an additional _sidecar_
@@ -227,6 +227,7 @@ List all available destination rules:
 oc get destinationrules -o yaml
 ----
 
+Let's move on to the next section and verify our new application.
 
 #### 2. Access Bookinfo
 
@@ -244,9 +245,17 @@ Reload the page multiple times. The three different versions of the
 Reviews service show the star ratings differently - _v1_ shows no stars
 at all, _v2_ shows black stars, and _v3_ shows red stars:
 
-* *v1*: image::stars-none.png[no stars]
-* *v2*: image::stars-black.png[black stars]
-* *v3*: image::stars-red.png[red stars]
+* *v1* 
+
+image::stars-none.png[no stars]
+
+* *v2* 
+
+image::stars-black.png[black stars]
+
+* *v3*: 
+
+image::stars-red.png[red stars]
 
 That’s because there are 3 versions of reviews deployment for our
 reviews service. Istio’s load-balancer is using a _round-robin_
