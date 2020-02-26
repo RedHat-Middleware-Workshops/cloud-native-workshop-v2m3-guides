@@ -244,7 +244,7 @@ image::kiali_graph_sidecar.png[istio]
 
 #### 2. Fault Injection
 
-'''''
+
 
 This step will walk you through how to use *Fault Injection* to test the end-to-end failure recovery capability of the application as a whole. An incorrect configuration of the failure recovery policies could result in unavailability of critical services. Examples of incorrect configurations include incompatible or restrictive timeouts across service calls.
 
@@ -529,7 +529,7 @@ Terminal window that was running it.
 
 #### 3. Enable Circuit Breaker
 
-'''''
+
 
 In this step, you will configure a circuit Breaker to protect the calls to `Inventory` service. If the `Inventory` service gets overloaded due to call volume, Istio will limit future calls to the service instances to allow them to recover.
 
@@ -604,7 +604,7 @@ parameter does.
 
 #### 4. Overload the service
 
-'''''
+
 
 Let’s use simple *curl* commands to send multiple concurrent requests to our application, and witness the circuit breaker kicking in and opening the circuit.
 
@@ -644,7 +644,7 @@ That’s the circuit breaker in action, limiting the number of requests to the s
 
 #### 5. Stop overloading
 
-'''''
+
 
 Before moving on, stop the traffic generator by executing the following commands in CodeReady Workspaces Terminal:
 
@@ -665,7 +665,7 @@ oc delete destinationrule/inventory-cb -n {{ USER_ID }}-inventory
 
 #### 6. Enable Authentication using Single Sign-on
 
-'''''
+
 
 In this step, you will learn how to enable authentication. You will secure the _Catalog_ endpoint. We will use JWT with Red Hat Single Sign On which is part of the Red Hat Runtimes.
 
@@ -1031,7 +1031,7 @@ Congratulations! You’ve integrated RH-SSO with Istio to protect service mesh t
 
 #### 7. Securing Spring Boot with Red Hat Single Sing-On
 
-'''''
+
 
 Unfortunately, the catalog service still doesn’t work when you access via the web page because the application has no authentication configuration yet:
 

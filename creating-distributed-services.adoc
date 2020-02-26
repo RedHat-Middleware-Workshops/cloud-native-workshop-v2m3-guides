@@ -38,7 +38,7 @@ Architecture]
 
 ####1. Deploy Bookinfo Application
 
-'''''
+
 
 First, open a new browser with the
 link:{{ CONSOLE_URL }}[OpenShift web
@@ -103,8 +103,6 @@ You have access to the following projects and can switch between them with 'oc p
     istio-system
     {{ USER_ID }}-bookinfo
     {{ USER_ID }}-catalog
-    {{ USER_ID }}-cloudnative-pipeline
-    {{ USER_ID }}-cloudnativeapps
     {{ USER_ID }}-inventory
 
 Using project "default".
