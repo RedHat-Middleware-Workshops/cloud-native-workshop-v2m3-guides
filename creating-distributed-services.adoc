@@ -20,7 +20,7 @@ There are 3 versions of the reviews microservice:
 
 The end-to-end architecture of the application is shown below.
 
-image::istio_bookinfo.png[Bookinfo Architecture, 700]
+image::istio_bookinfo.png[Bookinfo Architecture, 900]
 
 First, open a new browser with the link:{{ CONSOLE_URL }}[OpenShift web console, window=_blank]
 
@@ -104,21 +104,21 @@ Deploy the *Bookinfo application* in the bookinfo project in CodeReady Workspace
 [source,sh,role="copypaste"]
 ----
 oc project {{ USER_ID }}-bookinfo
-oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml
+oc apply -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml
 ----
 
 And then create the _ingress gateway_ for Bookinfo:
 
 [source,sh,role="copypaste"]
 ----
-oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml
+oc apply -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml
 ----
 
 Before you can use the Bookinfo application, you have to add default destination rules. 
 
 [source,sh,role="copypaste"]
 ----
-oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/destination-rule-all.yaml
+oc apply -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/destination-rule-all.yaml
 ----
 
 Make sure it’s actually done rolling out. Visit the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-bookinfo[Topology View, window=_blank] for the catalog, and ensure you get the blue circles!

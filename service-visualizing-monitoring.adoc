@@ -265,7 +265,7 @@ Open a new Terminal (while your other endless `for` loop continues to run) and e
 
 [source, shell, role="copypaste"]
 ----
-oc create -f /projects/cloud-native-workshop-v2m3-labs/istio/virtual-service-all-v1.yaml
+oc create -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/virtual-service-all-v1.yaml
 ----
 
 You can see this default set of _virtual services_ with:
@@ -329,7 +329,7 @@ _reviews:v3_. Execute:
 
 [source, shell, role="copypaste"]
 ----
-oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/virtual-service-reviews-jason-v2-v3.yaml
+oc apply -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/virtual-service-reviews-jason-v2-v3.yaml
 ----
 
 [TIP]
