@@ -56,13 +56,13 @@ Let's create the _ServiceMeshMemberRole_
 
 image::plussigntop_ocpconsole.png[Run yaml in console]
 
-- Select your namespace `{{ USER_ID }}-istio-system` on the top right; as shown in the picture and paste the above yaml file into the editor. 
+- Select your namespace `{{ USER_ID }}-istio-system` on the top right; as shown in the picture and paste the above _ServiceMeshMemberRole_ yaml file into the editor. 
 
 image::smmr_yaml_create.png[Run yaml in console]
 
 - Press create. This should create the required _ServiceMeshMemberRole_ 
 
-Now let's click `Home -> Explorer` in the openshift webconsole and verify where the _ServiceMeshMemberRole_ was created. 
+Now let's click `Home -> Explore` in the openshift webconsole and verify where the _ServiceMeshMemberRole_ was created. 
 Click on the _ServiceMeshMemberRole_ and then select your project user5-istio-system and you will see the newly create role. 
 
 image::smmr_explore.png[SMMR Explore]
@@ -101,12 +101,10 @@ Once logged in, you should see the OpenShift landing page:
 image::openshift_landing.png[openshift_landing]
 
 
-The project displayed in the landing page depends on which labs you will run today. If you will develop `Service Mesh and Identity` then you will see pre-created projects as the above screeenshot.
+The project displayed on the landing page depends on which labs you will run today. If you will develop `Service Mesh and Identity` then you will see pre-created projects as shown in the above screeenshot.
 
 Although your CodeReady workspace is running on the Kubernetes cluster, it’s running with a default restricted _Service Account_ that prevents you from creating most resource types. If you’ve completed other modules, you’re probably already logged in, but let’s login again. Open a Terminal and issue the following command:
 
-Although your CodeReady workspace is running on the Kubernetes cluster, it’s running with a default restricted _Service Account_ that prevents you from creating most resource types. If you’ve completed other modules, you’re probably already logged in, but let’s login again:
-open a Terminal and issue the following command:
 
 [source, shell, role="copypaste"]
 ----
@@ -118,7 +116,7 @@ Enter your username and password assigned to you:
 * Username: `{{ USER_ID }}`
 * Password: `r3dh4t1!`
 
-You should see something like this (the project names may be different):
+You should see a similar output as follows:
 
 [source,none]
 ----
@@ -135,22 +133,14 @@ Using project "{{ USER_ID }}-bookinfo".
 Welcome! See 'oc help' to get started.
 ----
 
-Change to the empty *{{ USER_ID }}-bookinfo* project via CodeReady
-Workspaces Terminal and the following command 
+Let's change to our working project *{{ USER_ID }}-bookinfo* ; Open a terminal via CodeReady
+Workspaces and run the following commands 
 
 [source,shell, role="copypaste"]
 ----
 oc project {{ USER_ID }}-bookinfo
-----
-
-Visit on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-bookinfo[Topology View, window=_blank], click on `+` icon on the right top corner.
-
-[source,shell, role="copypaste"]
-----
 oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml
 ----
-
-Copy the following `ServiceMeshMemberRole` in `YAML` editor then click on *Create*:
 
 Following should be your bookinfo app URL.
 

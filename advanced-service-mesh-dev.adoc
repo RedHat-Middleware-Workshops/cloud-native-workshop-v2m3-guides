@@ -11,7 +11,7 @@ In this lab, we will learn the advanced usecases of service mesh. The lab showca
 These features are important for any distributed applications built on top of Kubernetes/Openshift. We use a different set of microservices that you will be building and deploying. Our applicaiton is called the _Coolstore microservice_ developed in prior labs (i.e Catalog, Inventory) that you developed and deployed to
 OpenShift cluster in _Module 1_ or/and _Module 2_.
 
-=== If this is the first module you are doing today
+==== If this is the first module you are doing today
 
 If you have already deployed the _inventory_ and _catalog_ microservices from Module 1, you can skip this step!
 
@@ -29,54 +29,22 @@ sh $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-inven
 sh $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-catalog.sh {{ USER_ID }}
 ----
 
-This will build and deploy the inventory and catalog components into the following namespaces. They won’t automatically get Istio sidecar proxy containers
+This will build and deploy the _inventory_ and _catalog_ components into the following namespaces. They won’t automatically get Istio sidecar proxy containers
 yet, but you’ll add that in the next step!
 
-<1> {{ USER_ID }}-inventory
-<2> {{ USER_ID }}-catalog 
+=== 1. Enabling automatic sidecar injection
 
-=== 1. Configuring Automatic Sidecar Injection in Coolstore Microservices
+Let’s go to the https://kiali-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Kiali console, window=_blank]
 
-Let’s go to the https://kiali-istio-system.{{ ROUTE_SUBDOMAIN }}/[Kiali console, window=_blank] 
-
-[NOTE]
-====
-(_Catalog_, _Inventory_) are not running with a _sidecar_ and are not
-yet visible in the service mesh.
-====
-
-Lets start the configuration
-
-<1> Click on *Applications* on the left menu. 
-<2> Then, using the `Namespace` drop-down at the top, type in `{{ USER_ID }}` (your username) to filter
-the list
-<3> and select the following namespaces 
-    - {{ USER_ID }}-catalog
-    - {{ USER_ID }}-inventory
-<4> and de-select the `{{ USER_ID }}-bookinfo` namespace. 
-
-You can also see the _Missing Sidecar_ in our applications as shown in the screenshot below.
-
-image::kiali_missing_sidecar.png[istio]
-
-Upstream Istio community installations rely on the existence of a proxy sidecar within the application’s pod to provide service mesh
-capabilities to the application. You can include the proxy sidecar by
-using a manual process before deployment. However, automatic injection
-ensures that your application contains the appropriate configuration for your service mesh at the time of its deployment.
-
-_Automatic injection of the sidecar_ is supported by using the
-_sidecar.istio.io/inject_ annotation within your application yaml file.
-You will add this in the next step.
+Red Hat OpenShift Service Mesh relies on a proxy sidecar within the application’s pod to provide Service Mesh capabilities to the application. You can enable automatic sidecar injection or manage it manually. Red Hat recommends automatic injection using the annotation with no need to label projects. This ensures that your application contains the appropriate configuration for the Service Mesh upon deployment. This method requires fewer privileges and does not conflict with other OpenShift capabilities such as builder pods.
 
 [NOTE]
 ====
-Upstream Istio community installations require a specific label on the
-namespace after which all pods in that namespace are injected with the
-sidecar. The OpenShift Service Mesh approach requires you to opt in to
-injection using an annotation with no need to label namspaces. This
-method requires fewer privileges and does not conflict with other
-OpenShift capabilities such as builder pods.
+The upstream version of Istio injects the sidecar by default if you have labeled the project. Red Hat OpenShift Service Mesh requires you to opt in to having the sidecar automatically injected to a deployment, so you are not required to label the project. This avoids injecting a sidecar if it is not wanted (for example, in build or deploy pods).
+
+The webhook checks the configuration of pods deploying into all projects to see if they are opting in to injection with the appropriate annotation.
 ====
+
 
 <1> Open link:{{CONSOLE_URL}}[OpenShift web console, window=_blank]
 <2> select the  `{{ USER_ID }}-inventory` project in the project drop-down
