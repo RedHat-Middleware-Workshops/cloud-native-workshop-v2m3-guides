@@ -22,7 +22,7 @@ The end-to-end architecture of the application is shown below.
 
 image::istio_bookinfo.png[Bookinfo Architecture, 700]
 
-First, open a new browser with the link:{{ CONSOLE_URL }}[OpenShift web console, window="_blank"]
+First, open a new browser with the link:{{ CONSOLE_URL }}[OpenShift web console, window=_blank]
 
 image::openshift_login.png[openshift_login, 700]
 
@@ -31,7 +31,6 @@ Login using:
 * Username: `{{ USER_ID }}`
 * Password: `r3dh4t1!`
 
-
 [IMPORTANT]
 ====
 When you access the link:{{ CONSOLE_URL }}[OpenShift web console] or other URLs via _HTTPS_ protocol, you will see browser warnings like `Your Connection is not secure` since this workshop uses self-signed certificates (which you should not do in production!). For example, if you’re using *Chrome*, to accept the warning, Click on
@@ -39,7 +38,6 @@ When you access the link:{{ CONSOLE_URL }}[OpenShift web console] or other URLs 
 ====
 
 image::browser_warning.png[warning, 700]
-
 
 Other browsers have similar procedures to accept the security exception.
 
@@ -77,6 +75,28 @@ You have access to the following projects and can switch between them with 'oc p
 
 Using project "{{ USER_ID }}-bookinfo".
 Welcome! See 'oc help' to get started.
+----
+
+Before we start depoying our application we need to make sure we have the right access to our different application namespaces. The *OpenShift Service Mesh* that includes Elasticsearch, Jaeger, Kiali and Service Mesh Operators, have all been installed at the cluster provisioning time. However for applications to communicate to each other accross different namespaces, we need to ensure that the *ServiceMeshMemberRole* is also created. We create the ServiceMeshMemberRole with the following yaml file
+
+Visit on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-bookinfo[Topology View, window=_blank], click on `+` icon on the right top corner.
+
+image::plus-icon.png[bookinfo, 500]
+
+Copy the following `ServiceMeshMemberRole` in `YAML` editor then click on *Create*:
+
+[source,sh,role="copypaste"]
+----
+apiVersion: maistra.io/v1
+kind: ServiceMeshMemberRoll
+metadata:
+  name: default
+  namespace: {{ USER_ID }}-istio-system 
+spec:
+  members:
+    - {{ USER_ID }}-bookinfo 
+    - {{ USER_ID }}-catalog
+    - {{ USER_ID }}-inventory
 ----
 
 Deploy the *Bookinfo application* in the bookinfo project in CodeReady Workspaces Terminal:
