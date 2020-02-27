@@ -86,7 +86,7 @@ image::kiali-services-productpage.png[kiali, 700]
 
 https://prometheus.io/[Prometheus] will periodically _scrape_ applications to retrieve their metrics (by default on the `/metrics` endpoint of the application). The Prometheus add-on for Istio is a Prometheus server that comes pre-configured to _scrape_ Istio Mixer endpoints to collect its exposed metrics. It provides a mechanism for persistent storage and querying of those metrics metrics.
 
-Open the http://prometheus-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Prometheus console, window=_blank] and click on *Log in with OpenShift*.
+Open the https://prometheus-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Prometheus console, window=_blank] and click on *Log in with OpenShift*.
 
 You should see _OpenShift Login_ screen. Enter the username and password as below and click _Log In_. If you have _Requested permissions_ to authorize access Prometheus, click on *Allow selected permissions*. Then, you will see Prometheus home screen, similar to this:
 
@@ -110,16 +110,21 @@ image::istio-prometheus-graph.png[Prometheus graph, 700]
 Other expressions to try:
 
 * Total count of all requests to _productpage_ service:
+
 [source,sh,role="copypaste"]
 ----
 istio_request_duration_seconds_count{destination_service=~"productpage.*"}
 ----
+
 * Total count of all requests to _v3_ of the _reviews_ service:
+
 [source,sh,role="copypaste"]
 ----
 istio_request_duration_seconds_count{destination_service=~"reviews.*", destination_version="v3"}
 ----
+
 * Rate of requests over the past 5 minutes to all _productpage_ services:
+
 [source,sh,role="copypaste"]
 ----
 rate(istio_request_duration_seconds_count{destination_service=~"productpage.*", response_code="200"}[5m])
@@ -131,7 +136,7 @@ There are many, many different queries you can perform to extract the data you n
 
 As the number of services and interactions grows in your application, this style of metrics may be a bit overwhelming. https://grafana.com/[Grafana, window=_blank] provides a visual representation of many available Prometheus metrics extracted from the Istio data plane and can be used to quickly spot problems and take action.
 
-Open the http://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Grafana console, window=_blank]
+Open the https://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Grafana console, window=_blank]
 
 You should see _OpenShift Login_ screen. Enter the username and password as below and click _Log In_. If you have _Requested permissions_ to authorize access Prometheus, click on *Allow selected permissions*. Then, you will see Prometheus home screen, similar to this:
 
@@ -200,7 +205,7 @@ If your application already provides some defensive measures (e.g. using https:
 
 Istio introduces the concept of a service version, which is a finer-grained way to subdivide service instances by versions (_v1_, _v2_) or environment (_staging_, _prod_). These variants are not necessarily different API versions: they could be iterative changes to the same service, deployed in different environments (prod, staging, dev, etc.). Common scenarios where this is used include A/B testing or canary rollouts. Istio’s https://istio.io/docs/concepts/traffic-management/rules-configuration.html[traffic routing rules, window=_blank] can refer to service versions to provide additional control over traffic between services.
 
-image::versions.png[Versions, 700]
+image::versions.png[Versions, 500]
 
 As illustrated in the figure above, clients of a service have no knowledge of different versions of the service. They can continue to access the services using the hostname/IP address of the service. The Envoy sidecar/proxy intercepts and forwards all requests/responses between the client and the service.
 
