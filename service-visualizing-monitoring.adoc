@@ -11,7 +11,13 @@ Open a new _CodeReady Workspaces Terminal_ and run the following command:
 
 [source, shell, role="copypaste"]
 ----
+<<<<<<< HEAD
+`BOOK_URL={{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}`
+
+`for i in {1..1000} ; do curl -o /dev/null -s -w "%{http_code}\n" http://$BOOK_URL/productpage ; sleep 2 ; done`
+=======
 for i in {1..1000} ; do curl -o /dev/null -s -w "%{http_code}\n" http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}/productpage ; sleep 2 ; done
+>>>>>>> 4c9097edde539c47628c918f0e6b25e1741af7ab
 ----
 
 This command will endlessly access the application and report the HTTP status result in a separate terminal window.
@@ -317,7 +323,18 @@ http:
 
 This says that for any incoming HTTP request that has a cookie set to the _jason_ user to direct traffic to *reviews:v2*, and others to *reviews:v3*.
 
+<<<<<<< HEAD
+Now, access the application again via your own _Gateway URL_:
+
+[source,shell, role="copypaste"]
+----
+http://{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}/productpage
+----
+
+and sign in with:
+=======
 Now, access the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}/productpage[Bookinfo Product Page, window=_blank] and click *Sign In* (at the upper right) and sign in with:
+>>>>>>> 4c9097edde539c47628c918f0e6b25e1741af7ab
 
 * Username: *jason*
 * Password: *jason*
