@@ -1,7 +1,7 @@
 = Lab 1 - Creating Distributed Services
 :experimental:
 
-In this step, we’ll install a sample application into the system. This application is included in Istio itself for demonstrating various aspects of it, but the application isn’t tied exclusively to Istio - it’s an ordinary microservice application that could be installed to any OpenShift instance with or without Istio.
+In this lab, we’ll install a sample application into the system. This application is included in Istio itself for demonstrating various aspects of it, but the application isn’t tied exclusively to Istio - it’s an ordinary microservice application that could be installed to any OpenShift instance with or without Istio.
 
 The sample application is called _Bookinfo_, a simple application that displays information about a book, similar to a single catalog entry of an online book store. Displayed on the page is a description of the book, book details (ISBN, number of pages, and so on), and a few book reviews.
 
