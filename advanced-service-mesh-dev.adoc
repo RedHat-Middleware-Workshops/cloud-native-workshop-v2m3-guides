@@ -1,28 +1,21 @@
-== Lab 3 - Advanced Service Mesh Development
+= Lab 3 - Advanced Service Mesh Development
 :experimental:
 
-In this lab, we will learn the advanced usecases of service mesh. The lab showcases features such as 
-  
-<1> *Fault Injection*
-<2> *Traffic Shifting*
-<3> *Circuit Breaking*
-<4> *Rate Limiting*
+In this lab, we will learn the advanced usecases of service mesh. The lab showcases features:
 
-These features are important for any distributed applications built on top of Kubernetes/Openshift. 
+* Fault Injection
+* Traffic Shifting
+* Circuit Breaking
+* Rate Limiting
 
-In this section we use a different set of microservices that you will be building and deploying. Our applicaiton is called the _Coolstore microservice_ developed in
-prior labs (i.e Catalog, Inventory) that you developed and deployed to
+These features are important for any distributed applications built on top of Kubernetes/Openshift. We use a different set of microservices that you will be building and deploying. Our applicaiton is called the _Coolstore microservice_ developed in prior labs (i.e Catalog, Inventory) that you developed and deployed to
 OpenShift cluster in _Module 1_ or/and _Module 2_.
 
 === If this is the first module you are doing today
 
-If you have already deployed the _inventory_ and _catalog_ microservices
-from Module 1, you can skip this step!
+If you have already deployed the _inventory_ and _catalog_ microservices from Module 1, you can skip this step!
 
-If you haven’t done Module 1 or Module 2 today, or you didn’t quite
-complete them, you should deploy the coolstore application and
-microservices by executing the following shell scripts in CodeReady
-Workspaces Terminal:
+If you haven’t done Module 1 or Module 2 today, or you didn’t quite complete them, you should deploy the coolstore application and microservices by executing the following shell scripts in CodeReady Workspaces Terminal:
 
 [IMPORTANT]
 ====
@@ -42,9 +35,9 @@ yet, but you’ll add that in the next step!
 <1> {{ USER_ID }}-inventory
 <2> {{ USER_ID }}-catalog 
 
-#### 1. Configuring Automatic Sidecar Injection in Coolstore Microservices
+=== 1. Configuring Automatic Sidecar Injection in Coolstore Microservices
 
-Let’s go to the https://kiali-istio-system.{{ ROUTE_SUBDOMAIN }}/[Kiali console, window="_blank"] 
+Let’s go to the https://kiali-istio-system.{{ ROUTE_SUBDOMAIN }}/[Kiali console, window=_blank] 
 
 [NOTE]
 ====
@@ -85,7 +78,7 @@ method requires fewer privileges and does not conflict with other
 OpenShift capabilities such as builder pods.
 ====
 
-<1> Open link:{{CONSOLE_URL}}[OpenShift web console, window="_blank"]
+<1> Open link:{{CONSOLE_URL}}[OpenShift web console, window=_blank]
 <2> select the  `{{ USER_ID }}-inventory` project in the project drop-down
 <3> then go to *Workloads > Deployment Configs* on the left menu
 <4> click on _inventory-database_ 
@@ -233,7 +226,7 @@ Leave this page open as the _Catalog UI browser_ creates traffic (every 2 second
 
 Now, reload *Applications* in
 https://kiali-istio-system.{{ ROUTE_SUBDOMAIN }}/[Kiali
-console, window="_blank"] and verify that the _Missing sidecar_
+console, window=_blank] and verify that the _Missing sidecar_
 warning is no longer present:
 
 image::kiali_injecting_sidecar.png[istio]
@@ -243,7 +236,7 @@ Animation* in _Display_ for understanding the traffic flow from _Catalog service
 
 image::kiali_graph_sidecar.png[istio]
 
-#### 2. Fault Injection
+=== 2. Fault Injection
 
 
 
@@ -528,7 +521,7 @@ Also, close the tabs in your browser for the Inventory and Catalog
 services to avoid unnecessary load, and stop the endless `for` loop you started in the beginning of this lab in CodeReady by closing the
 Terminal window that was running it.
 
-#### 3. Enable Circuit Breaker
+=== 3. Enable Circuit Breaker
 
 
 
@@ -561,7 +554,7 @@ applicable.
 
 Each circuit breaking limit is configurable and tracked on a per
 upstream cluster and per priority basis. This allows different
-components of the distributed system to be tuned independently and have different limits. See the https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/circuit_breaking[Envoy’s circuit breaker, window="_blank"] for more details.
+components of the distributed system to be tuned independently and have different limits. See the https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/circuit_breaking[Envoy’s circuit breaker, window=_blank] for more details.
 
 Let’s add a circuit breaker to the calls to the *Inventory service*.
 Instead of using a _VirtualService_ object, circuit breakers in Istio
@@ -600,10 +593,10 @@ oc create -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/inventory/rules/
 We set the Inventory service’s maximum connections to 1 and maximum
 pending requests to 1. Thus, if we send more than 2 requests within a
 short period of time to the inventory service, 1 will go through, 1 will be pending, and any additional requests will be denied until the pending request is processed. Furthermore, it will detect any hosts that return a server error (HTTP 5xx) and eject the pod out of the load balancing pool for 15 minutes. You can visit here to check the
-https://istio.io/docs/tasks/traffic-management/circuit-breaking[Istio spec, window="_blank"] for more details on what each configuration
+https://istio.io/docs/tasks/traffic-management/circuit-breaking[Istio spec, window=_blank] for more details on what each configuration
 parameter does.
 
-#### 4. Overload the service
+=== 4. Overload the service
 
 
 
@@ -643,7 +636,7 @@ image::inventory-circuit-breaker-grafana.png[circuit-breaker]
 
 That’s the circuit breaker in action, limiting the number of requests to the service. In practice your limits would be much higher.
 
-#### 5. Stop overloading
+=== 5. Stop overloading
 
 
 
@@ -664,7 +657,7 @@ commands.
 oc delete destinationrule/inventory-cb -n {{ USER_ID }}-inventory
 ----
 
-#### 6. Enable Authentication using Single Sign-on
+=== 6. Enable Authentication using Single Sign-on
 
 
 
@@ -672,11 +665,11 @@ In this step, you will learn how to enable authentication. You will secure the _
 
 References: 
 
-https://en.wikipedia.org/wiki/JSON_Web_Token[JSON Web Token(JWT), window="_blank"]
+https://en.wikipedia.org/wiki/JSON_Web_Token[JSON Web Token(JWT), window=_blank]
 
-https://access.redhat.com/products/red-hat-single-sign-on[Red Hat Single Sign-On, window="_blank"]
+https://access.redhat.com/products/red-hat-single-sign-on[Red Hat Single Sign-On, window=_blank]
 
-https://www.redhat.com/en/products/application-runtimes[Red Hat Runtimes, window="_blank"]
+https://www.redhat.com/en/products/application-runtimes[Red Hat Runtimes, window=_blank]
 
 
 Lets start by removing the direct route to the catalog service. We want traffic to be managed by the service mesh, and not allow direct traffic.
@@ -688,7 +681,7 @@ Use the following command in the CodeReady Workspaces Terminal:
 oc delete route/catalog-springboot -n {{ USER_ID }}-catalog
 ----
 
-<1> Open the link:{{CONSOLE_URL}}[OpenShift web console, window="_blank"]
+<1> Open the link:{{CONSOLE_URL}}[OpenShift web console, window=_blank]
 <2> select the `{{ USER_ID }}-catalog` project
 <3> then navigate to _Networking > Services_ 
 <4> from the left menu, select the `catalog-springboot` service
@@ -811,7 +804,7 @@ oc rollout status -w dc/sso -n {{ USER_ID }}-catalog
 ----
 
 Once this finishes (it may take a minute or two), in the
-link:{{ CONSOLE_URL }}[OpenShift web console, window="_blank"] navigate to _Networking > Routes_ and you will see the route URL as below (in the `{{ USER_ID }}-catalog` project):
+link:{{ CONSOLE_URL }}[OpenShift web console, window=_blank] navigate to _Networking > Routes_ and you will see the route URL as below (in the `{{ USER_ID }}-catalog` project):
 
 image::rhsso_deployment.png[sso]
 
@@ -906,11 +899,11 @@ Well done, you have enabled RH-SSO to with a custom realm, user and role!
 
 Turning to back to Istio, let’s create a user-facing authentication policy using JSON Web Tokens (JWTs). 
 
-- The format is defined in https://tools.ietf.org/html/rfc7519[RFC 7519, window="_blank"].
+- The format is defined in https://tools.ietf.org/html/rfc7519[RFC 7519, window=_blank].
 
-- You can find more details how https://tools.ietf.org/html/rfc6749[OAuth 2.0, window="_blank"] 
+- You can find more details how https://tools.ietf.org/html/rfc6749[OAuth 2.0, window=_blank] 
 
-- https://openid.net/connect/[OIDC 1.0, window="_blank"] work in the overall authentication flow.
+- https://openid.net/connect/[OIDC 1.0, window=_blank] work in the overall authentication flow.
 
 In CodeReady, open the blank *ccn-auth-config.yml* file in `$CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/catalog/rules/` to create an authentication policy. 
 
@@ -948,12 +941,12 @@ The following fields are used above to create a Policy in Istio and are
 described here:
 
 * *issuer* - Identifies the issuer that issued the JWT. See
-https://tools.ietf.org/html/rfc7519#section-4.1.1[issuer, window="_blank"]
+https://tools.ietf.org/html/rfc7519#section-4.1.1[issuer, window=_blank]
 usually a URL or an email address.
 * *jwksUri* - URL of the provider’s public key set to validate signature
 of the JWT.
 * *audiences* - The list of JWT
-https://tools.ietf.org/html/rfc7519#section-4.1.3[audiences, window="_blank"].
+https://tools.ietf.org/html/rfc7519#section-4.1.3[audiences, window=_blank].
 that are allowed to access. A JWT containing any of these audiences will
 be accepted.
 
@@ -1030,7 +1023,7 @@ image::rhsso_call_catalog_auth.png[sso]
 
 Congratulations! You’ve integrated RH-SSO with Istio to protect service mesh traffic to the catalog service, without having to change the application at all. Let’s do it again with Spring Boot!
 
-#### 7. Securing Spring Boot with Red Hat Single Sing-On
+=== 7. Securing Spring Boot with Red Hat Single Sing-On
 
 
 

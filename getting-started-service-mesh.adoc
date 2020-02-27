@@ -1,4 +1,4 @@
-== Service Mesh and Identity
+= Service Mesh and Identity
 :experimental:
 
 In this module, you will learn how to prevent cascading failures in a distributed environment, how to detect misbehaving services, and how to avoid having to implement resiliency and monitoring in your business logic. As we transition our applications towards a distributed architecture with microservices deployed across a distributed
@@ -24,8 +24,6 @@ Another challenge is each runtime and language addresses these with different li
 In this section we'll explore how to use the OpenShift _Service Mesh_. Service Mesh is based on the _Istio_ open source project. It enables a much more robust, reliable, and resilient application in the face of the new world of dynamic distributed applications.
 
 === What is Istio?
-
-
 
 image::istio-logo.png[Logo, 600, align="center"]
 
