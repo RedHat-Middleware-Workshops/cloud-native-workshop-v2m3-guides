@@ -14,35 +14,76 @@ reviews.
 
 The BookInfo application is broken into four separate microservices:
 
-* *productpage* - The `productpage` microservice calls the `details` and
+<1> *productpage* - The `productpage` microservice calls the `details` and
 `reviews` microservices to populate the page.
-* *details* - The `details` microservice contains book information.
-* *reviews* - The `reviews` microservice contains book reviews. It also
+<2> *details* - The `details` microservice contains book information.
+<3> *reviews* - The `reviews` microservice contains book reviews. It also
 calls the `ratings` microservice to show a ``star'' rating for each
 book.
-* *ratings* - The `ratings` microservice contains book rating
+<4> *ratings* - The `ratings` microservice contains book rating
 information that accompanies a book review.
 
 There are 3 versions of the reviews microservice:
 
-* Version `v1` does not call the ratings service.
-* Version `v2` calls the ratings service, and displays each rating as 1
+<1> Version `v1` does not call the ratings service.
+<2> Version `v2` calls the ratings service, and displays each rating as 1
 to 5 *black* stars.
-* Version `v3` calls the ratings service, and displays each rating as 1
+<3> Version `v3` calls the ratings service, and displays each rating as 1
 to 5 *red* stars.
 
 The end-to-end architecture of the application is shown below.
 
-image::istio_bookinfo.png[Bookinfo
-Architecture]
+image::istio_bookinfo.png[Bookinfo Architecture]
 
-####1. Deploy Bookinfo Application
+Before we start depoying our application we need to make sure we have the right access to our different application namespaces. The _ServiceMeshControlPlane_ that includes _Elasticsearch_, _Jaeger_, _Kiali_ and _Service Mesh Operators_, have all been installed at the cluster provisioning time. However for applications to communicate to each other accross different namespaces, we need to ensure that the _ServiceMeshMemberRole_ is also created. We create the _ServiceMeshMemberRole_ with the following yaml file. 
+
+[source, yaml, role="copypaste"]
+----
+apiVersion: maistra.io/v1
+kind: ServiceMeshMemberRoll
+metadata:
+  name: default
+  namespace: {{ USER_ID }}-istio-system <1>
+spec:
+  members:
+    - {{ USER_ID }}-bookinfo <2>
+    - {{ USER_ID }}-catalog
+    - {{ USER_ID }}-cloudnative-pipeline
+    - {{ USER_ID }}-cloudnativeapps
+    - {{ USER_ID }}-inventory
+----
+
+So what's really happening in this yaml construct? 
+
+<1> is the istio-system namespace which will hold are _ServiceMeshMemberRole_ and a bunch of other service mesh related objects. 
+<2> is the list of projects that will be part of this _ServiceMesh_; in our case that's the our application.  
+
+Let's create the _ServiceMeshMemberRole_
+
+- Login to the openshift console link:{{CONSOLE_URL}}[OpenShift web console, window="_blank"]
+- Press the plus sign on the right top corner as shown in the picture. 
+
+image::plussigntop_ocpconsole.png[Run yaml in console]
+
+- Select your namespace `{{ USER_ID }}-istio-system` on the top right; as shown in the picture and paste the above yaml file into the editor. 
+
+image::smmr_yaml_create.png[Run yaml in console]
+
+- Press create. This should create the required _ServiceMeshMemberRole_ 
+
+Now let's click `Home -> Explorer` in the openshift webconsole and verify where the _ServiceMeshMemberRole_ was created. 
+Click on the _ServiceMeshMemberRole_ and then select your project user5-istio-system and you will see the newly create role. 
+
+image::smmr_explore.png[SMMR Explore]
+
+Congratulations now we have successfully configured _ServiceMeshMemberRole_ let's move on to deploy our application to our service mesh. 
+
+
+#### 1. Deploy Bookinfo Application
 
 '''''
 
-First, open a new browser with the
-link:{{ CONSOLE_URL }}[OpenShift web
-console, window="_blank"]
+First, open a new browser with the link:{{ CONSOLE_URL }}[OpenShift web console, window="_blank"]
 
 image::openshift_login.png[openshift_login]
 
@@ -52,39 +93,32 @@ Login using:
 * Password: `r3dh4t1!`
 
 
-[IMPORTANT]
+[NOTE]
 ====
-When you access the link:{{ CONSOLE_URL }}[OpenShift web
-console] or other URLs via _HTTPS_ protocol, you will see browser
-warnings like `Your Connection is not secure` since this workshop uses
-self-signed certificates (which you should not do in production!). For
-example, if you’re using *Chrome*, to accept the warning, Click on
-`Advanced` then `Proceed to...` to access the page.
+When you access the link:{{ CONSOLE_URL }}[OpenShift web console] or other URLs via _HTTPS_ protocol, you might see browser warnings like `Your Connection is not secure` since this workshop uses self-signed certificates (which you should not do in production!). For example, if you’re using *Chrome*, to accept the warning, Click on `Advanced` then `Proceed to...` to access the page.
 ====
 
-images/browser_warning.png[warning]
+image::browser_warning.png[warning]
 
 
 Other browsers have similar procedures to accept the security exception.
 
 
-Once logged in, uou will see the OpenShift landing page:
+Once logged in, you should see the OpenShift landing page:
 
 image::openshift_landing.png[openshift_landing]
 
 
-The project displayed in the landing page depends on which labs you will
-run today. If you will develop `Service Mesh and Identity` then you will
-see pre-created projects as the above screeenshot.
+The project displayed in the landing page depends on which labs you will run today. If you will develop `Service Mesh and Identity` then you will see pre-created projects as the above screeenshot.
 
 
-Although your Eclipse Che workspace is running on the Kubernetes
-cluster, it’s running with a default restricted _Service Account_ that
-prevents you from creating most resource types. If you’ve completed
-other modules, you’re probably already logged in, but let’s login again:
+Although your CodeReady workspace is running on the Kubernetes cluster, it’s running with a default restricted _Service Account_ that prevents you from creating most resource types. If you’ve completed other modules, you’re probably already logged in, but let’s login again:
 open a Terminal and issue the following command:
 
-`oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-skip-tls-verify=true`
+[source, shell, role="copypaste"]
+----
+oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-skip-tls-verify=true
+----
 
 Enter your username and password assigned to you:
 
@@ -112,39 +146,46 @@ Welcome! See 'oc help' to get started.
 ----
 
 Change to the empty *{{ USER_ID }}-bookinfo* project via CodeReady
-Workspaces Terminal and this command (you should replace *{{ USER_ID
-}}* with your username):
+Workspaces Terminal and the following command 
 
-`oc project {{ USER_ID }}-bookinfo`
+[source,shell, role="copypaste"]
+----
+oc project {{ USER_ID }}-bookinfo
+----
 
 Deploy the *Bookinfo application* in the bookinfo project:
 
-`oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml`
+[source,shell, role="copypaste"]
+----
+oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml
+----
 
 Next, open the `istio/bookinfo-gateway.yaml` file in CodeReady.
 
-Look for the _REPLACE WITH YOUR BOOKINFO APP URL_ (there are 2 of them)
-and replace them with your custom url:
+Following should be your bookinfo app URL.
 
-`{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}`
+[source,shell, role="copypaste"]
+----
+http://{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}/productpage
+----
+
 
 image::bookinfo-gateway.png[gateway]
 
-[TIP]
-====
-Be sure to substitute your username for `{{ USER_ID }}`!
-====
-
-
 And then create the _ingress gateway_ for Bookinfo:
 
-`oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml`
+[source,shell, role="copypaste"]
+----
+oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml
+----
 
 For your conveience, set an environment variable in the CodeReady
 Workspaces Terminal:
 
-`echo "export BOOK_URL=REPLACE WITH YOUR BOOKINFO APP URL" >> ~/.bashrc && source ~/.bashrc`
-(again, replace the same value as above).
+[source,shell, role="copypaste"]
+----
+echo "export BOOK_URL={{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}" >> ~/.bashrc && source ~/.bashrc
+----
 
 When the app is installed, each Pod will get an additional _sidecar_
 container as described earlier.
@@ -159,7 +200,7 @@ complete and result `successfully rolled out`:
 
 [source,shell]
 ----
-oc rollout status -w deployment/productpage-v1 && \
+ oc rollout status -w deployment/productpage-v1 && \
  oc rollout status -w deployment/reviews-v1 && \
  oc rollout status -w deployment/reviews-v2 && \
  oc rollout status -w deployment/reviews-v3 && \
@@ -169,27 +210,45 @@ oc rollout status -w deployment/productpage-v1 && \
 
 Confirm that Bookinfo has been *successfully* deployed via your own
 _Gateway URL_:
-
-`curl -o /dev/null -s -w "%{http_code}\n" http://$BOOK_URL/productpage`
+[source,shell, role="copypaste"]
+----
+curl -o /dev/null -s -w "%{http_code}\n" http://{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}/productpage
+----
 
 You should get *200* as a response.
 
 Add default destination rules (we’ll alter this later to affect routing
 of requests):
 
-`oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/destination-rule-all.yaml`
+[source,shell, role="copypaste"]
+----
+oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/destination-rule-all.yaml
+----
+
 
 List all available destination rules:
 
-`oc get destinationrules -o yaml`
+[source,shell, role="copypaste"]
+----
+oc get destinationrules -o yaml
+----
 
-####2. Access Bookinfo
+Let's move on to the next section and verify our new application.
+
+#### 2. Access Bookinfo
 
 Open the application in your web browser to make sure if it’s working.
 You will find the URL via running the following command in CodeReady
 Workspaces Terminal:
 
 `echo http://$BOOK_URL/productpage`
+
+or use the following url
+
+[source,shell, role="copypaste"]
+----
+http://{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}/productpage
+----
 
 It should look something like:
 
@@ -199,9 +258,17 @@ Reload the page multiple times. The three different versions of the
 Reviews service show the star ratings differently - _v1_ shows no stars
 at all, _v2_ shows black stars, and _v3_ shows red stars:
 
-* *v1*: image::stars-none.png[no stars]
-* *v2*: image::stars-black.png[black stars]
-* *v3*: image::stars-red.png[red stars]
+* *v1* 
+
+image::stars-none.png[no stars]
+
+* *v2* 
+
+image::stars-black.png[black stars]
+
+* *v3*: 
+
+image::stars-red.png[red stars]
 
 That’s because there are 3 versions of reviews deployment for our
 reviews service. Istio’s load-balancer is using a _round-robin_
@@ -212,7 +279,12 @@ sidecar in each of them alongside the microservice. The microservices
 are productpage, details, ratings, and reviews. Note that you’ll have
 three versions of the reviews microservice:
 
-`oc get pods --selector app=reviews`
+[source,shell, role="copypaste"]
+----
+oc get pods --selector app=reviews
+----
+
+The output from the above command should be similar but not the same, since pod names should be different.
 
 [source,shell]
 ----
