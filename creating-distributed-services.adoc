@@ -1,16 +1,9 @@
-== Lab 1 - Creating Distributed Services
+= Creating Distributed Services
+:experimental:
 
-In this step, we’ll install a sample application into the system. This
-application is included in Istio itself for demonstrating various
-aspects of it, but the application isn’t tied exclusively to Istio -
-it’s an ordinary microservice application that could be installed to any
-OpenShift instance with or without Istio.
+In this lab, we’ll install a sample application into the system. This application is included in Istio itself for demonstrating various aspects of it, but the application isn’t tied exclusively to Istio - it’s an ordinary microservice application that could be installed to any OpenShift instance with or without Istio.
 
-The sample application is called _Bookinfo_, a simple application that
-displays information about a book, similar to a single catalog entry of
-an online book store. Displayed on the page is a description of the
-book, book details (ISBN, number of pages, and so on), and a few book
-reviews.
+The sample application is called _Bookinfo_, a simple application that displays information about a book, similar to a single catalog entry of an online book store. Displayed on the page is a description of the book, book details (ISBN, number of pages, and so on), and a few book reviews.
 
 The BookInfo application is broken into four separate microservices:
 
@@ -48,8 +41,6 @@ spec:
   members:
     - {{ USER_ID }}-bookinfo <2>
     - {{ USER_ID }}-catalog
-    - {{ USER_ID }}-cloudnative-pipeline
-    - {{ USER_ID }}-cloudnativeapps
     - {{ USER_ID }}-inventory
 ----
 
@@ -103,6 +94,7 @@ image::browser_warning.png[warning]
 
 Other browsers have similar procedures to accept the security exception.
 
+You will see a list of projects to which you have access:
 
 Once logged in, you should see the OpenShift landing page:
 
@@ -111,6 +103,7 @@ image::openshift_landing.png[openshift_landing]
 
 The project displayed in the landing page depends on which labs you will run today. If you will develop `Service Mesh and Identity` then you will see pre-created projects as the above screeenshot.
 
+Although your CodeReady workspace is running on the Kubernetes cluster, it’s running with a default restricted _Service Account_ that prevents you from creating most resource types. If you’ve completed other modules, you’re probably already logged in, but let’s login again. Open a Terminal and issue the following command:
 
 Although your CodeReady workspace is running on the Kubernetes cluster, it’s running with a default restricted _Service Account_ that prevents you from creating most resource types. If you’ve completed other modules, you’re probably already logged in, but let’s login again:
 open a Terminal and issue the following command:
@@ -125,23 +118,20 @@ Enter your username and password assigned to you:
 * Username: `{{ USER_ID }}`
 * Password: `r3dh4t1!`
 
-You should see like:
+You should see something like this (the project names may be different):
 
-[source,shell]
+[source,none]
 ----
 Login successful.
 
 You have access to the following projects and can switch between them with 'oc project <projectname>':
 
-  * default
-    istio-system
-    {{ USER_ID }}-bookinfo
+  * {{ USER_ID }}-bookinfo
     {{ USER_ID }}-catalog
-    {{ USER_ID }}-cloudnative-pipeline
-    {{ USER_ID }}-cloudnativeapps
     {{ USER_ID }}-inventory
+    {{ USER_ID }}-istio-system
 
-Using project "default".
+Using project "{{ USER_ID }}-bookinfo".
 Welcome! See 'oc help' to get started.
 ----
 
@@ -153,14 +143,14 @@ Workspaces Terminal and the following command
 oc project {{ USER_ID }}-bookinfo
 ----
 
-Deploy the *Bookinfo application* in the bookinfo project:
+Visit on the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-bookinfo[Topology View, window=_blank], click on `+` icon on the right top corner.
 
 [source,shell, role="copypaste"]
 ----
 oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml
 ----
 
-Next, open the `istio/bookinfo-gateway.yaml` file in CodeReady.
+Copy the following `ServiceMeshMemberRole` in `YAML` editor then click on *Create*:
 
 Following should be your bookinfo app URL.
 
@@ -237,26 +227,15 @@ Let's move on to the next section and verify our new application.
 
 #### 2. Access Bookinfo
 
-Open the application in your web browser to make sure if it’s working.
-You will find the URL via running the following command in CodeReady
-Workspaces Terminal:
+Make sure it’s actually done rolling out. Visit the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-bookinfo[Topology View, window=_blank] for the catalog, and ensure you get the blue circles!
 
-`echo http://$BOOK_URL/productpage`
+image::bookinfo_topology.png[Bookinfo App, 700]
 
-or use the following url
+Finally, access the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}/productpage[Bookinfo Product Page, window=_blank] and ensure it should look something like:
 
-[source,shell, role="copypaste"]
-----
-http://{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}/productpage
-----
+image::bookinfo.png[Bookinfo App, 700]
 
-It should look something like:
-
-image::bookinfo.png[Bookinfo App]
-
-Reload the page multiple times. The three different versions of the
-Reviews service show the star ratings differently - _v1_ shows no stars
-at all, _v2_ shows black stars, and _v3_ shows red stars:
+Reload the page multiple times. The three different versions of the Reviews service show the star ratings differently - _v1_ shows no stars at all, _v2_ shows black stars, and _v3_ shows red stars:
 
 * *v1* 
 
@@ -270,14 +249,9 @@ image::stars-black.png[black stars]
 
 image::stars-red.png[red stars]
 
-That’s because there are 3 versions of reviews deployment for our
-reviews service. Istio’s load-balancer is using a _round-robin_
-algorithm to iterate through the 3 instances of this service.
+That’s because there are 3 versions of reviews deployment for our reviews service. Istio’s load-balancer is using a _round-robin_ algorithm to iterate through the 3 instances of this service.
 
-You should now have your OpenShift Pods running and have an Envoy
-sidecar in each of them alongside the microservice. The microservices
-are productpage, details, ratings, and reviews. Note that you’ll have
-three versions of the reviews microservice:
+You should now have your OpenShift Pods running and have an _Envoy sidecar_ in each of them alongside the microservice. The microservices are productpage, details, ratings, and reviews. Note that you’ll have three versions of the reviews microservice:
 
 [source,shell, role="copypaste"]
 ----
@@ -286,7 +260,7 @@ oc get pods --selector app=reviews
 
 The output from the above command should be similar but not the same, since pod names should be different.
 
-[source,shell]
+[source,sh]
 ----
 NAME                          READY   STATUS    RESTARTS   AGE
 reviews-v1-7754bbd88-dm4s5    2/2     Running   0          12m
@@ -294,11 +268,8 @@ reviews-v2-69fd995884-qpddl   2/2     Running   0          12m
 reviews-v3-5f9d5bbd8-sz29k    2/2     Running   0          12m
 ----
 
-Notice that each of the microservices shows *2/2* containers ready for
-each service (one for the service and one for its sidecar).
+Notice that each of the microservices shows *2/2* containers ready for each service (one for the service and one for its sidecar).
 
-Now that we have our application deployed and linked into the Istio
-service mesh, let’s take a look at the immediate value we can get out of
-it without touching the application code itself!
+Now that we have our application deployed and linked into the Istio service mesh, let’s take a look at the immediate value we can get out of it without touching the application code itself!
 
 ##### Congratulations!
