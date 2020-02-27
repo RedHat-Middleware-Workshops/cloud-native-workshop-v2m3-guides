@@ -162,7 +162,13 @@ oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml
 
 Next, open the `istio/bookinfo-gateway.yaml` file in CodeReady.
 
-Following should be your bookinfo app URL. `{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}`
+Following should be your bookinfo app URL.
+
+[source,shell, role="copypaste"]
+----
+http://{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}/productpage
+----
+
 
 image::bookinfo-gateway.png[gateway]
 
@@ -206,7 +212,7 @@ Confirm that Bookinfo has been *successfully* deployed via your own
 _Gateway URL_:
 [source,shell, role="copypaste"]
 ----
-curl -o /dev/null -s -w "%{http_code}\n" http://$BOOK_URL/productpage
+curl -o /dev/null -s -w "%{http_code}\n" http://{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}/productpage
 ----
 
 You should get *200* as a response.
@@ -236,6 +242,13 @@ You will find the URL via running the following command in CodeReady
 Workspaces Terminal:
 
 `echo http://$BOOK_URL/productpage`
+
+or use the following url
+
+[source,shell, role="copypaste"]
+----
+http://{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}/productpage
+----
 
 It should look something like:
 

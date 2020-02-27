@@ -13,7 +13,7 @@ App URL_:
 
 [source, shell, role="copypaste"]
 ----
-`BOOK_URL=REPLACE WITH YOUR BOOKINFO APP URL`
+`BOOK_URL={{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}`
 
 `for i in {1..1000} ; do curl -o /dev/null -s -w "%{http_code}\n" http://$BOOK_URL/productpage ; sleep 2 ; done`
 ----
@@ -370,8 +370,12 @@ the _jason_ user to direct traffic to *reviews:v2*, and others to
 
 Now, access the application again via your own _Gateway URL_:
 
-`http://YOUR_BOOK_APP_URL/productpage` and click *Sign In* (at the upper
-right) and sign in with:
+[source,shell, role="copypaste"]
+----
+http://{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}/productpage
+----
+
+and sign in with:
 
 * Username: *jason*
 * Password: *jason*
