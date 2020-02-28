@@ -24,7 +24,7 @@ to 5 *black* stars.
 <3> Version `v3` calls the ratings service, and displays each rating as 1
 to 5 *red* stars.
 
-The end-to-end architecture of the application is shown below.
+The application architecture is described in the below diagram:
 
 image::istio_bookinfo.png[Bookinfo Architecture]
 
@@ -92,7 +92,7 @@ When you access the link:{{ CONSOLE_URL }}[OpenShift web console] or other URLs 
 image::browser_warning.png[warning]
 
 
-Other browsers have similar procedures to accept the security exception.
+Other browsers should have a similar to accept the security exception.
 
 You will see a list of projects to which you have access:
 
@@ -187,15 +187,6 @@ complete and result `successfully rolled out`:
  oc rollout status -w deployment/details-v1 && \
  oc rollout status -w deployment/ratings-v1
 ----
-
-Confirm that Bookinfo has been *successfully* deployed via your own
-_Gateway URL_:
-[source,shell, role="copypaste"]
-----
-curl -o /dev/null -s -w "%{http_code}\n" http://{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}/productpage
-----
-
-You should get *200* as a response.
 
 Add default destination rules (we’ll alter this later to affect routing
 of requests):
