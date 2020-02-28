@@ -26,7 +26,7 @@ to 5 *red* stars.
 
 The application architecture is described in the below diagram:
 
-image::istio_bookinfo.png[Bookinfo Architecture]
+image::istio_bookinfo.png[Bookinfo Architecture, 700, align=center]
 
 #### 1. Deploy Bookinfo Application
 '''''
@@ -35,7 +35,7 @@ image::istio_bookinfo.png[Bookinfo Architecture]
 
 First, open a new browser with the link:{{ CONSOLE_URL }}[OpenShift web console, window="_blank"]
 
-image::openshift_login.png[openshift_login]
+image::openshift_login.png[openshift_login, 700, align=center]
 
 Login using:
 
@@ -48,16 +48,16 @@ Login using:
 When you access the link:{{ CONSOLE_URL }}[OpenShift web console] or other URLs via _HTTPS_ protocol, you might see browser warnings like `Your Connection is not secure` since this workshop uses self-signed certificates (which you should not do in production!). For example, if you’re using *Chrome*, to accept the warning, Click on `Advanced` then `Proceed to...` to access the page.
 ====
 
-image::browser_warning.png[warning]
+image::browser_warning.png[warning, 700, align=center]
 
 
-Other browsers should have a similar to accept the security exception.
+Other browsers should have a similar way to accept the security exception.
 
 You will see a list of projects to which you have access:
 
 Once logged in, you should see the OpenShift landing page:
 
-image::openshift_landing.png[openshift_landing]
+image::openshift_landing.png[openshift_landing, 700, align=center]
 
 
 The project displayed on the landing page depends on which labs you will run today. If you will develop `Service Mesh and Identity` then you will see pre-created projects as shown in the above screeenshot.
@@ -112,26 +112,26 @@ spec:
 
 So what's really happening in this yaml construct? 
 
-<1> is the istio-system namespace which will hold are _ServiceMeshMemberRole_ and a bunch of other service mesh related objects. 
-<2> is the list of projects that will be part of this _ServiceMesh_; in our case that's the our application.  
+<1> is the istio-system namespace which will hold the _ServiceMeshMemberRole_ and a bunch of other service mesh related objects. 
+<2> is the list of projects that will be part of this _ServiceMesh_; in our case that's the application spread in three different namespaces/projects.  
 
 Let's create the _ServiceMeshMemberRole_
 
 - Login to the openshift console link:{{CONSOLE_URL}}[OpenShift web console, window="_blank"]
 - Press the plus sign on the right top corner as shown in the picture. 
 
-image::plussigntop_ocpconsole.png[Run yaml in console]
+image::plussigntop_ocpconsole.png[Run yaml in console, 700, align=center]
 
 - Select your namespace `{{ USER_ID }}-istio-system` on the top right; as shown in the picture and paste the above _ServiceMeshMemberRole_ yaml file into the editor. 
 
-image::smmr_yaml_create.png[Run yaml in console]
+image::smmr_yaml_create.png[Run yaml in console, 700, align=center]
 
 - Press create. This should create the required _ServiceMeshMemberRole_ 
 
 Now let's click `Home -> Explore` in the openshift webconsole and verify where the _ServiceMeshMemberRole_ was created. 
 Click on the _ServiceMeshMemberRole_ and then select your project user5-istio-system and you will see the newly create role. 
 
-image::smmr_explore.png[SMMR Explore]
+image::smmr_explore.png[SMMR Explore, 700, align=center]
 
 Congratulations now we have successfully configured _ServiceMeshMemberRole_ let's move on to deploy our application to our service mesh. 
 
@@ -151,11 +151,11 @@ Following should be your bookinfo app URL.
 
 [source,shell, role="copypaste"]
 ----
-http://{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}/productpage
+{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}
 ----
 
 
-image::bookinfo-gateway.png[gateway]
+image::bookinfo-gateway.png[gateway, 700, align=center]
 
 And then create the _ingress gateway_ for Bookinfo:
 
@@ -185,7 +185,7 @@ container as described earlier.
 Let’s wait for our application to finish deploying. Go to the overview
 page in _{{ USER_ID }}-bookinfo_ project:
 
-image::bookinfo_topology.png[Bookinfo App, 700]
+image::bookinfo_topology.png[Bookinfo App, 700, align=center]
 
 Or you can execute the following commands to wait for the deployment to
 complete and result `successfully rolled out`:
@@ -203,7 +203,7 @@ complete and result `successfully rolled out`:
 Finally, access the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}/productpage[Bookinfo Product Page, window=_blank] and ensure it should look something like:
 
 
-image::bookinfo.png[Bookinfo App, 700]
+image::bookinfo.png[Bookinfo App, 700, align=center]
 
 Reload the page multiple times. The three different versions of the Reviews service show the star ratings differently - _v1_ shows no stars at all, _v2_ shows black stars, and _v3_ shows red stars:
 
