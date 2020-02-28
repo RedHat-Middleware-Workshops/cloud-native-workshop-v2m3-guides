@@ -24,7 +24,7 @@ to 5 *black* stars.
 <3> Version `v3` calls the ratings service, and displays each rating as 1
 to 5 *red* stars.
 
-The end-to-end architecture of the application is shown below.
+The application architecture is described in the below diagram:
 
 image::istio_bookinfo.png[Bookinfo Architecture]
 
@@ -92,7 +92,7 @@ When you access the link:{{ CONSOLE_URL }}[OpenShift web console] or other URLs 
 image::browser_warning.png[warning]
 
 
-Other browsers have similar procedures to accept the security exception.
+Other browsers should have a similar to accept the security exception.
 
 You will see a list of projects to which you have access:
 
@@ -159,12 +159,19 @@ And then create the _ingress gateway_ for Bookinfo:
 oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml
 ----
 
-For your conveience, set an environment variable in the CodeReady
-Workspaces Terminal:
+Add default destination rules (we’ll alter this later to affect routing
+of requests):
 
 [source,shell, role="copypaste"]
 ----
-echo "export BOOK_URL={{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}" >> ~/.bashrc && source ~/.bashrc
+oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/destination-rule-all.yaml
+----
+
+List all available destination rules:
+
+[source,shell, role="copypaste"]
+----
+oc get destinationrules -o yaml
 ----
 
 When the app is installed, each Pod will get an additional _sidecar_
@@ -173,7 +180,7 @@ container as described earlier.
 Let’s wait for our application to finish deploying. Go to the overview
 page in _{{ USER_ID }}-bookinfo_ project:
 
-image::bookinfo-deployed.png[bookinfo]
+image::bookinfo_topology.png[Bookinfo App, 700]
 
 Or you can execute the following commands to wait for the deployment to
 complete and result `successfully rolled out`:
@@ -188,40 +195,8 @@ complete and result `successfully rolled out`:
  oc rollout status -w deployment/ratings-v1
 ----
 
-Confirm that Bookinfo has been *successfully* deployed via your own
-_Gateway URL_:
-[source,shell, role="copypaste"]
-----
-curl -o /dev/null -s -w "%{http_code}\n" http://{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}/productpage
-----
-
-You should get *200* as a response.
-
-Add default destination rules (we’ll alter this later to affect routing
-of requests):
-
-[source,shell, role="copypaste"]
-----
-oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/destination-rule-all.yaml
-----
-
-
-List all available destination rules:
-
-[source,shell, role="copypaste"]
-----
-oc get destinationrules -o yaml
-----
-
-Let's move on to the next section and verify our new application.
-
-#### 2. Access Bookinfo
-
-Make sure it’s actually done rolling out. Visit the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-bookinfo[Topology View, window=_blank] for the catalog, and ensure you get the blue circles!
-
-image::bookinfo_topology.png[Bookinfo App, 700]
-
 Finally, access the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}/productpage[Bookinfo Product Page, window=_blank] and ensure it should look something like:
+
 
 image::bookinfo.png[Bookinfo App, 700]
 
