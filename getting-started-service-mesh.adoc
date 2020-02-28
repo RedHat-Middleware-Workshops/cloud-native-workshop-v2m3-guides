@@ -137,7 +137,7 @@ image::che-workspace-gitclone.png[cdw, 600, align="center"]
 
 Step through the prompts, using the following value for **Repository URL**:
 
-[source,none,role="copypaste"]
+[source,shell,role="copypaste"]
 ----
 https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m3-labs.git
 ----
