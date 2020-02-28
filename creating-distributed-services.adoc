@@ -242,4 +242,4 @@ Notice that each of the microservices shows *2/2* containers ready for each serv
 
 Now that we have our application deployed and linked into the Istio service mesh, let’s take a look at the immediate value we can get out of it without touching the application code itself!
 
-##### Congratulations!
+*Congratulations!* {{ USER_ID }} have now successfully deployed your first application with _ServiceMesh_. Lets move to the next lab _Service Visulization and Montioring_
