@@ -147,16 +147,6 @@ oc project {{ USER_ID }}-bookinfo
 oc apply -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml
 ----
 
-Following should be your bookinfo app URL.
-
-[source,shell, role="copypaste"]
-----
-{{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}
-----
-
-
-image::bookinfo-gateway.png[gateway, 700, align=center]
-
 And then create the _ingress gateway_ for Bookinfo:
 
 [source,shell, role="copypaste"]
