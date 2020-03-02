@@ -11,21 +11,22 @@ In this lab, we will learn the advanced usecases of service mesh. The lab showca
 These features are important for any distributed applications built on top of Kubernetes/Openshift. We use a different set of microservices that you will be building and deploying. Our applicaiton is called the _Coolstore microservice_ developed in prior labs (i.e Catalog, Inventory) that you developed and deployed to
 OpenShift cluster in _Module 1_ or/and _Module 2_.
 
-==== If this is the first module you are doing today
-
-If you have already deployed the _inventory_ and _catalog_ microservices from Module 1, you can skip this step!
-
-If you haven’t done Module 1 or Module 2 today, or you didn’t quite complete them, you should deploy the coolstore application and microservices by executing the following shell scripts in CodeReady Workspaces Terminal:
-
 [IMPORTANT]
 ====
-In some of the screen shots, the username might differ ensure that you always use your `{{ USER_ID }}`
+If you have already deployed the _inventory_ and _catalog_ microservices from Module 1, you can skip this step and move to sectionn "1. Enabling automatic sidecar injection"
 ====
 
+Incase you haven’t done Module 1 or Module 2 today, or you didn’t quite complete them, you should deploy the coolstore application and microservices by executing the following shell scripts in CodeReady Workspaces Terminal:
+
+The following script will deploy the inventory service
 [source, shell, role="copypaste"]
 ----
 sh $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-inventory.sh {{ USER_ID }}
+----
 
+The following script will deploy the catalog service
+[source, shell, role="copypaste"]
+----
 sh $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-catalog.sh {{ USER_ID }}
 ----
 
@@ -33,6 +34,11 @@ This will build and deploy the _inventory_ and _catalog_ components into the fol
 yet, but you’ll add that in the next step!
 
 === 1. Enabling automatic sidecar injection
+
+[IMPORTANT]
+====
+In some of the screen shots, the username might differ ensure that you always use your `{{ USER_ID }}`
+====
 
 Let’s go to the https://kiali-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Kiali console, window=_blank]
 
@@ -52,11 +58,15 @@ The webhook checks the configuration of pods deploying into all projects to see 
 <4> click on _inventory-database_ 
 <5> then click the _YAML_ tab.
 
-image::inventory_db_dc.png[istio]
+image::inventory_db_dc.png[istio, 700, align=center]
 
 Add the following annotation in `spec.template.metadata.annotations` path in the YAML and click on *Save*.
 
-`sidecar.istio.io/inject: "true"`
+[source, yaml, role="copypaste"]
+----
+sidecar.istio.io/inject: "true"
+----
+
 
 [NOTE]
 ====
@@ -66,7 +76,7 @@ same indentation as the annotation immediately above!
 Following is an example screenshot
 ====
 
-image::inventory_db_inject_sidecar.png[istio]
+image::inventory_db_inject_sidecar.png[istio, 700, align=center]
 
 You should now see a new 
 
@@ -78,7 +88,7 @@ Pods > inventory-database-xxxxx_. This new container will intercept
 traffic to and from the application pod and potentially alter and/or
 re-route it depending on service mesh configuration.
 
-image::inventory_db_sidecar.png[istio]
+image::inventory_db_sidecar.png[istio, 700, align=center]
 
 Now let's inject a sidecar container to application container (Inventory) as well. First, we need to remove the healhcheck of the
 inventory service as it will also be proxied and as we have no route for it, will be rejected (and the pod killed since Kubernetes cannot access the health check!). Alternative health checks involve running commands directly in the container but we’ll just remove it for now. Remove it with:
@@ -102,11 +112,15 @@ Next:
 <3> click on _inventory-quarkus_ 
 <4> and then the `YAML` tab.
 
-image::inventory_dc.png[istio]
+image::inventory_dc.png[istio, 700, align=center]
 
 We’ll add the same annotation as before:
 
-`sidecar.istio.io/inject: "true"`
+[source, yaml, role="copypaste"]
+----
+sidecar.istio.io/inject: "true"
+----
+
 
 [NOTE]
 ====
@@ -115,7 +129,7 @@ block under _spec > template > metadata > annotations_ and match the
 same indentation as the annotation immediately above!
 ====
 
-image::inventory_inject_sidecar.png[istio]
+image::inventory_inject_sidecar.png[istio, 700, align=center]
 
 Again you should see 
 
@@ -124,7 +138,7 @@ Again you should see
 
 in the ``Pod Details'' page when you navigate _Workloads > Pods > inventory-quarkus-xxxxx_:
 
-image::inventory_sidecar.png[istio]
+image::inventory_sidecar.png[istio, 700, align=center]
 
 Next, let's do the same for the catalog and catalog’s database. 
 
@@ -132,14 +146,18 @@ Next, let's do the same for the catalog and catalog’s database.
 <2> on the left menu, select _{{ USER_ID}}-catalog_ project 
 <3> click on _catalog-database_
 
-image::catalog_db_dc.png[istio]
+image::catalog_db_dc.png[istio, 700, align=center]
 
 Now click on *YAML* tab and add the following annotation in 
 `spec.template.metadata.annotations` path and click on *Save*.
 
-`sidecar.istio.io/inject: "true"`
+[source, yaml, role="copypaste"]
+----
+sidecar.istio.io/inject: "true"
+----
 
-image::catalog_db_inject_sidecar.png[istio]
+
+image::catalog_db_inject_sidecar.png[istio, 700, align=center]
 
 You should see 
 
@@ -148,7 +166,7 @@ You should see
 
 in Pod Details page when you navigate _Workloads > Pods >catalog-database-xxxxx_.
 
-image::catalog_db_sidecar.png[istio]
+image::catalog_db_sidecar.png[istio, 700, align=center]
 
 Now its time to inject the Sidecar container to (Catalog). Let's go ahead and do that.
 
@@ -156,13 +174,17 @@ Now its time to inject the Sidecar container to (Catalog). Let's go ahead and do
 <2> on the left menu, select _{{ USER_ID }}-catalog_ project
 <3> and click on _catalog-springboot_
 
-image::catalog_dc.png[istio]
+image::catalog_dc.png[istio, 700, align=center]
 
 Add the same annotation (on the YAML tab):
 
-`sidecar.istio.io/inject: "true"`
+[source, yaml, role="copypaste"]
+----
+sidecar.istio.io/inject: "true"
+----
 
-image::catalog_inject_sidecar.png[istio]
+
+image::catalog_inject_sidecar.png[istio, 700, align=center]
 
 You should see 
 
@@ -172,7 +194,7 @@ You should see
 in the ``Pod Details'' page when you navigate _Workloads > Pods >
 catalog-springboot-xxxxx_:
 
-image::catalog_sidecar.png[istio]
+image::catalog_sidecar.png[istio, 700, align=center]
 
 Let’s make sure if inventory and catalog services are working correctly via accessing _Catalog Route URL_ in your browser. 
 
@@ -185,7 +207,7 @@ You will see the following web page including _Inventory Quantity_ if
 the catalog service can access the inventory service via _Istio proxy
 sidecar_:
 
-image::catalog_route_sidecar.png[istio]
+image::catalog_route_sidecar.png[istio, 700, align=center]
 
 [NOTE]
 ====
@@ -197,16 +219,14 @@ https://kiali-istio-system.{{ ROUTE_SUBDOMAIN }}/[Kiali
 console, window=_blank] and verify that the _Missing sidecar_
 warning is no longer present:
 
-image::kiali_injecting_sidecar.png[istio]
+image::kiali_injecting_sidecar.png[istio, 700, align=center]
 
 Also, go to the Service Graph page and check _{{ USER_ID}} inventory_, _{{ USER_ID }}-catalog_ in Namespace, check *Traffic
 Animation* in _Display_ for understanding the traffic flow from _Catalog service_ to inventory service:
 
-image::kiali_graph_sidecar.png[istio]
+image::kiali_graph_sidecar.png[istio, 700, align=center]
 
 === 2. Fault Injection
-
-
 
 This step will walk you through how to use *Fault Injection* to test the end-to-end failure recovery capability of the application as a whole. An incorrect configuration of the failure recovery policies could result in unavailability of critical services. Examples of incorrect configurations include incompatible or restrictive timeouts across service calls.
 
