@@ -80,7 +80,7 @@ sidecar.istio.io/inject: 'true'
 
 Let's create a gateway and virtual service to manage ingress traffic by the service mesh. Open the empty `catalog-default.yaml` file in _catalog/rules_ directory to copy the following _Gateway_ and _VirtualService_ in CodeReady Workspaces:
 
-[source,yaml]
+[source,yaml, role="copypaste"]
 ----
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
@@ -333,9 +333,8 @@ Before we will move to the next step, clean up the fault injection and set the d
 
 [source,sh,role="copypaste"]
 ----
-oc delete virtualservice/inventory-fault-delay -n {{ USER_ID }}-inventory
-oc delete gateway/inventory-gateway -n {{ USER_ID }}-inventory
-
+oc delete virtualservice/inventory-fault-delay -n {{ USER_ID }}-inventory &&
+oc delete gateway/inventory-gateway -n {{ USER_ID }}-inventory &&
 oc create -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-default.yaml -n {{ USER_ID }}-inventory
 ----
 
@@ -525,12 +524,10 @@ image::rhsso_clients_create.png[sso, 700]
 
 On the next screen, you will see details on the *Settings* tab, the only thing you need to do is to input _Valid Redirect URIs_ that can be used after successful login or logout for clients.
 
-[NOTE]
-====
-Add *http://* at the front as well as `/*` at the end of URL.
-====
-
-Valid Redirect URIs: http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}/*
+[source,sh,role="copypaste"]
+----
+http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}/*
+----
 
 image::rhsso_clients_settings.png[sso, 700]
 
@@ -632,7 +629,7 @@ You should get and `HTTP 401 Unauthorized` and `Origin authentication failed.` m
 
 The expected response is here because the user has not been identified with a valid JWT token in RH-SSO. It normally takes `5 ~ 10 seconds` to initialize the authentication policy in Istio Mixer. After this things go quickly as policies are cached for some period of time.
 
-image::rhsso_call_catalog_noauth.png[sso, 700]
+image::rhsso_call_catalog_noauth.png[sso, 900]
 
 In order to generate a correct token, run next `curl` request in CodeReady Workspaces Terminal. This command will store the output Authorization token from RH-SSO in an environment variable called *TOKEN*.
 
@@ -783,8 +780,8 @@ After the catalog pod is started, access the _catalog gateway_ via a new web bro
 
 Input the following credential that we created it in RH-SSO administration page eariler.
 
-* Username or email: *auth{{ USER_ID }}*
-* Password: *{{ OPENSHIFT_USER_PASSWORD }}*
+* Username or email: `auth{{ USER_ID }}`
+* Password: `{{ OPENSHIFT_USER_PASSWORD }}`
 
 image::rhsso_catalog_redirect.png[sso, 700]
 
