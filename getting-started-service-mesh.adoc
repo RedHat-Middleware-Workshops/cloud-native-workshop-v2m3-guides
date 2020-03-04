@@ -46,7 +46,7 @@ _Kiali_ is an observability console for Istio with service mesh configuration ca
 
 _Jaeger_ inspired by Dapper and OpenZipkin, is a distributed tracing system released as open source by Uber Technologies. It is used for monitoring and troubleshooting microservices-based distributed systems.
 
-You can also read a bit more about the https://istio.io/docs[Istio, window="_blank"] architecture below:
+You can also read a bit more about the https://istio.io/docs[Istio^] architecture below:
 
 === Istio Details
 
@@ -62,7 +62,7 @@ image::arch.png[Istio Arch, 600, align="center"]
 
 ==== Istio Components
 
-Istio uses an extended version of the https://envoyproxy.github.io/envoy/[Envoy, window="_blank"] proxy as a _side car_ container attached to each service Pod. Envoy is a
+Istio uses an extended version of the https://envoyproxy.github.io/envoy/[Envoy^] proxy as a _side car_ container attached to each service Pod. Envoy is a
 high-performance proxy developed in C++ to mediate all inbound and outbound traffic for all services in the service mesh. Istio leverages Envoy’s many built-in features, for example:
 
 * Dynamic service discovery
@@ -84,7 +84,7 @@ Mixer includes a flexible plugin model. This model enables Istio to interface wi
 
 *Pilot* is the _control plane_ component responsible for configuring the proxies at runtime. Pilot provides service discovery for the Envoy sidecars, traffic management capabilities for intelligent routing (for example, A/B tests or canary deployments), and resiliency (timeouts, retries, and circuit breakers).
 
-Pilot converts high level routing rules that control traffic behavior into Envoy-specific configurations, and propagates them to the sidecars at runtime. Pilot abstracts platform-specific service discovery mechanisms and synthesizes them into a standard format that any sidecar conforming with the https://github.com/envoyproxy/data-plane-api[Envoy data plane APIs, window="_blank"] can consume. This loose coupling allows Istio to run on multiple environments such as Kubernetes, Consul, or Nomad, while maintaining the same operator interface for traffic management.
+Pilot converts high level routing rules that control traffic behavior into Envoy-specific configurations, and propagates them to the sidecars at runtime. Pilot abstracts platform-specific service discovery mechanisms and synthesizes them into a standard format that any sidecar conforming with the https://github.com/envoyproxy/data-plane-api[Envoy data plane APIs^] can consume. This loose coupling allows Istio to run on multiple environments such as Kubernetes, Consul, or Nomad, while maintaining the same operator interface for traffic management.
 
 *Citadel* is the _control plane_ component responsible for certificate issuance and rotation. Citadel provides strong service-to-service and end-user authentication with built-in identity and credential management. You can use Citadel to upgrade unencrypted traffic in the service mesh. Using Citadel, operators can enforce policies based on
 service identity rather than on network controls.
@@ -93,10 +93,10 @@ service identity rather than on network controls.
 
 Several *Add-ons* components are used to provide additional visualizations, metrics, and tracing functions:
 
-* https://www.kiali.io/[Kiali, window="_blank"] - Service mesh observability and configuration
-* https://prometheus.io/[Prometheus, window="_blank"] - Systems monitoring and alerting toolkit
-* https://grafana.com/[Grafana, window="_blank"] - Allows you to query, visualize, alert on and understand your metrics
-* http://jaeger.readthedocs.io/[Jaeger Tracing, window="_blank"] - Distributed tracing to gather timing data needed to troubleshoot latency problems in microservice architectures
+* https://www.kiali.io/[Kiali^] - Service mesh observability and configuration
+* https://prometheus.io/[Prometheus^] - Systems monitoring and alerting toolkit
+* https://grafana.com/[Grafana^] - Allows you to query, visualize, alert on and understand your metrics
+* http://jaeger.readthedocs.io/[Jaeger Tracing^] - Distributed tracing to gather timing data needed to troubleshoot latency problems in microservice architectures
 
 We will use these in future steps in this scenario!
 
@@ -104,9 +104,9 @@ We will use these in future steps in this scenario!
 
 ==== If this is the first module you are doing today
 
-You will be using Red Hat CodeReady Workspaces, an online IDE based on https://www.eclipse.org/che/[Eclipe Che, window=_blank]. *Changes to files are auto-saved every few seconds*, so you don’t need to explicitly save changes.
+You will be using Red Hat CodeReady Workspaces, an online IDE based on https://www.eclipse.org/che/[Eclipe Che^]. *Changes to files are auto-saved every few seconds*, so you don’t need to explicitly save changes.
 
-To get started, {{ ECLIPSE_CHE_URL }}[access the Che instance, window=_blank] and log in using the username and password you’ve been assigned (e.g. `{{ USER_ID }}/{{ CHE_USER_PASSWORD }}`):
+To get started, {{ ECLIPSE_CHE_URL }}[access the Che instance^] and log in using the username and password you’ve been assigned (e.g. `{{ USER_ID }}/{{ CHE_USER_PASSWORD }}`):
 
 image::che-login.png[cdw, 700]
 

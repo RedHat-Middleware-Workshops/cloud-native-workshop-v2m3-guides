@@ -25,7 +25,7 @@ With this application load running, metrics will become much more interesting in
 *Kiali* allows you to manage and monitor your mesh from a single UI. This UI will allow you to view configurations, monitor traffic flow and
 health, and analyze traces.
 
-Open the https://kiali-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Kiali console, window=_blank].
+Open the https://kiali-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Kiali console^].
 
 You should see _OpenShift Login_ screen. Enter the username and password as below and click _Log In_.
 
@@ -88,7 +88,7 @@ image::kiali-services-productpage.png[kiali, 700]
 
 https://prometheus.io/[Prometheus] will periodically _scrape_ applications to retrieve their metrics (by default on the `/metrics` endpoint of the application). The Prometheus add-on for Istio is a Prometheus server that comes pre-configured to _scrape_ Istio Mixer endpoints to collect its exposed metrics. It provides a mechanism for persistent storage and querying of those metrics metrics.
 
-Open the https://prometheus-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Prometheus console, window=_blank] and click on *Log in with OpenShift*.
+Open the https://prometheus-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Prometheus console^] and click on *Log in with OpenShift*.
 
 You should see _OpenShift Login_ screen. Enter the username and password as below and click _Log In_. If you have _Requested permissions_ to authorize access Prometheus, click on *Allow selected permissions*. Then, you will see Prometheus home screen, similar to this:
 
@@ -136,9 +136,9 @@ There are many, many different queries you can perform to extract the data you n
 
 === 4. Visualizing Metrics with Grafana
 
-As the number of services and interactions grows in your application, this style of metrics may be a bit overwhelming. https://grafana.com/[Grafana, window=_blank] provides a visual representation of many available Prometheus metrics extracted from the Istio data plane and can be used to quickly spot problems and take action.
+As the number of services and interactions grows in your application, this style of metrics may be a bit overwhelming. https://grafana.com/[Grafana^] provides a visual representation of many available Prometheus metrics extracted from the Istio data plane and can be used to quickly spot problems and take action.
 
-Open the https://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Grafana console, window=_blank]
+Open the https://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Grafana console^]
 
 You should see _OpenShift Login_ screen. Enter the username and password as below and click _Log In_. If you have _Requested permissions_ to authorize access Prometheus, click on *Allow selected permissions*. Then, you will see Prometheus home screen, similar to this:
 
@@ -181,7 +181,7 @@ image::grafana-workload-metrics.png[Grafana graph, 700]
 
 This dashboard shows workload’s metrics, and metrics for client-(inbound) and service (outbound) workloads. You can switch to a different workload, ot filter metrics by inbound or outbound workloads by using drop-down lists at the top of the dashboard.
 
-For more on how to create, configure, and edit dashboards, please see the http://docs.grafana.org/[Grafana documentation, window=_blank].
+For more on how to create, configure, and edit dashboards, please see the http://docs.grafana.org/[Grafana documentation^].
 
 As a developer, you can get quite a bit of information from these metrics without doing anything to the application itself. Let’s use our new tools in the next section to see the real power of Istio to diagnose and fix issues in applications and make them more resilient and robust.
 
@@ -201,11 +201,11 @@ Requests can be routed based on the source and destination, HTTP header fields, 
 
 Together, these features enable the service mesh to tolerate failing nodes and prevent localized failures from cascading instability to other nodes. However, applications must still be designed to deal with failures by taking appropriate fallback actions. For example, when all instances in a load balancing pool have failed, Istio will return HTTP 503. It is the responsibility of the application to implement any fallback logic that is needed to handle the HTTP 503 error code from an upstream service.
 
-If your application already provides some defensive measures (e.g. using https://github.com/Netflix/Hystrix[Netflix Hystrix, window=_blank]), then that’s OK. *Istio* is completely transparent to the application. A failure response returned by Istio would not be distinguishable from a failure response returned by the upstream service to which the call was made.
+If your application already provides some defensive measures (e.g. using https://github.com/Netflix/Hystrix[Netflix Hystrix^]), then that’s OK. *Istio* is completely transparent to the application. A failure response returned by Istio would not be distinguishable from a failure response returned by the upstream service to which the call was made.
 
 === 6. Service Versions
 
-Istio introduces the concept of a service version, which is a finer-grained way to subdivide service instances by versions (_v1_, _v2_) or environment (_staging_, _prod_). These variants are not necessarily different API versions: they could be iterative changes to the same service, deployed in different environments (prod, staging, dev, etc.). Common scenarios where this is used include A/B testing or canary rollouts. Istio’s https://istio.io/docs/concepts/traffic-management/rules-configuration.html[traffic routing rules, window=_blank] can refer to service versions to provide additional control over traffic between services.
+Istio introduces the concept of a service version, which is a finer-grained way to subdivide service instances by versions (_v1_, _v2_) or environment (_staging_, _prod_). These variants are not necessarily different API versions: they could be iterative changes to the same service, deployed in different environments (prod, staging, dev, etc.). Common scenarios where this is used include A/B testing or canary rollouts. Istio’s https://istio.io/docs/concepts/traffic-management/rules-configuration.html[traffic routing rules^] can refer to service versions to provide additional control over traffic between services.
 
 image::versions.png[Versions, 500]
 
@@ -268,11 +268,11 @@ It may take a minute or two for the new routing to take effect. If you still see
 Eventually it should no longer show any red/black stars.
 ====
 
-To verify this, access the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}/productpage[Bookinfo Product Page, window=_blank] and ensure you have no rating stars:
+To verify this, access the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}/productpage[Bookinfo Product Page^] and ensure you have no rating stars:
 
 image::ratings-stopped-bookinfo.png[Versions, 700]
 
-Back on http://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Grafana console, window=_blank] and scroll down to the *ratings* service in _Istio Service Dashboard_ and notice that the requests coming from the reviews service have stopped:
+Back on http://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Grafana console^] and scroll down to the *ratings* service in _Istio Service Dashboard_ and notice that the requests coming from the reviews service have stopped:
 
 image::ratings-stopped.png[Versions, 700]
 
@@ -319,7 +319,7 @@ http:
 
 This says that for any incoming HTTP request that has a cookie set to the _jason_ user to direct traffic to *reviews:v2*, and others to *reviews:v3*.
 
-Now, access the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}/productpage[Bookinfo Product Page, window=_blank] and click *Sign In* (at the upper right) and sign in with:
+Now, access the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}/productpage[Bookinfo Product Page^] and click *Sign In* (at the upper right) and sign in with:
 
 * Username: *jason*
 * Password: *jason*
