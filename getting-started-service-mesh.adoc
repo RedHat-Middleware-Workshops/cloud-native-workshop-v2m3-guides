@@ -137,9 +137,11 @@ image::che-workspace-gitclone.png[cdw, 600, align="center"]
 
 Step through the prompts, using the following value for **Repository URL**:
 
-[source,none,role="copypaste"]
+[source, shell, role="copypaste"]
 ----
+
 https://github.com/RedHat-Middleware-Workshops/cloud-native-workshop-v2m3-labs.git
+
 ----
 
 image::crw-clone-repo.png[crw, 600, align="center"]
@@ -150,7 +152,7 @@ image::crw-clone-dest.png[crw, 600, align="center"]
 
 And click *Select Repository Location*.
 
-Once imported, choose **Add to existing workspace** when prompted.
+Once imported, choose **Add to workspace** when prompted.
 
 The project is imported into your workspace and is visible in the project explorer:
 

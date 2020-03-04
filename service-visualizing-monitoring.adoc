@@ -11,12 +11,12 @@ Open a new _CodeReady Workspaces Terminal_ and run the following command:
 
 [source, shell, role="copypaste"]
 ----
-`BOOK_URL={{ USER_ID }}-bookinfo-istio-system.{{ROUTE_SUBDOMAIN}}`
+BOOK_URL=istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}
 
-`for i in {1..1000} ; do curl -o /dev/null -s -w "%{http_code}\n" http://$BOOK_URL/productpage ; sleep 2 ; done`
+for i in {1..1000} ; do curl -o /dev/null -s -w "%{http_code}\n" http://$BOOK_URL/productpage ; sleep 2 ; done
 ----
 
-This command will endlessly access the application and report the HTTP status result in a separate terminal window.
+This command will endlessly access the application and report the HTTP status result in a separate terminal window. The script should return an endless `200`. 
 
 With this application load running, metrics will become much more interesting in the next few steps.
 

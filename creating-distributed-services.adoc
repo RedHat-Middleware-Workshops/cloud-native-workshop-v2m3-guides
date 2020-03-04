@@ -22,16 +22,27 @@ There are 3 versions of the reviews microservice:
 
 The application architecture is described in the below diagram:
 
+<<<<<<< HEAD
 image::istio_bookinfo.png[Bookinfo Architecture, 700]
+=======
+image::istio_bookinfo.png[Bookinfo Architecture, 700, align=center]
+>>>>>>> 000b4f64ab0636890068cc70d26cda6fbefedf9b
 
 #### 1. Deploy Bookinfo Application
 '''''
 
 #####  Setting up
+<<<<<<< HEAD
 
 First, open a new browser with the link:{{ CONSOLE_URL }}[OpenShift web console^]
 
 image::openshift_login.png[openshift_login, 700]
+=======
+
+First, open a new browser with the link:{{ CONSOLE_URL }}[OpenShift web console, window="_blank"]
+
+image::openshift_login.png[openshift_login, 700, align=center]
+>>>>>>> 000b4f64ab0636890068cc70d26cda6fbefedf9b
 
 Login using:
 
@@ -44,7 +55,11 @@ Login using:
 When you access the link:{{ CONSOLE_URL }}[OpenShift web console] or other URLs via _HTTPS_ protocol, you might see browser warnings like `Your Connection is not secure` since this workshop uses self-signed certificates (which you should not do in production!). For example, if you’re using *Chrome*, to accept the warning, Click on `Advanced` then `Proceed to...` to access the page.
 ====
 
+<<<<<<< HEAD
 image::browser_warning.png[warning, 700]
+=======
+image::browser_warning.png[warning, 700, align=center]
+>>>>>>> 000b4f64ab0636890068cc70d26cda6fbefedf9b
 
 
 Other browsers should have a similar way to accept the security exception.
@@ -53,7 +68,11 @@ You will see a list of projects to which you have access:
 
 Once logged in, you should see the OpenShift landing page:
 
+<<<<<<< HEAD
 image::openshift_landing.png[openshift_landing, 700]
+=======
+image::openshift_landing.png[openshift_landing, 700, align=center]
+>>>>>>> 000b4f64ab0636890068cc70d26cda6fbefedf9b
 
 
 The project displayed on the landing page depends on which labs you will run today. If you will develop `Service Mesh and Identity` then you will see pre-created projects as shown in the above screeenshot.
@@ -113,6 +132,7 @@ So what's really happening in this yaml construct?
 
 Let's create the _ServiceMeshMemberRole_
 
+<<<<<<< HEAD
 - Login to the openshift console link:{{CONSOLE_URL}}[OpenShift web console^]
 - Press the plus sign on the right top corner as shown in the picture. 
 
@@ -121,13 +141,27 @@ image::plussigntop_ocpconsole.png[Run yaml in console, 700]
 - Select your namespace `{{ USER_ID }}-istio-system` on the top right; as shown in the picture and paste the above _ServiceMeshMemberRole_ yaml file into the editor. 
 
 image::smmr_yaml_create.png[Run yaml in console, 700]
+=======
+- Login to the openshift console link:{{CONSOLE_URL}}[OpenShift web console, window="_blank"]
+- Press the plus sign on the right top corner as shown in the picture. 
+
+image::plussigntop_ocpconsole.png[Run yaml in console, 700, align=center]
+
+- Select your namespace `{{ USER_ID }}-istio-system` on the top right; as shown in the picture and paste the above _ServiceMeshMemberRole_ yaml file into the editor. 
+
+image::smmr_yaml_create.png[Run yaml in console, 700, align=center]
+>>>>>>> 000b4f64ab0636890068cc70d26cda6fbefedf9b
 
 - Press create. This should create the required _ServiceMeshMemberRole_ 
 
 Now let's click `Home -> Explore` in the openshift webconsole and verify where the _ServiceMeshMemberRole_ was created. 
 Click on the _ServiceMeshMemberRole_ and then select your project user5-istio-system and you will see the newly create role. 
 
+<<<<<<< HEAD
 image::smmr_explore.png[SMMR Explore, 700]
+=======
+image::smmr_explore.png[SMMR Explore, 700, align=center]
+>>>>>>> 000b4f64ab0636890068cc70d26cda6fbefedf9b
 
 Congratulations now we have successfully configured _ServiceMeshMemberRole_ let's move on to deploy our application to our service mesh. 
 
@@ -171,7 +205,11 @@ container as described earlier.
 Let’s wait for our application to finish deploying. Go to the overview
 page in _{{ USER_ID }}-bookinfo_ project:
 
+<<<<<<< HEAD
 image::bookinfo_topology.png[Bookinfo App, 700]
+=======
+image::bookinfo_topology.png[Bookinfo App, 700, align=center]
+>>>>>>> 000b4f64ab0636890068cc70d26cda6fbefedf9b
 
 Or you can execute the following commands to wait for the deployment to
 complete and result `successfully rolled out`:
@@ -186,10 +224,15 @@ complete and result `successfully rolled out`:
  oc rollout status -w deployment/ratings-v1
 ----
 
+<<<<<<< HEAD
 Finally, access the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}/productpage[Bookinfo Product Page^] and ensure it should look something like:
 
+=======
+Finally, access the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}/productpage[Bookinfo Product Page, window=_blank] and ensure it should look something like:
+>>>>>>> 000b4f64ab0636890068cc70d26cda6fbefedf9b
 
-image::bookinfo.png[Bookinfo App, 700]
+
+image::bookinfo.png[Bookinfo App, 700, align=center]
 
 Reload the page multiple times. The three different versions of the Reviews service show the star ratings differently - _v1_ shows no stars at all, _v2_ shows black stars, and _v3_ shows red stars:
 
@@ -228,4 +271,8 @@ Notice that each of the microservices shows *2/2* containers ready for each serv
 
 Now that we have our application deployed and linked into the Istio service mesh, let’s take a look at the immediate value we can get out of it without touching the application code itself!
 
+<<<<<<< HEAD
 *Congratulations!* {{ USER_ID }} have now successfully deployed your first application with _ServiceMesh_. Lets move to the next lab _Service Visulization and Montioring_
+=======
+*Congratulations!* {{ USER_ID }} have now successfully deployed your first application with _ServiceMesh_. Lets move to the next lab _Service Visulization and Montioring_
+>>>>>>> 000b4f64ab0636890068cc70d26cda6fbefedf9b

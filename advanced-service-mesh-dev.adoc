@@ -11,27 +11,21 @@ In this lab, we will learn the advanced usecases of service mesh. The lab showca
 These features are important for any distributed applications built on top of Kubernetes/Openshift. We use a different set of microservices that you will be building and deploying. Our applicaiton is called the _Coolstore microservice_ developed in prior labs (i.e Catalog, Inventory) that you developed and deployed to
 OpenShift cluster in _Module 1_ or/and _Module 2_.
 
-==== If this is the first module you are doing today
-
-If you have already deployed the _inventory_ and _catalog_ microservices from Module 1, you can skip this step!
-
-If you haven’t done Module 1 or Module 2 today, or you didn’t quite complete them, you should deploy the coolstore application and microservices by executing the following shell scripts in CodeReady Workspaces Terminal:
-
 [IMPORTANT]
 ====
-In some of the screen shots, the username might differ ensure that you always use your `{{ USER_ID }}`
+If you have already deployed the _inventory_ and _catalog_ microservices from Module 1, you can skip this step and move to sectionn "1. Enabling automatic sidecar injection"
 ====
 
-Let's deploy an inventory service first.
+Incase you haven’t done Module 1 or Module 2 today, or you didn’t quite complete them, you should deploy the coolstore application and microservices by executing the following shell scripts in CodeReady Workspaces Terminal:
 
-[source,sh,role="copypaste"]
+The following script will deploy the inventory service
+[source, shell, role="copypaste"]
 ----
 sh $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-inventory.sh {{ USER_ID }}
 ----
 
-Next, deploy an catalog service.
-
-[source,sh,role="copypaste"]
+The following script will deploy the catalog service
+[source, shell, role="copypaste"]
 ----
 sh $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-catalog.sh {{ USER_ID }}
 ----
@@ -49,7 +43,6 @@ The upstream version of Istio injects the sidecar by default if you have labeled
 
 The webhook checks the configuration of pods deploying into all projects to see if they are opting in to injection with the appropriate annotation.
 ====
-
 
 Open {{ CONSOLE_URL }}/k8s/ns/{{ USER_ID }}-inventory/deploymentconfigs/inventory-database/yaml[Inventory Database DeploymentConfig^] and add the following annotation in `spec.template.metadata.annotations` path in the YAML and click on *Save*.
 
