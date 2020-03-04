@@ -479,7 +479,7 @@ Click on *Instantiate Template* and fill in the following fields, leaving the ot
 * *RH-SSO Administrator Username*: `admin`
 * *RH-SSO Administrator Password*: `admin`
 * *RH-SSO Realm*: `istio`
-* *RH-SSO Service Username*: `auth{{ USER_ID }`
+* *RH-SSO Service Username*: `auth{{ USER_ID }}`
 * *SSO_SERVICE_PASSWORD*: `{{ OPENSHIFT_USER_PASSWORD }}`
 
 image::rhsso-values.png[sso, 700]
