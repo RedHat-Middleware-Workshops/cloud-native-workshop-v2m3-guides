@@ -71,12 +71,14 @@ sidecar.istio.io/inject: 'true'
 
 image::catalog_db_inject_sidecar.png[istio, 700]
 
-Now its time to inject the Sidecar container to (Catalog). Let's go ahead and do that. Open {{ CONSOLE_URL }}/k8s/ns/{{ USER_ID }}-catalog/deploymentconfigs/catalog-springboot/yaml[Catalog Service DeploymentConfig^] and add the following annotation in `spec.template.metadata.annotations` path in the YAML and click on *Save*.
+Now its time to inject the Sidecar container to catalog service. Let's go ahead and do that. Open {{ CONSOLE_URL }}/k8s/ns/{{ USER_ID }}-catalog/deploymentconfigs/catalog-springboot/yaml[Catalog Service DeploymentConfig^] and add the following annotation in `spec.template.metadata.annotations` path in the YAML and click on *Save*.
 
 [source, yaml, role="copypaste"]
 ----
 sidecar.istio.io/inject: 'true'
 ----
+
+image::catalog_svc_inject_sidecar.png[istio, 700]
 
 Let's create a gateway and virtual service to manage ingress traffic by the service mesh. Open the empty `catalog-default.yaml` file in _catalog/rules_ directory to copy the following _Gateway_ and _VirtualService_ in CodeReady Workspaces:
 
@@ -223,7 +225,7 @@ Create the new Istio-powered route by running the following command via CodeRead
 oc create -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-default.yaml -n {{ USER_ID }}-inventory
 ----
 
-Now, you can test if the inventory service works correctly via accessing the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[CoolStore Inventory page^]:
+Now, you can test if the inventory service works correctly via accessing the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[CoolStore Inventory page^]. If you still see _Coolstore Catalog_ then reload the page to see _Coolstore Inventory_ with kbd:[CTRL+F5] (or kbd:[Command+Shift+R] on Mac OS).
 
 image::inventory-ui-gateway.png[fault-injection, 700]
 
@@ -459,40 +461,22 @@ _Red Hat Single Sign-On (RH-SSO)_ is based on the *Keycloak* project and enables
 * *Identity Brokering* - Integrates with 3rd-party Identity Providers including leading social networks as identity source.
 * *REST APIs and Administration GUI* - Specify user federation, role mapping, and client applications with easy-to-use Administration GUI and REST APIs.
 
-We will deploy RH-SSO in a new project. Visit the {{ CONSOLE_URL }}[OpenShift Administrator Console^]. Clcik on **Create Project**:
-
- * *Name*: `{{ USER_ID }}-rhsso`
-
-image::rhsso-create-project.png[sso, 700]
-
-Switch to the _Dev Console_ and click *+Add* on the left, on the _From Catalog_ box on the *{{ USER_ID }}-rhsso* project overview:
-
-image::sso-catalog.png[sso, 700]
-
-Type in `sso` in the search box, and click on the *Red Hat Single Sign-On 7.2(Ephemeral)*:
-
-image::sso-rhsso.png[sso, 700]
-
-Click on *Instantiate Template* and fill in the following fields, leaving the others as their default values:
-
-* *RH-SSO Administrator Username*: `admin`
-* *RH-SSO Administrator Password*: `admin`
-* *RH-SSO Realm*: `istio`
-* *RH-SSO Service Username*: `auth{{ USER_ID }}`
-* *SSO_SERVICE_PASSWORD*: `{{ OPENSHIFT_USER_PASSWORD }}`
-
-image::rhsso-values.png[sso, 700]
-
-Click on *Create* and you will see that RH-SSO is deployed in the _Topology view_:
-
-image::rhsso-topology.png[sso, 700]
-
-To avoid healthcheck failure randomly, we will remove _liveness_ and _readiness_ healthcheck via running the following command in CodeReady Workspaces Terminal:
+We will deploy RH-SSO in a new project. Run the following commands in CodeReady Workspaces Terminal:
 
 [source,sh,role="copypaste"]
 ----
-oc set probe dc/sso --remove --readiness --liveness -n {{ USER_ID }}-rhsso
+oc new-project {{ USER_ID}}-rhsso &&
+oc new-app ccn-sso72 \
+   -p SSO_ADMIN_USERNAME=admin \
+   -p SSO_ADMIN_PASSWORD=admin \
+   -p SSO_REALM=istio \
+   -p SSO_SERVICE_USERNAME=auth{{ USER_ID}} \
+   -p SSO_SERVICE_PASSWORD={{ OPENSHIFT_USER_PASSWORD }}
 ----
+
+Visit the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-rhsso[Topology View^]:
+
+image::rhsso-topology.png[sso, 700]
 
 Once this finishes (it may take a minute or two), click on *Open URL* to access RH-SSO web console as below:
 
@@ -501,7 +485,7 @@ image::rhsso_landing_page.png[sso, 700]
 Click on _Administration Console_ to configure *Istio* Ream then input the usename and password that you used earlier:
 
 * Username or email: `admin`
-* Password:`admin`
+* Password: `admin`
 
 image::rhsso_admin_login.png[sso, 700]
 
@@ -691,76 +675,17 @@ keycloak.security-constraints[0].authRoles[0]=ccn_auth
 keycloak.security-constraints[0].securityCollections[0].patterns[0]=/*
 ----
 
-Let’s update *pom.xml* in catalog project to add the needed keycloak dependency to our app:.
-
-* Add _spring-boot-starter-parent_ artifact Id before _properties_ element:
+Let’s update *pom.xml* in catalog project to add the needed keycloak dependency to our app:
 
 [source,xml,role="copypaste"]
 ----
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.6.SP3-redhat-00001</version>
-        <relativePath/>
-    </parent>
+    <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-spring-boot-starter</artifactId>
+    </dependency>
 ----
 
 image::rhsso_catalog_pom_parent.png[sso, 700]
-
-* Replace *me.snowdrop* dependencyManagement and *spring-boot-starter* dependency with _keycloak_ dependency.
-
-*From:*
-
-[source,xml,role="copypaste"]
-----
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>me.snowdrop</groupId>
-                <artifactId>spring-boot-bom</artifactId>
-                <version>2.1.6.SP3-redhat-00001</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.bom.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-----
-
-*To:*
-
-[source,xml,role="copypaste"]
-----
-    <dependencyManagement>
-       <dependencies>
-          <dependency>
-              <groupId>org.keycloak.bom</groupId>
-              <artifactId>keycloak-adapter-bom</artifactId>
-              <version>3.1.0.Final</version>
-              <type>pom</type>
-              <scope>import</scope>
-          </dependency>
-      </dependencies>
-    </dependencyManagement>
-    <dependencies>
-        <dependency>
-          <groupId>org.keycloak</groupId>
-          <artifactId>keycloak-spring-boot-starter</artifactId>
-        </dependency>
-----
-
-image::rhsso_catalog_pom_dependency.png[sso, 700]
 
 Re-build and deploy the project using the following command in a Terminal:
 
@@ -773,7 +698,7 @@ And then start and watch the build, which will take about a minute to complete:
 
 [source,sh,role="copypaste"]
 ----
-oc -n {{ USER_ID }}-catalog start-build catalog-springboot --from-file=target/catalog-1.0.0-SNAPSHOT.jar --follow
+oc start-build catalog-springboot --from-file=$CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/catalog/target/catalog-1.0.0-SNAPSHOT.jar --follow -n {{ USER_ID }}-catalog
 ----
 
 After the catalog pod is started, access the _catalog gateway_ via a new web brower then you will redirect to the login page of *RH-SSO*.
