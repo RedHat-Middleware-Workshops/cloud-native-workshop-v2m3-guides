@@ -659,7 +659,11 @@ image::rhsso_web_catalog_noauth.png[sso, 700]
 
 Let’s integrate RH-SSO authentication to the presentation layer of the catalog service. First, clean up all authentication configuration that we have tested in the previous steps. Run the following script to clean up:
 
-`$CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/scripts/cleanup.sh {{ USER_ID }}`
+[source,sh,role="copypaste"]
+----
+$CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/scripts/cleanup.sh {{ USER_ID }}
+----
+
 
 Next, open the *application-openshift.properties* in _catalog/src/main/resources_ directory and add the following settings at the bottom of the file:
 
