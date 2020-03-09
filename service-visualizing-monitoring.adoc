@@ -5,7 +5,7 @@ In this lab you will visualize your service mesh using *Kiali*, *Prometheus*, *G
 
 === 1. Generating application load
 
-To get a better idea of the power of metrics, let’s setup an endless loop that will continually access the application and generate load. We’ll open up a separate terminal just for this purpose.
+To get a better idea of the power of metrics, let’s setup an endless loop that will continually access the application and generate load for about 30 minutes. We’ll open up a separate terminal just for this purpose.
 
 Open a new _CodeReady Workspaces Terminal_ and run the following command:
 
@@ -16,7 +16,7 @@ BOOK_URL=istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}
 for i in {1..1000} ; do curl -o /dev/null -s -w "%{http_code}\n" http://$BOOK_URL/productpage ; sleep 2 ; done
 ----
 
-This command will endlessly access the application and report the HTTP status result in a separate terminal window. The script should return an endless `200`. 
+This command will endlessly access the application and report the HTTP status result in a separate terminal window. The script should return an endless `200`.
 
 With this application load running, metrics will become much more interesting in the next few steps.
 
@@ -38,7 +38,7 @@ image::kiali-all-namespaces.png[kiali, 700]
 
 ==== Service Graph
 
-Click on the _Graph_ page on the left and check *Traffic Animation* in *Display*:
+Click on the _Graph_ page on the left and check *Traffic Animation* in *Display*. You'll also need to select the `{{ USER_ID }}-bookinfo` project in the _Namespace_ dropdown at the top:
 
 image::kiali-service-graph.png[kiali, 700]
 
@@ -175,7 +175,7 @@ You can switch to a different service or filter metrics by _client-_ and _servic
 
 ==== Istio Workload Metrics
 
-To switch to the workloads dashboard, select *Home > Istio Workload Dashboard* from the drop-down list in the top left corner of the screen. You should see a screen similar to this:
+To switch to the workloads dashboard, select *Home > Istio > Istio Workload Dashboard* from the drop-down list in the top left corner of the screen. You should see a screen similar to this:
 
 image::grafana-workload-metrics.png[Grafana graph, 700]
 
@@ -223,21 +223,21 @@ Open a new Terminal (while your other endless `for` loop continues to run) and e
 
 [source, shell, role="copypaste"]
 ----
-oc create -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/virtual-service-all-v1.yaml
+oc create -n {{ USER_ID}}-bookinfo -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/virtual-service-all-v1.yaml
 ----
 
 You can see this default set of _virtual services_ with:
 
 [source, shell, role="copypaste"]
 ----
-oc get virtualservices -o yaml
+oc get virtualservices -n {{ USER_ID}}-bookinfo -o yaml
 ----
 
 There are default _virtual services_ for each service, such as the one that forces all traffic to the _v1_ version of the _reviews_ service:
 
 [source, shell, role="copypaste"]
 ----
-oc get virtualservices/reviews -o yaml
+oc get virtualservices/reviews -n {{ USER_ID}}-bookinfo -o yaml
 ----
 
 [source, yaml]
@@ -272,17 +272,21 @@ To verify this, access the http://istio-ingressgateway-{{ USER_ID }}-istio-syste
 
 image::ratings-stopped-bookinfo.png[Versions, 700]
 
-Back on http://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Grafana console^] and scroll down to the *ratings* service in _Istio Service Dashboard_ and notice that the requests coming from the reviews service have stopped:
+Back on http://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Grafana console^], Select the *Istio Service Dashboard*, and then select the `ratings.{{USER_ID}}-bookinfo.svc.cluster.local` service in the _Service_ dropdown:
+
+image::ratings-select-dash.png[Versions, 700]
+
+Notice that the requests coming from the reviews service have stopped:
 
 image::ratings-stopped.png[Versions, 700]
 
 === 8. A/B Testing with Istio
 
-Let’s enable the ratings service for a test user named _jason_ by routing `productpage` traffic to _reviews:v2_ and any others to _reviews:v3_. Execute:
+Let’s enable the ratings service for a test user named _jason_ by routing `productpage` traffic to _reviews:v2_ (black stars) and any others to _reviews:v3_ (red stars). Execute:
 
 [source, shell, role="copypaste"]
 ----
-oc apply -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/virtual-service-reviews-jason-v2-v3.yaml
+oc apply -n {{ USER_ID}}-bookinfo -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/virtual-service-reviews-jason-v2-v3.yaml
 ----
 
 [TIP]
@@ -295,7 +299,7 @@ Confirm the rule is created:
 
 [source, shell, role="copypaste"]
 ----
-oc get virtualservices/reviews -o yaml
+oc get virtualservices/reviews -n {{ USER_ID}}-bookinfo -o yaml
 ----
 
 Notice the _match_ element:
