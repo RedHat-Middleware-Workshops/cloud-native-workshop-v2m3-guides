@@ -84,23 +84,30 @@ inventory-quarkus-1-wwz89    1/1     Running   0          15m
 
 ==== Add sidecars
 
+OpenShift Service Mesh requires that applications "opt-in" to being part of a service mesh by default. To "opt-in" an app, you need to add an annotation which is a flag to istio to attach a sidecar and bring the app into the mesh.
+
 Rather than manually adding the annotations necessary to inject istio sidecars, run the following commands to add the annotations which will trigger a sidecar to be injected into our _inventory_ and _catalog_ microservices, as well as their associated databases.
 
 First, do the databases and wait for them to be re-deployed:
 [source,sh,role="copypaste"]
 ----
-oc patch dc/inventory-database -n {{USER_ID}}-inventory --type='json' -p '[{"op": "add", "path": "/spec/template/metadata/annotations/sidecar.istio.io~1inject", "value": "'"true"'"}]' && \
-oc patch dc/catalog-database -n {{USER_ID}}-catalog --type='json' -p '[{"op": "add", "path": "/spec/template/metadata/annotations/sidecar.istio.io~1inject", "value": "'"true"'"}]' && \
+oc patch dc/inventory-database -n {{USER_ID}}-inventory --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
+oc patch dc/catalog-database -n {{USER_ID}}-catalog --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
 oc rollout status -w dc/inventory-database -n {{USER_ID}}-inventory && \
 oc rollout status -w dc/catalog-database -n {{USER_ID}}-catalog
 ----
+
+[NOTE]
+====
+The above complex-looking command uses the `oc patch` command to programmatically edit the Kubernetes objects. You could just as easily have edited the file in an editor, but YAML can sometimes be tricky so we made it easy for you!
+====
 
 Next, let's add sidecars to our services and wait for them to be re-deployed:
 
 [source,sh,role="copypaste"]
 ----
-oc patch dc/inventory-quarkus -n {{USER_ID}}-inventory --type='json' -p '[{"op": "add", "path": "/spec/template/metadata/annotations/sidecar.istio.io~1inject", "value": "'"true"'"}]' && \
-oc patch dc/catalog-springboot -n {{USER_ID}}-catalog --type='json' -p '[{"op": "add", "path": "/spec/template/metadata/annotations/sidecar.istio.io~1inject", "value": "'"true"'"}]' && \
+oc patch dc/inventory-quarkus -n {{USER_ID}}-inventory --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
+oc patch dc/catalog-springboot -n {{USER_ID}}-catalog --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
 oc rollout status -w dc/inventory-quarkus -n {{USER_ID}}-inventory && \
 oc rollout status -w dc/catalog-springboot -n {{USER_ID}}-catalog
 ----
@@ -134,6 +141,11 @@ NAME                         READY   STATUS    RESTARTS   AGE
 catalog-database-2-djmbd     2/2     Running   0          39m
 catalog-springboot-2-x7cf6   2/2     Running   0          39m
 ----
+
+[WARNING]
+====
+It may take a minute or two before the `inventory` and `catalog` services are recognized and brought into the mesh.
+====
 
 Next, let's create a gateway and virtual service to manage ingress traffic by the service mesh. Open the empty `catalog-default.yaml` file in _catalog/rules_ directory to copy the following _Gateway_ and _VirtualService_ in CodeReady Workspaces:
 
@@ -333,6 +345,11 @@ Let’s find out if the fault injection works corectly via accessing the http://
 image::inventory-dead-ok.png[fault-injection, 700]
 
 Back on the https://kiali-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}/console/graph/namespaces/?edges=noEdgeLabels&graphType=versionedApp&namespaces={{ USER_ID }}-catalog%2C{{ USER_ID }}-inventory&unusedNodes=false&injectServiceNodes=true&duration=60&pi=15000&layout=dagre[Kiali Graph page^] and you will see `red` traffic from _istio-ingressgateway_ as well as around 50% of requests are displayed as _5xx_ on the right side, _HTTP Traffic_. It may not be _exactly_ 50% since some traffic is coming from the catalog and ingress gateway at the same time, but it will approach 50% over time.
+
+[WARNING]
+====
+Kiali "looks back" and records/displays the last minute of traffic, so if you're quick you may see some of the prior traffic flows from earlier in the lab. Within 1 minute the graph should clear up and only show what you are looking for!
+====
 
 image::inventlry-vs-error-kiali.png[fault-injection,700]
 

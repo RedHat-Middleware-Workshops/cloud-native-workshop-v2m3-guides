@@ -40,6 +40,8 @@ Sounds fun, right? Let’s get started!
 
 === Getting Ready for the labs
 
+If you've already worked on prior labs today, you'll be familiar with the CodeReady Workspaces environment and can skip down to the *Import Project* section below.
+
 ==== If this is the first module you are doing today
 
 You will be using Red Hat CodeReady Workspaces, an online IDE based on https://www.eclipse.org/che/[Eclipe Che^]. *Changes to files are auto-saved every few seconds*, so you don’t need to explicitly save changes.
@@ -71,6 +73,8 @@ Many features of CodeReady Workspaces are accessed via *Commands*. You can see a
 
 If you ever need to run commands that you don't see in a menu, you can press kbd:[F1] to open the command window, or the more traditional kbd:[Control+SHIFT+P] (or kbd:[Command+SHIFT+P] on Mac OS X).
 
+==== Import project
+
 Let's import our first project. Click on **Git Clone..** (or type kbd:[F1], enter 'git' and click on the auto-completed _Git Clone.._ )
 
 image::che-workspace-gitclone.png[cdw, 600, align="center"]
@@ -97,6 +101,12 @@ Once imported, choose **Add to workspace** when prompted.
 The project is imported into your workspace and is visible in the project explorer after clicking the *Explorer* pane at the upper right:
 
 image::crw-clone-explorer.png[crw, 600, align="center"]
+
+=== Remove other projects
+
+If you've completed other modules today (such as `cloud-native-workshop-v2m2-labs`), remove them from your workspace by right-clicking on the project name in the explorer and choose *Remove from Workspace* and accept the warning. Be sure not to delete the new project you just imported for this lab!
+
+image::remove-workspace.png[remove, 700]
 
 [NOTE]
 ====
