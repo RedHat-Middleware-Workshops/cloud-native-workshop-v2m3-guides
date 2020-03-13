@@ -119,12 +119,23 @@ Congratulations now we have successfully created a _ServiceMeshMemberRole_ which
 
 #####  Deploying BookInfo App
 
-Let's change to our working project *{{ USER_ID }}-bookinfo* ; Open a terminal via CodeReady
-Workspaces and run the following commands
+Open a terminal via CodeReady Workspaces and run the following commands to deploy the bookinfo app:
 
 [source,shell, role="copypaste"]
 ----
 oc apply -n {{ USER_ID}}-bookinfo -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml
+----
+
+Add some nice labels to correspond to the different langages/frameworks used in the app:
+
+[source,sh,role="copypaste"]
+----
+oc label -n {{USER_ID}}-bookinfo deployment/productpage-v1 app.openshift.io/runtime=python --overwrite && \
+oc label -n {{USER_ID}}-bookinfo deployment/details-v1 app.openshift.io/runtime=ruby --overwrite && \
+oc label -n {{USER_ID}}-bookinfo deployment/reviews-v1 app.openshift.io/runtime=java --overwrite && \
+oc label -n {{USER_ID}}-bookinfo deployment/reviews-v2 app.openshift.io/runtime=java --overwrite && \
+oc label -n {{USER_ID}}-bookinfo deployment/reviews-v3 app.openshift.io/runtime=java --overwrite && \
+oc label -n {{USER_ID}}-bookinfo deployment/ratings-v1 app.openshift.io/runtime=nodejs --overwrite
 ----
 
 And then create the _ingress gateway_ for Bookinfo:

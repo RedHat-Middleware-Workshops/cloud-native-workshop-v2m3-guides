@@ -97,6 +97,8 @@ oc rollout status -w dc/inventory-database -n {{USER_ID}}-inventory && \
 oc rollout status -w dc/catalog-database -n {{USER_ID}}-catalog
 ----
 
+This should take about 1 minute to finish.
+
 [NOTE]
 ====
 The above complex-looking command uses the `oc patch` command to programmatically edit the Kubernetes objects. You could just as easily have edited the file in an editor, but YAML can sometimes be tricky so we made it easy for you!
@@ -112,7 +114,7 @@ oc rollout status -w dc/inventory-quarkus -n {{USER_ID}}-inventory && \
 oc rollout status -w dc/catalog-springboot -n {{USER_ID}}-catalog
 ----
 
-Verify that the `inventory-database` is running with 2 pods (`2/2` in the `READY` column) with this command:
+This should also take about 1 minute to finish. When it's done, verify that the `inventory-database` is running with 2 pods (`2/2` in the `READY` column) with this command:
 
 [source,sh,role="copypaste"]
 ----
@@ -545,12 +547,13 @@ We will deploy RH-SSO in a new project. Run the following commands in CodeReady 
 [source,sh,role="copypaste"]
 ----
 oc new-project {{ USER_ID}}-rhsso && \
-oc new-app ccn-sso72 \
+oc new-app ccn-sso72 -l app.openshift.io/runtime=sso \
    -p SSO_ADMIN_USERNAME=admin \
    -p SSO_ADMIN_PASSWORD=admin \
    -p SSO_REALM=istio \
    -p SSO_SERVICE_USERNAME=auth{{ USER_ID}} \
-   -p SSO_SERVICE_PASSWORD={{ OPENSHIFT_USER_PASSWORD }}
+   -p SSO_SERVICE_PASSWORD={{ OPENSHIFT_USER_PASSWORD }} && \
+oc label dc/sso-postgresql app.openshift.io/runtime=postgresql --overwrite
 ----
 
 Visit the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-rhsso[Topology View^]:
