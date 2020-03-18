@@ -46,8 +46,6 @@ Other browsers should have a similar way to accept the security exception.
 
 You will see a list of projects to which you have access:
 
-Once logged in, you should see the OpenShift landing page:
-
 image::openshift_landing.png[openshift_landing, 700]
 
 The project displayed on the landing page depends on which labs you will run today. If you will develop `Service Mesh and Identity` then you will see pre-created projects as shown in the above screeenshot.
@@ -162,7 +160,7 @@ oc get -n {{ USER_ID}}-bookinfo destinationrules
 
 When the app is installed, each Pod will get an additional _sidecar_ container as described earlier.
 
-Let’s wait for our application to finish deploying. Go to the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-bookinfo[Topology View^] for the `*{{USER_ID}}-bookinfo` project. You'll see the app components spinning up:
+Let’s wait for our application to finish deploying. Go to the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-bookinfo[Topology View^] for the `{{USER_ID}}-bookinfo` project. You'll see the app components spinning up:
 
 image::bookinfo_topology.png[Bookinfo App, 700]
 
