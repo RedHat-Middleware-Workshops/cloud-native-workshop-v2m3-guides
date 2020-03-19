@@ -42,8 +42,6 @@ Sounds fun, right? Let’s get started!
 
 If you've already worked on prior labs today, you'll be familiar with the CodeReady Workspaces environment and can skip down to the *Import Project* section below.
 
-==== Do this if this is the first module you're doing today, otherwise continue to the next module!
-
 You will be using Red Hat CodeReady Workspaces, an online IDE based on https://www.eclipse.org/che/[Eclipe Che^]. *Changes to files are auto-saved every few seconds*, so you don’t need to explicitly save changes.
 
 To get started, {{ ECLIPSE_CHE_URL }}[access the Che instance^] and log in using the username and password you’ve been assigned (e.g. `{{ USER_ID }}/{{ CHE_USER_PASSWORD }}`):
