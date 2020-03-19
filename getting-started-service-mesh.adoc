@@ -42,7 +42,7 @@ Sounds fun, right? Let’s get started!
 
 If you've already worked on prior labs today, you'll be familiar with the CodeReady Workspaces environment and can skip down to the *Import Project* section below.
 
-==== If this is the first module you are doing today
+==== Do this if this is the first module you're doing today, otherwise continue to the next module!
 
 You will be using Red Hat CodeReady Workspaces, an online IDE based on https://www.eclipse.org/che/[Eclipe Che^]. *Changes to files are auto-saved every few seconds*, so you don’t need to explicitly save changes.
 
@@ -96,7 +96,7 @@ image::crw-clone-dest.png[crw, 600, align="center"]
 
 And click *Select Repository Location*.
 
-Once imported, choose **Add to workspace** when prompted.
+Once imported, choose **Add to workspace** when prompted in the bottom-right corner of the screen.
 
 The project is imported into your workspace and is visible in the project explorer after clicking the *Explorer* pane at the upper right:
 
