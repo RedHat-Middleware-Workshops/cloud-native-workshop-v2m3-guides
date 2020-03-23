@@ -81,17 +81,17 @@ Welcome! See 'oc help' to get started.
 ----
 
 
-#####  ServiceMeshMemberRole
-Before we start depoying our application we need to make sure we have the right access to our different application namespaces. The _ServiceMeshControlPlane_ that includes _Elasticsearch_, _Jaeger_, _Kiali_ and _Service Mesh Operators_, have all been installed at the cluster provisioning time. However for applications to communicate to each other accross different namespaces, we need to ensure that the _ServiceMeshMemberRole_ is also created.
+#####  ServiceMeshMemberRoll
+Before we start depoying our application we need to make sure we have the right access to our different application namespaces. The _ServiceMeshControlPlane_ that includes _Elasticsearch_, _Jaeger_, _Kiali_ and _Service Mesh Operators_, have all been installed at the cluster provisioning time. However for applications to communicate to each other accross different namespaces, we need to ensure that the _ServiceMeshMemberRoll_ is also created.
 
-Let's create the _ServiceMeshMemberRole_
+Let's create the _ServiceMeshMemberRoll_
 
 - Login to the openshift console link:{{CONSOLE_URL}}[OpenShift web console^]
 - Press the plus sign on the right top corner as shown in the picture.
 
 image::plussigntop_ocpconsole.png[Run yaml in console, 700]
 
-- Select your namespace `{{ USER_ID }}-istio-system` on the top left; as shown in the picture and paste the below _ServiceMeshMemberRole_ YAML code into the editor.
+- Select your namespace `{{ USER_ID }}-istio-system` on the top left; as shown in the picture and paste the below _ServiceMeshMemberRoll_ YAML code into the editor.
 
 [source, yaml, role="copypaste"]
 ----
@@ -106,14 +106,14 @@ spec:
     - {{ USER_ID }}-catalog
     - {{ USER_ID }}-inventory
 ----
-<1> is the istio-system namespace which will hold the _ServiceMeshMemberRole_ and a bunch of other service mesh related objects.
+<1> is the istio-system namespace which will hold the _ServiceMeshMemberRoll_ and a bunch of other service mesh related objects.
 <2> is the list of projects that will be part of this _ServiceMesh_; in our case that's the application spread in three different namespaces/projects.
 
 image::smmr_yaml_create.png[Run yaml in console, 700]
 
-- Click **Create**. This should create the required _ServiceMeshMemberRole_
+- Click **Create**. This should create the required _ServiceMeshMemberRoll_
 
-Congratulations now we have successfully created a _ServiceMeshMemberRole_ which will cause a new service mesh to be deployed into the `{{ USER_ID }}-istio-system` project. let's move on to deploy our application to our service mesh.
+Congratulations now we have successfully created a _ServiceMeshMemberRoll_ which will cause a new service mesh to be deployed into the `{{ USER_ID }}-istio-system` project. let's move on to deploy our application to our service mesh.
 
 #####  Deploying BookInfo App
 
