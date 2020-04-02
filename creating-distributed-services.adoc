@@ -148,23 +148,6 @@ oc get -n {{ USER_ID}}-bookinfo destinationrules
 
 When the app is installed, each Pod will get an additional _sidecar_ container as described earlier.
 
-Let’s wait for our application to finish deploying. Go to the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-bookinfo[Topology View^] for the `{{USER_ID}}-bookinfo` project. You'll see the app components spinning up:
-
-image::bookinfo_topology.png[Bookinfo App, 700]
-
-Wait for each component to have the full blue circles,
-or you can execute the following commands to wait for the deployment to complete and result `successfully rolled out`:
-
-[source,shell,role="copypaste"]
-----
- oc rollout status -n {{ USER_ID}}-bookinfo -w deployment/productpage-v1 && \
- oc rollout status -n {{ USER_ID}}-bookinfo -w deployment/reviews-v1 && \
- oc rollout status -n {{ USER_ID}}-bookinfo -w deployment/reviews-v2 && \
- oc rollout status -n {{ USER_ID}}-bookinfo -w deployment/reviews-v3 && \
- oc rollout status -n {{ USER_ID}}-bookinfo -w deployment/details-v1 && \
- oc rollout status -n {{ USER_ID}}-bookinfo -w deployment/ratings-v1
-----
-
 Add some nice labels to correspond to the different langages/frameworks used in the app:
 
 [source,sh,role="copypaste"]
@@ -185,6 +168,23 @@ oc label deployment reviews-v3 app.kubernetes.io/part-of=bookinfo --overwrite &&
 oc annotate deployment productpage-v1 app.openshift.io/connects-to=reviews-v1,reviews-v2,reviews-v3,details-v1 && \
 oc annotate deployment reviews-v2 app.openshift.io/connects-to=ratings-v1 && \
 oc annotate deployment reviews-v3 app.openshift.io/connects-to=ratings-v1
+----
+
+Let’s wait for our application to finish deploying. Go to the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-bookinfo[Topology View^] for the `{{USER_ID}}-bookinfo` project. You'll see the app components spinning up:
+
+image::bookinfo_topology.png[Bookinfo App, 700]
+
+Wait for each component to have the full blue circles,
+or you can execute the following commands to wait for the deployment to complete and result `successfully rolled out`:
+
+[source,shell,role="copypaste"]
+----
+ oc rollout status -n {{ USER_ID}}-bookinfo -w deployment/productpage-v1 && \
+ oc rollout status -n {{ USER_ID}}-bookinfo -w deployment/reviews-v1 && \
+ oc rollout status -n {{ USER_ID}}-bookinfo -w deployment/reviews-v2 && \
+ oc rollout status -n {{ USER_ID}}-bookinfo -w deployment/reviews-v3 && \
+ oc rollout status -n {{ USER_ID}}-bookinfo -w deployment/details-v1 && \
+ oc rollout status -n {{ USER_ID}}-bookinfo -w deployment/ratings-v1
 ----
 
 Finally, access the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}/productpage[Bookinfo Product Page^]. It should look something like:
