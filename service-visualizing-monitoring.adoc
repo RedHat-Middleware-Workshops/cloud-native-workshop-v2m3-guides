@@ -84,6 +84,46 @@ Click on *productpage* service which will show you the details of the service, s
 
 image::kiali-services-productpage.png[kiali, 700]
 
+==== Distributed Tracing
+
+Kiali also features integration with https://www.jaegertracing.io/[Jaeger^].  This lets you follow the path of a request through various microservices that make up an application (without having to update the app itself!).
+
+Jaeger automatically records the execution of individual requests across the whole stack of microservices, and presents them as _traces_ consisting of one or more _spans_ (individual calls to a microservice).
+
+To view the traces being generated, click on the **Distributed Tracing** link on the left:
+
+image::kiali-tracing.png[kiali, 700]
+
+This will open the https://jaeger-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Jaeger Query console^].
+
+You should see the _OpenShift Login_ screen. Enter the username and password as below and click _Log In_.
+
+* Username: `{{ USER_ID }}`
+* Password: `r3dh4t1!`
+
+You will land on the Jaeger query page:
+
+image::kiali-tracing-jaeger.png[kiali, 700]
+
+On the left, choose the following options:
+
+* **Service**: `productpage.{{USER_ID}}-bookinfo`
+* **Operation**: `all`
+
+Then click **Find Traces**. This will show you recent traces:
+
+image::kiali-tracing-traces.png[kiali, 700]
+
+Click on one of them, as shown above to get detailed trace and span data:
+
+image::kiali-tracing-traces-trace.png[kiali, 700]
+
+This trace consists of a few nested spans, each corresponding to a Bookinfo Service call, all performed in response to a `/productpage request.
+
+Overall processing time was 23.23ms, with the details Service taking 2.04ms, the reviews Service taking 7.17ms, and the ratings Service taking 0.72ms. Each of the calls to remote Services is represented by a client-side and server-side span.
+
+You can use this information (and even compare two different traces) to spot problems with applications quickly.
+
 === 3. Querying Metrics with Prometheus
 
 https://prometheus.io/[Prometheus] will periodically _scrape_ applications to retrieve their metrics (by default on the `/metrics` endpoint of the application). The Prometheus add-on for Istio is a Prometheus server that comes pre-configured to _scrape_ Istio Mixer endpoints to collect its exposed metrics. It provides a mechanism for persistent storage and querying of those metrics metrics.
