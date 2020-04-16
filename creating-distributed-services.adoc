@@ -131,7 +131,14 @@ And then create the _ingress gateway_ for Bookinfo:
 oc apply -n {{ USER_ID}}-bookinfo -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml
 ----
 
-Add default destination rules (we’ll alter this later to affect routing
+The above default ingress manages traffic for any incoming host, but we only want it to manage traffic destined to our own ingress, so change the host from '*' to your specific host with this command:
+
+[source,sh,role="copypaste"]
+----
+oc patch -n {{USER_ID}}-bookinfo virtualservice/bookinfo --type='json' -p '[{"op":"add","path":"/spec/hosts","value": ["istio-ingressgateway-{{USER_ID}}-istio-system.{{ROUTE_SUBDOMAIN}}"]}]'
+----
+
+Finally, add default destination rules (we’ll alter this later to affect routing
 of requests):
 
 [source,shell, role="copypaste"]

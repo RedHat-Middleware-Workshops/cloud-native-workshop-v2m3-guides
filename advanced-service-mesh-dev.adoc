@@ -149,34 +149,19 @@ catalog-springboot-2-x7cf6   2/2     Running   0          39m
 It may take a minute or two before the `inventory` and `catalog` services are recognized and brought into the mesh.
 ====
 
-Next, let's create a gateway and virtual service to manage ingress traffic by the service mesh. Open the empty `catalog-default.yaml` file in _catalog/rules_ directory to copy the following _Gateway_ and _VirtualService_ in CodeReady Workspaces:
+Next, let's create a virtual service to send incoming traffic to the catalog. Open the empty `catalog-default.yaml` file in _catalog/rules_ directory to copy the following _VirtualService_ into the empty file using CodeReady Workspaces:
 
 [source,yaml, role="copypaste"]
 ----
-apiVersion: networking.istio.io/v1alpha3
-kind: Gateway
-metadata:
-  name: catalog-gateway
-spec:
-  selector:
-    istio: ingressgateway # use istio default controller
-  servers:
-  - port:
-      number: 80
-      name: http
-      protocol: HTTP
-    hosts:
-    - "*"
----
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: catalog-default
 spec:
   hosts:
-  - "*"
+  - "istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}"
   gateways:
-  - catalog-gateway
+  - {{USER_ID}}-bookinfo/bookinfo-gateway
   http:
     - match:
         - uri:
@@ -208,7 +193,7 @@ image::catalog-ui-gateway.png[catalog, 700]
 It takes a few seconds to reconcile _istio ingress_ with the _gateway_ and _virtual service_. Leave this page open as the _Catalog UI browser_ creates traffic (every 2 seconds) between services, which is useful for testing.
 ====
 
-Ensure if we injected _side car_ to each pods. Access the https://kiali-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}/console/graph/namespaces/?edges=noEdgeLabels&graphType=versionedApp&namespaces={{ USER_ID }}-catalog%2C{{ USER_ID }}-inventory&unusedNodes=false&injectServiceNodes=true&duration=60&pi=15000&layout=dagre[Kiali Graph page^] and check *{{ USER_ID }}-inventory*, *{{ USER_ID }}-catalog* in _Namespaces_ then check *Traffic Animation* in _Display_ for understanding the traffic flow from _Catalog service_ to _Inventory service_:
+Ensure if we injected _side car_ to each pods. Access the https://kiali-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}/console/graph/namespaces/?edges=noEdgeLabels&graphType=versionedApp&namespaces={{ USER_ID }}-catalog%2C{{ USER_ID }}-inventory&unusedNodes=false&injectServiceNodes=true&duration=60&pi=15000&layout=dagre[Kiali Graph page^] and verify that *{{ USER_ID }}-inventory*, *{{ USER_ID }}-catalog* are selected _Namespaces_ then enable *Traffic Animation* in the _Display_ drop-down to see animated traffic flow from _Catalog service_ to _Inventory service_:
 
 image::kiali_graph_sidecar.png[istio, 700]
 
@@ -220,11 +205,11 @@ This step will walk you through how to use *Fault Injection* to test the end-to-
 
 _Istio_ provides a set of failure recovery features that can be taken advantage of by the services in an application. Features include:
 
-* Timeouts
-* Bounded retries with timeout budgets and variable jitter between retries
-* Limits on number of concurrent connections and requests to upstream services
-* Active (periodic) health checks on each member of the load balancing pool
-* Fine-grained circuit breakers (passive health checks) – applied per instance in the load balancing pool
+* **Timeouts** to minimize wait times for slow services
+* **Bounded retries** with timeout budgets and variable jitter between retries
+* **Limits** on number of concurrent connections and requests to upstream services
+* **Active (periodic) health checks** on each member of the load balancing pool
+* **Fine-grained circuit breakers** (passive health checks) – applied per instance in the load balancing pool
 
 These features can be dynamically configured at runtime through Istio’s traffic management rules.
 
@@ -241,34 +226,19 @@ Two types of faults can be injected:
 
 To test our application microservices for resiliency, we will inject a failure in *50%* of the requests to the _inventory_ service, causing the service to appear to fail (and return `HTTP 5xx` errors) half of the time.
 
-Open the empty `inventory-default.yaml` file in the _inventory/rules_ directory and copy the following _Gateway_ and _VirtualService_ in CodeReady Workspaces:
+Open the empty `inventory-default.yaml` file in the _inventory/rules_ directory and copy the following into the file:
 
 [source,yaml,role="copypaste"]
 ----
-apiVersion: networking.istio.io/v1alpha3
-kind: Gateway
-metadata:
-  name: inventory-gateway
-spec:
-  selector:
-    istio: ingressgateway # use istio default controller
-  servers:
-  - port:
-      number: 80
-      name: http
-      protocol: HTTP
-    hosts:
-    - '*'
----
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: inventory-default
 spec:
   hosts:
-  - '*'
+  - "istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}"
   gateways:
-  - inventory-gateway
+  - {{USER_ID}}-bookinfo/bookinfo-gateway
   http:
     - match:
         - uri:
@@ -289,7 +259,7 @@ Delete the gateway to direct route catalog that was setup earlier with:
 oc delete -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/catalog/rules/catalog-default.yaml -n {{ USER_ID }}-catalog
 ----
 
-Create the new Istio-powered route by running the following command via CodeReady Workspaces Terminal to create this object in OpenShift:
+Create the new VirtualService to direct traffic to the inventory service by running the following command via CodeReady Workspaces Terminal:
 
 [source,sh,role="copypaste"]
 ----
@@ -312,9 +282,9 @@ metadata:
   name: inventory-fault
 spec:
   hosts:
-  - '*'
+  - "istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}"
   gateways:
-  - inventory-gateway
+  - {{USER_ID}}-bookinfo/bookinfo-gateway
   http:
     - fault:
          abort:
@@ -335,7 +305,7 @@ Before creating a new *inventory-fault VirtualService*, we need to delete the ex
 oc delete virtualservice/inventory-default -n {{ USER_ID }}-inventory
 ----
 
-Then create a new virtualservice and gateway with this command:
+Then create a new VirtualService with this command:
 
 [source,sh,role="copypaste"]
 ----
@@ -367,9 +337,9 @@ metadata:
   name: inventory-fault-delay
 spec:
   hosts:
-  - '*'
+  - "istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}"
   gateways:
-  - inventory-gateway
+  - {{USER_ID}}-bookinfo/bookinfo-gateway
   http:
     - fault:
          delay:
@@ -397,7 +367,7 @@ Then create a new virtualservice:
 oc create -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-vs-fault-delay.yaml -n {{ USER_ID }}-inventory
 ----
 
-Go to the *Kiali Graph* you opened earlier and you will see that the `green` traffic from _istio-ingressgateway_ is delayed for requests coming from catalog service. Note that you need to check *Traffic Animation* in the _Display_ select box.
+Go to the *Kiali Graph* you opened earlier and you will see that the `green` traffic from _istio-ingressgateway_ is delayed for requests coming from inventory service. Note that you need to check *Traffic Animation* in the _Display_ select box.
 
 [NOTE]
 ====
@@ -417,7 +387,6 @@ Before we will move to the next step, clean up the fault injection and set the d
 [source,sh,role="copypaste"]
 ----
 oc delete virtualservice/inventory-fault-delay -n {{ USER_ID }}-inventory && \
-oc delete gateway/inventory-gateway -n {{ USER_ID }}-inventory && \
 oc create -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-default.yaml -n {{ USER_ID }}-inventory
 ----
 
@@ -480,18 +449,18 @@ parameter does.
 
 === 4. Overload the service
 
-Let’s use simple *curl* commands to send multiple concurrent requests to our application, and witness the circuit breaker kicking in and opening the circuit.
+We'll use a utility called _siege_ to send multiple concurrent requests to our application, and witness the circuit breaker kicking in and opening the circuit.
 
-Execute this to simulate a number of users attampting to access the gateway URL simultaneously in CodeReady Workspaces Terminal.
+Execute this to simulate a number of users attempting to access the gateway URL simultaneously in CodeReady Workspaces Terminal.
 
 [source,sh,role="copypaste"]
 ----
-    for i in {1..1000} ; do
-        curl 'http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}' >& /dev/null &
-    done
+siege --verbose --time=1M --concurrent=10 'http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}'
 ----
 
-Due to the very conservative circuit breaker, many of these calls will fail with HTTP 503 (Server Unavailable). To see this, open the https://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}/d/LJ_uJAvmk/istio-service-dashboard?orgId=1&refresh=10s&var-service=inventory-quarkus.{{ USER_ID }}-inventory.svc.cluster.local&var-srcns=All&var-srcwl=All&var-dstns=All&var-dstwl=All[Istio Service Dashboard^] in Grafana and ensure to see _Client Success Rate(non-5xx responses)_ of inventory service:
+This will run for 1 minute, and you'll likely errors like `[error] Failed to make an SSL connection: 5` which indicates that the circuit breaker is tripping and stopping the flood of requests from going to the service.
+
+To see this, open the https://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}/d/LJ_uJAvmk/istio-service-dashboard?orgId=1&refresh=10s&var-service=inventory-quarkus.{{ USER_ID }}-inventory.svc.cluster.local&var-srcns=All&var-srcwl=All&var-dstns=All&var-dstwl=All[Istio Service Dashboard^] in Grafana and ensure to see _Client Success Rate(non-5xx responses)_ of inventory service is no longer at 100%:
 
 [NOTE]
 ====
@@ -502,16 +471,11 @@ image::inventory-circuit-breaker-grafana.png[circuit-breaker, 700]
 
 That’s the circuit breaker in action, limiting the number of requests to the service. In practice your limits would be much higher.
 
-=== 5. Stop overloading
+You can also see the Circuit Breaker triggering `HTTP 503` errors in the animation:
 
-Before moving on, stop the traffic generator by executing the following commands in CodeReady Workspaces Terminal:
+image::inventory-circuit-breaker-kiali.png[circuit-breaker, 700]
 
-[source,sh,role="copypaste"]
-----
-for i in {1..1000} ; do kill %${i} ; done
-----
-
-image::inventory-circuit-breaker-stop.png[circuit-breaker, 700]
+In practice, these `503`s would trigger upstream fallbacks while the overloaded service is given a chance to recover.
 
 Before we move on the next step, clear existing destinationrule, virtural service and gateway via the following commands.
 
@@ -519,7 +483,6 @@ Before we move on the next step, clear existing destinationrule, virtural servic
 ----
 oc delete destinationrule/inventory-cb -n {{ USER_ID }}-inventory && \
 oc delete virtualservice/inventory-default -n {{ USER_ID }}-inventory && \
-oc delete gw/inventory-gateway  -n {{ USER_ID }}-inventory && \
 oc create -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/catalog/rules/catalog-default.yaml -n {{ USER_ID }}-catalog
 ----
 

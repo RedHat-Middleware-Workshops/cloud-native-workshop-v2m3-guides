@@ -191,11 +191,11 @@ This task shows you how to configure dynamic request routing based on weights an
 
 _Route rules_ control how requests are routed within an Istio service mesh. Route rules provide:
 
-* _Timeouts_
-* _Bounded retries_ with timeout budgets and variable jitter between retries
-* _Limits_ on number of concurrent connections and requests to upstream services
-* _Active (periodic) health checks_ on each member of the load balancing pool
-* _Fine-grained circuit breakers_ (passive health checks) – applied per instance in the load balancing pool
+* **Timeouts** to minimize wait times for slow services
+* **Bounded retries** with timeout budgets and variable jitter between retries
+* **Limits** on number of concurrent connections and requests to upstream services
+* **Active (periodic) health checks** on each member of the load balancing pool
+* **Fine-grained circuit breakers** (passive health checks) – applied per instance in the load balancing pool
 
 Requests can be routed based on the source and destination, HTTP header fields, and weights associated with individual service versions. For example, a route rule could route requests to different versions of a service.
 
@@ -272,7 +272,7 @@ To verify this, access the http://istio-ingressgateway-{{ USER_ID }}-istio-syste
 
 image::ratings-stopped-bookinfo.png[Versions, 700]
 
-Back on http://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Grafana console^], Select the *Istio Service Dashboard*, and then select the `ratings.{{USER_ID}}-bookinfo.svc.cluster.local` service in the _Service_ dropdown:
+Back on the https://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Grafana console^], Select the *Istio Service Dashboard*, and then select the `ratings.{{USER_ID}}-bookinfo.svc.cluster.local` service in the _Service_ dropdown:
 
 image::ratings-select-dash.png[Versions, 700]
 
