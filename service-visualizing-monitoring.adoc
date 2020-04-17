@@ -30,7 +30,7 @@ Open the https://kiali-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Kiali co
 You should see _OpenShift Login_ screen. Enter the username and password as below and click _Log In_.
 
 * Username: `{{ USER_ID }}`
-* Password: `r3dh4t1!`
+* Password: `{{ OPENSHIFT_USER_PASSWORD }}`
 
 You will see _Overvew_ page in Kiali like this:
 
@@ -99,7 +99,7 @@ This will open the https://jaeger-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN 
 You should see the _OpenShift Login_ screen. Enter the username and password as below and click _Log In_.
 
 * Username: `{{ USER_ID }}`
-* Password: `r3dh4t1!`
+* Password: `{{ OPENSHIFT_USER_PASSWORD }}`
 
 You will land on the Jaeger query page:
 

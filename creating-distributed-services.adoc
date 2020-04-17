@@ -33,7 +33,7 @@ image::openshift_login.png[openshift_login, 700]
 Login using:
 
 * Username: `{{ USER_ID }}`
-* Password: `{{ OPENSHIFT_USER_PASSWORD }}!`
+* Password: `{{ OPENSHIFT_USER_PASSWORD }}`
 
 [NOTE]
 ====
@@ -61,7 +61,7 @@ oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-sk
 Enter your username and password assigned to you:
 
 * Username: `{{ USER_ID }}`
-* Password: `r3dh4t1!`
+* Password: `{{ OPENSHIFT_USER_PASSWORD }}`
 
 You should see a similar output as follows:
 
