@@ -516,7 +516,10 @@ oc new-app ccn-sso72 -l app.openshift.io/runtime=sso \
    -p SSO_REALM=istio \
    -p SSO_SERVICE_USERNAME=auth{{ USER_ID}} \
    -p SSO_SERVICE_PASSWORD={{ OPENSHIFT_USER_PASSWORD }} && \
-oc label dc/sso-postgresql app.openshift.io/runtime=postgresql --overwrite
+oc label dc/sso-postgresql app.openshift.io/runtime=postgresql --overwrite && \
+oc label dc/sso-postgresql app.kubernetes.io/part-of=sso --overwrite && \
+oc label dc/sso app.kubernetes.io/part-of=sso --overwrite && \
+oc annotate dc/sso-postgresql app.openshift.io/connects-to=ccn-sso72 --overwrite
 ----
 
 Visit the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-rhsso[Topology View^]:
