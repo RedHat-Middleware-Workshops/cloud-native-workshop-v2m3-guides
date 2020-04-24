@@ -59,7 +59,7 @@ oc get pods -n {{USER_ID}}-catalog --field-selector status.phase=Running
 
 You should see two pods running (one for the service, and one for its database):
 
-[source,console,role="copypaste"]
+[source,console]
 ----
 NAME                         READY   STATUS    RESTARTS   AGE
 catalog-database-1-p5hcd     1/1     Running   0          6m4s
@@ -75,7 +75,7 @@ oc get pods -n {{USER_ID}}-inventory --field-selector status.phase=Running
 
 You should again see two pods running (one for the service, and one for its database):
 
-[source,console,role="copypaste"]
+[source,console]
 ----
 NAME                         READY   STATUS    RESTARTS   AGE
 inventory-database-1-7jt7j   1/1     Running   0          16m
