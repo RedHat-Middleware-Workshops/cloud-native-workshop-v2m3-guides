@@ -88,9 +88,13 @@ image::kiali-services-productpage.png[kiali, 700]
 
 Kiali also features integration with https://www.jaegertracing.io/[Jaeger^].  This lets you follow the path of a request through various microservices that make up an application (without having to update the app itself!).
 
-Jaeger automatically records the execution of individual requests across the whole stack of microservices, and presents them as _traces_ consisting of one or more _spans_ (individual calls to a microservice). 
+To view the traces being generated, click on the **Distributed Tracing** link on the left:
 
-Open the https://jaeger-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Jaeger Query console^] and you should see the _OpenShift Login_ screen. Enter the username and password as below and click _Log In_.
+image::kiali-tracing.png[kiali, 700]
+
+This will open the https://jaeger-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[Jaeger Query console^].
+
+You should see the _OpenShift Login_ screen. Enter the username and password as below and click _Log In_.
 
 * Username: `{{ USER_ID }}`
 * Password: `{{ OPENSHIFT_USER_PASSWORD }}`
@@ -99,10 +103,8 @@ You will land on the Jaeger query page:
 
 image::kiali-tracing-jaeger.png[kiali, 700]
 
-To view the traces being generated, click on the **Distributed Tracing** in _Kiali console_  on the left with choosing the following options:
-
 * **Service**: `productpage`
-* **Loopback**: `Last 1h`
+* **Operation**: `all`
 
 Then click **Find Traces**. This will show you recent traces:
 
