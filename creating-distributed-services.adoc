@@ -35,37 +35,22 @@ Login using:
 * Username: `{{ USER_ID }}`
 * Password: `{{ OPENSHIFT_USER_PASSWORD }}`
 
-[NOTE]
-====
-When you access the link:{{ CONSOLE_URL }}[OpenShift web console] or other URLs via _HTTPS_ protocol, you might see browser warnings like `Your Connection is not secure` since this workshop uses self-signed certificates (which you should not do in production!). For example, if you’re using *Chrome*, to accept the warning, Click on `Advanced` then `Proceed to...` to access the page.
-====
-
-image::browser_warning.png[warning, 700]
-
-Other browsers should have a similar way to accept the security exception.
-
 You will see a list of projects to which you have access:
 
 image::openshift_landing.png[openshift_landing, 700]
 
 The project displayed on the landing page depends on which labs you will run today. If you will develop `Service Mesh and Identity` then you will see pre-created projects as shown in the above screeenshot.
 
-Although your CodeReady workspace is running on the Kubernetes cluster, it’s running with a default restricted _Service Account_ that prevents you from creating most resource types. If you’ve completed other modules, you’re probably already logged in, but let’s login again. Open a Terminal and issue the following command:
-
-
-[source, shell, role="copypaste"]
-----
-oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-skip-tls-verify=true
-----
-
-Enter your username and password assigned to you:
+Although your CodeReady workspace is running on the Kubernetes cluster, it’s running with a default restricted _Service Account_ that prevents you from creating most resource types. If you’ve completed other modules, you’re probably already logged in, but let’s login again: click on *Login to OpenShift*, and enter your given credentials:
 
 * Username: `{{ USER_ID }}`
 * Password: `{{ OPENSHIFT_USER_PASSWORD }}`
 
-You should see a similar output as follows:
+image::cmd-login.png[login,700]
 
-[source,shell]
+You should see something like this (the project names may be different):
+
+[source,none]
 ----
 Login successful.
 
@@ -73,13 +58,14 @@ You have access to the following projects and can switch between them with 'oc p
 
   * {{ USER_ID }}-bookinfo
     {{ USER_ID }}-catalog
+    {{ USER_ID }}-cloudnative-pipeline
+    {{ USER_ID }}-cloudnativeapps
     {{ USER_ID }}-inventory
     {{ USER_ID }}-istio-system
 
 Using project "{{ USER_ID }}-bookinfo".
 Welcome! See 'oc help' to get started.
 ----
-
 
 #####  ServiceMeshMemberRoll
 Before we start depoying our application we need to make sure we have the right access to our different application namespaces. The _ServiceMeshControlPlane_ that includes _Elasticsearch_, _Jaeger_, _Kiali_ and _Service Mesh Operators_, have all been installed at the cluster provisioning time. However for applications to communicate to each other accross different namespaces, we need to ensure that the _ServiceMeshMemberRoll_ is also created.

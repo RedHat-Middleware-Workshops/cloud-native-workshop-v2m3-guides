@@ -79,7 +79,7 @@ You should again see two pods running (one for the service, and one for its data
 ----
 NAME                         READY   STATUS    RESTARTS   AGE
 inventory-database-1-7jt7j   1/1     Running   0          16m
-inventory-quarkus-1-wwz89    1/1     Running   0          15m
+inventory-1-wwz89    1/1     Running   0          15m
 ----
 
 ==== Add sidecars
@@ -108,9 +108,10 @@ Next, let's add sidecars to our services and wait for them to be re-deployed:
 
 [source,sh,role="copypaste"]
 ----
-oc patch dc/inventory-quarkus -n {{USER_ID}}-inventory --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
+oc patch dc/inventory -n {{USER_ID}}-inventory --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
+oc rollout latest dc/inventory -n {{USER_ID}}-inventory && \
 oc patch dc/catalog-springboot -n {{USER_ID}}-catalog --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
-oc rollout status -w dc/inventory-quarkus -n {{USER_ID}}-inventory && \
+oc rollout status -w dc/inventory -n {{USER_ID}}-inventory && \
 oc rollout status -w dc/catalog-springboot -n {{USER_ID}}-catalog
 ----
 
@@ -127,7 +128,7 @@ It should show:
 ----
 NAME                         READY   STATUS    RESTARTS   AGE
 inventory-database-9-t9gxw   2/2     Running   0          9m25s
-inventory-quarkus-2-nhgt6    2/2     Running   0          35m
+inventory-2-nhgt6    2/2     Running   0          35m
 ----
 
 Do the same for the catalog and confirm they also show the "2/2" pods running:
@@ -247,7 +248,7 @@ spec:
             exact: /
       route:
         - destination:
-            host: inventory-quarkus
+            host: inventory
             port:
               number: 8080
 ----
@@ -293,7 +294,7 @@ spec:
              value: 50
       route:
         - destination:
-            host: inventory-quarkus
+            host: inventory
             port:
               number: 8080
 ----
@@ -348,7 +349,7 @@ spec:
              value: 100
       route:
         - destination:
-            host: inventory-quarkus
+            host: inventory
             port:
               number: 8080
 ----
@@ -427,7 +428,7 @@ kind: DestinationRule
 metadata:
   name: inventory-cb
 spec:
-  host: inventory-quarkus
+  host: inventory
   trafficPolicy:
     connectionPool:
       tcp:
@@ -460,7 +461,7 @@ siege --verbose --time=1M --concurrent=10 'http://istio-ingressgateway-{{ USER_I
 
 This will run for 1 minute, and you'll likely errors like `[error] Failed to make an SSL connection: 5` which indicates that the circuit breaker is tripping and stopping the flood of requests from going to the service.
 
-To see this, open the https://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}/d/LJ_uJAvmk/istio-service-dashboard?orgId=1&refresh=10s&var-service=inventory-quarkus.{{ USER_ID }}-inventory.svc.cluster.local&var-srcns=All&var-srcwl=All&var-dstns=All&var-dstwl=All[Istio Service Dashboard^] in Grafana and ensure to see _Client Success Rate(non-5xx responses)_ of inventory service is no longer at 100%:
+To see this, open the https://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}/d/LJ_uJAvmk/istio-service-dashboard?orgId=1&refresh=10s&var-service=inventory.{{ USER_ID }}-inventory.svc.cluster.local&var-srcns=All&var-srcwl=All&var-dstns=All&var-dstwl=All[Istio Service Dashboard^] in Grafana and ensure to see _Client Success Rate(non-5xx responses)_ of inventory service is no longer at 100%:
 
 [NOTE]
 ====
@@ -615,7 +616,6 @@ In upcoming versions of OpenShift Service Mesh, newer versions of Istio will htt
 
 [source,sh,role="copypaste"]
 ----
-oc patch -n {{ USER_ID }}-inventory svc/inventory-quarkus -p '{"spec": {"ports":[{"port": 8080, "name": "http"}, {"port": 8443, "name": "https"}]}}' && \
 oc patch -n {{ USER_ID }}-catalog svc/catalog-springboot -p '{"spec": {"ports":[{"port": 8080, "name": "http"}, {"port": 8443, "name": "https"}]}}'
 ----
 
