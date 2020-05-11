@@ -5,7 +5,7 @@ The developers also will learn how to authenticate the cloud-native apps via Red
 
 Agenda
 ===
-* Getting Started with Servie Mesh
+* Getting Started with Service Mesh
 * Implementing Continuous Delivery
 * Creating Distributed Services
 * Service Visualization and Monitoring
