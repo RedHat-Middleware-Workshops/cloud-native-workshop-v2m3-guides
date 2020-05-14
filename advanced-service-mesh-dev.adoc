@@ -200,6 +200,11 @@ image::kiali_graph_sidecar.png[istio, 700]
 
 You can see the incoming traffic to the catalog service along with traffic going to both the catalog and inventory databases along each branch. This mirrors what we would expect - when you access the catalog frontend, a call is made to the catalog backend, which in turn access the inventory and combines it with catalog data and returns the result for display.
 
+[NOTE]
+====
+You may occasionally see _unknown_ or _PassthroughCluster_ elements in the graph. These are due to the istio configuration changes we are doing in realtime and would disappear if you wait long enough, but you can ignore them for this lab.
+====
+
 === 2. Fault Injection
 
 This step will walk you through how to use *Fault Injection* to test the end-to-end failure recovery capability of the application as a whole. An incorrect configuration of the failure recovery policies could result in unavailability of critical services. Examples of incorrect configurations include incompatible or restrictive timeouts across service calls.
@@ -377,6 +382,10 @@ You may still see "red" traffic from our previous fault injections, but those wi
 
 image::inventlry-vs-delay-kiali.png[fault-injection,700]
 
+Click on the "edge" (the line between `istio-ingressgateway` and `inventory`) and then scroll to the bottom of the right-side graph showing the _HTTP Request Response Time_. Hover over the black _average_ data point to confirm that the average response time is about 5000ms (5 seconds) as expected:
+
+image::5sdelay.png[delay, 800]
+
 If the Inventory’s front page was set to correctly handle delays, we expect it to load within approximately 5 seconds. To see the web page response times, open the Developer Tools menu in IE, Chrome or Firefox (typically, key combination kbd:[CTRL+SHIFT+I] or kbd:[CMD+ALT+I] on a Mac), select the `Network` tab, and reload the inventory web page.
 
 You will see and feel that the webpage loads in about 5 seconds:
@@ -465,7 +474,7 @@ To see this, open the https://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOM
 
 [NOTE]
 ====
-It may take 10-20 seconds before the evidence of the circuit breaker is visible within the Grafana dashboard, due to the not-quite-realtime nature of Prometheus metrics and Grafana refresh periods and general network latency.
+It may take 10-20 seconds before the evidence of the circuit breaker is visible within the Grafana dashboard, due to the not-quite-realtime nature of Prometheus metrics and Grafana refresh periods and general network latency. You can also re-run the `siege` command to force more failures.
 ====
 
 image::inventory-circuit-breaker-grafana.png[circuit-breaker, 700]
