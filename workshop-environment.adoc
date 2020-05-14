@@ -45,7 +45,7 @@ Your workshop environment consists of several components which have been pre-ins
 * https://www.redhat.com/en/technologies/jboss-middleware/amq[Red Hat AMQ Streams^] - streaming data platform based on *Apache Kafka*
 * https://access.redhat.com/products/red-hat-single-sign-on[Red Hat SSO^] - For authentication / authorization -
 based on *Keycloak*
-* Other open source projects like https://gogs.io/[Gogs^] (Git server that holds application source code), https://knative.dev[Knative^] (for serverless apps), https://jenkins.io/[Jenkins^] and https://cloud.google.com/tekton/[Tekton^] (CI/CD pipelines), https://prometheus.io[Prometheus^] and https://grafana.com[Grafana^] (monitoring apps), and more.
+* Other open source projects like https://knative.dev[Knative^] (for serverless apps), https://jenkins.io/[Jenkins^] and https://cloud.google.com/tekton/[Tekton^] (CI/CD pipelines), https://prometheus.io[Prometheus^] and https://grafana.com[Grafana^] (monitoring apps), and more.
 
 You’ll be provided clickable URLs throughout the workshop to access the services that have been installed for you.
 

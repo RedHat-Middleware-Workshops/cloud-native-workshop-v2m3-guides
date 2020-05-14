@@ -78,8 +78,8 @@ You should again see two pods running (one for the service, and one for its data
 [source,console]
 ----
 NAME                         READY   STATUS    RESTARTS   AGE
-inventory-database-1-7jt7j   1/1     Running   0          16m
-inventory-1-wwz89    1/1     Running   0          15m
+inventory-1-87smf            1/1     Running   0          3m12s
+inventory-database-1-6tvxs   1/1     Running   0          5m16s
 ----
 
 ==== Add sidecars
@@ -127,8 +127,8 @@ It should show:
 [source,console,role="copypaste"]
 ----
 NAME                         READY   STATUS    RESTARTS   AGE
-inventory-database-9-t9gxw   2/2     Running   0          9m25s
-inventory-2-nhgt6    2/2     Running   0          35m
+inventory-2-2p9bx            2/2     Running   0          65s
+inventory-database-2-4rzlh   2/2     Running   0          82s
 ----
 
 Do the same for the catalog and confirm they also show the "2/2" pods running:
@@ -704,6 +704,8 @@ You should see the following expected output:
 Congratulations! You’ve integrated RH-SSO with Istio to protect service mesh traffic to the catalog service, without having to change the application at all. Istio can use Keycloak to authenticate service-to-service calls (also called "east-west" traffic).
 
 For "north-south" traffic, such as traffic coming in from a frontend web application, RH-SSO provides https://access.redhat.com/documentation/en-us/red_hat_single_sign-on/7.3/html/securing_applications_and_services_guide/openid_connect_3[various adapters^] for apps like Spring Boot, JBoss EAP and others to configure your apps to authenticate against RH-SSO. Quarkus also provides MicroProfile JWT and Keycloak adapters for those types of apps. See the https://quarkus.io/guides[Quarkus Guides^] for more detail.
+
+*Red Hat* also offers https://access.redhat.com/products/quarkus[Red Hat build of Quarkus(RHBQ)^] to support and maintenance over stated time periods for the major versions of Quarkus. In this workhop, we use RHBQ to develop cloud-native microservices. https://access.redhat.com/documentation/en-us/red_hat_build_of_quarkus[Learn more about RHBQ^]. This is one of the cloud-native runtimes included in https://www.redhat.com/en/products/runtimes[Red Hat Runtimes^].
 
 When combining Red Hat SSO with istio, you can ensure traffic within the service mesh and traffic coming and leaving the mesh can be properly authenticated.
 
