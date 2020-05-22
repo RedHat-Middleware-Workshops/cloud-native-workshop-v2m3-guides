@@ -11,31 +11,33 @@ In this lab, we will learn the advanced usecases of service mesh. The lab showca
 These features are important for any distributed applications built on top of Kubernetes/Openshift. We use a different set of microservices that you will be building and deploying. Our applicaiton is called the _Coolstore microservice_ developed in prior labs (i.e Catalog, Inventory) that you developed and deployed to
 OpenShift cluster in _Module 1_ or/and _Module 2_.
 
-[IMPORTANT]
+[WARNING]
 ====
 If you have already deployed the _inventory_ and _catalog_ microservices from Module 1, you can skip this step and move to section "1. Enabling automatic sidecar injection"
 ====
 
 **In case you haven’t done Module 1 or Module 2 today**, or you didn’t quite complete them, you should deploy the coolstore application and microservices by executing the following shell scripts in CodeReady Workspaces Terminal:
 
-The following script will deploy the inventory service
-[source, shell, role="copypaste"]
-----
-sh $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-inventory.sh {{ USER_ID }}
-----
+The following script will deploy the inventory service:
 
-The following script will deploy the catalog service
 [source, shell, role="copypaste"]
 ----
+sh $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-inventory.sh {{ USER_ID }}  && \
 sh $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-catalog.sh {{ USER_ID }}
 ----
 
-[NOTE]
+[WARNING]
 ====
-These scripts will each take a few minutes to complete. Wait for them to finish!
+It sometimes takes time to create a new build image for network latency in OpenShift. So if you got failed to deploy catalog-service with *Error from server (NotFound): services "catalog-springboot" not found*. Please try again with delay via the following command:
 ====
 
-This will build and deploy the _inventory_ and _catalog_ components into their own namespaces. They won’t automatically get Istio sidecar proxy containers yet, but you’ll add that in the next step!
+[source, sh, role="copypaste"]
+----
+sh $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-inventory.sh {{ USER_ID }}  && \
+sh $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/scripts/deploy-catalog.sh {{ USER_ID }} 3m
+----
+
+Wait for the commands to complete. This will build and deploy the _inventory_ and _catalog_ components into their own namespaces. They won’t automatically get Istio sidecar proxy containers yet, but you’ll add that in the next step!
 
 === 1. Enabling automatic sidecar injection
 
