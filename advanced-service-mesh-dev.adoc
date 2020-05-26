@@ -527,7 +527,7 @@ Type the following name then click on *Create*:
 
 image::create_project_popup.png[rhsso, 500]
 
- Click on *From Catalog* in Topology view:
+Click on *From Catalog* in Topology view:
 
 image::create_project_fc.png[rhsso, 700]
 
@@ -561,7 +561,7 @@ Go back to the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-rhsso[Topology View^]
 
 image::rhsso-topology.png[sso, 700]
 
-Once this finishes (it may take a minute or two), click on https://secure-sso-{{ USER_ID }}-rhsso{{ ROUTE_SUBDOMAIN}}[Secure SSO Route] to access RH-SSO web console as below:
+Once this finishes (it may take a minute or two), click on https://secure-sso-{{ USER_ID }}-rhsso.{{ ROUTE_SUBDOMAIN}}[Secure SSO Route^] to access RH-SSO web console as below:
 
 image::rhsso_landing_page.png[sso, 700]
 
