@@ -67,6 +67,11 @@ Using project "{{ USER_ID }}-bookinfo".
 Welcome! See 'oc help' to get started.
 ----
 
+[NOTE]
+====
+After you log in using *Login to OpenShift*, the terminal is no longer usable as a regular terminal. You can close the terminal window. You will still be logged in when you open more terminals later!
+====
+
 #####  ServiceMeshMemberRoll
 Before we start depoying our application we need to make sure we have the right access to our different application namespaces. The _ServiceMeshControlPlane_ that includes _Elasticsearch_, _Jaeger_, _Kiali_ and _Service Mesh Operators_, have all been installed at the cluster provisioning time. However for applications to communicate to each other accross different namespaces, we need to ensure that the _ServiceMeshMemberRoll_ is also created.
 
