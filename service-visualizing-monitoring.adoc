@@ -182,7 +182,7 @@ image::grafana-home.png[Grafana graph, 700]
 
 ==== Istio Mesh Metrics
 
-Select *Home > Istio > Istio Mesh Dashboard* to see Istio mesh metrics:
+Select *Dashboard Icon > Manage > Istio > Istio Mesh Dashboard* to see Istio mesh metrics:
 
 image::grafana-mesh-metrics-select.png[Grafana graph, 700]
 
@@ -211,7 +211,7 @@ You can switch to a different service or filter metrics by _client-_ and _servic
 
 ==== Istio Workload Metrics
 
-To switch to the workloads dashboard, select *Home > Istio > Istio Workload Dashboard* from the drop-down list in the top left corner of the screen. You should see a screen similar to this:
+To switch to the workloads dashboard, select *Dashboard Icon > Manage > Istio > Istio Workload Dashboard* from the drop-down list in the top left corner of the screen. You should see a screen similar to this:
 
 image::grafana-workload-metrics.png[Grafana graph, 700]
 
