@@ -93,9 +93,9 @@ Rather than manually adding the annotations necessary to inject istio sidecars, 
 First, do the databases and wait for them to be re-deployed:
 [source,sh,role="copypaste"]
 ----
-oc patch deployments/inventory-database -n {{USER_ID}}-inventory --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
+oc patch dc/inventory-database -n {{USER_ID}}-inventory --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
 oc patch dc/catalog-database -n {{USER_ID}}-catalog --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
-oc rollout status -w deployments/inventory-database -n {{USER_ID}}-inventory && \
+oc rollout status -w dc/inventory-database -n {{USER_ID}}-inventory && \
 oc rollout status -w dc/catalog-database -n {{USER_ID}}-catalog
 ----
 
@@ -112,9 +112,9 @@ Next, let's add sidecars to our services and wait for them to be re-deployed:
 ----
 oc patch dc/inventory -n {{USER_ID}}-inventory --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
 oc rollout latest dc/inventory -n {{USER_ID}}-inventory && \
-oc patch deployments/catalog-springboot -n {{USER_ID}}-catalog --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
+oc patch dc/catalog-springboot -n {{USER_ID}}-catalog --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
 oc rollout status -w dc/inventory -n {{USER_ID}}-inventory && \
-oc rollout status -w deployments/catalog-springboot -n {{USER_ID}}-catalog
+oc rollout status -w dc/catalog-springboot -n {{USER_ID}}-catalog
 ----
 
 This should also take about 1 minute to finish. When it's done, verify that the `inventory-database` is running with 2 pods (`2/2` in the `READY` column) with this command:
