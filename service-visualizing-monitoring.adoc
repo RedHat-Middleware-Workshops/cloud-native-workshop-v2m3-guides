@@ -103,7 +103,7 @@ You will land on the Jaeger query page:
 
 image::kiali-tracing-jaeger.png[kiali, 700]
 
-* **Service**: `productpage`
+* **Service**: `productpage.{{USER_ID}}-bookinfo`
 * **Operation**: `all`
 
 Then click **Find Traces**. This will show you recent traces:
