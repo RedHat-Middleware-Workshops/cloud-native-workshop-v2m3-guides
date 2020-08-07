@@ -49,7 +49,7 @@ Click on the _Graph_ page on the left and check **Traffic Animation** in **Displ
 
 ![kiali]({% image_path kiali-service-graph.png %})
 
-It shows a graph with all the microservices, connected by the requests going through then. On this page, you can see how services interact with each other. Observe that traffic from `productpage` to `reviews` is equally hitting all three versions of the `reviews` service, and that `v2` and `v3` are in turn hitting the `ratings` service (while `v1` does not, so therefore you get no "stars" when you get load-balanced to `v1`).
+It shows a graph with all the microservices, connected by the requests going through them. On this page, you can see how services interact with each other. Observe that traffic from `productpage` to `reviews` is equally hitting all three versions of the `reviews` service, and that `v2` and `v3` are in turn hitting the `ratings` service (while `v1` does not, so therefore you get no "stars" when you get load-balanced to `v1`).
 
 
 ##### Applications
