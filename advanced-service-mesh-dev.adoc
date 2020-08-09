@@ -52,7 +52,7 @@ The webhook checks the configuration of pods deploying into all projects to see 
 
 ==== Confirm `inventory` and `catalog` services are running
 
-First, confirm you have running inventory service and associated database with the following command:
+First, confirm you have running catalog service and associated database with the following command:
 
 [source,sh,role="copypaste"]
 ----
