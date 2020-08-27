@@ -725,11 +725,18 @@ You should see the following expected output:
 [source,json]
 ----
 ...
+ {
+    "itemId": "444435",
+    "name": "Quarkus twill cap",
+    "desc": "",
+    "price": 13,
+    "quantity": 600
+  },
   {
     "itemId": "444437",
-    "name": "Lytro Camera",
-    "desc": "Consumers who want to up their photography game are looking at newfangled cameras like the Lytro Field camera, designed to take photos with infinite focus, so you can decide later exactly where you want the focus of each image to be.",
-    "price": 44.3,
+    "name": "Nanobloc Universal Webcam Cover",
+    "desc": "",
+    "price": 2.75,
     "quantity": 230
   }
 ]
