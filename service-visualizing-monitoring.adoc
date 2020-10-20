@@ -241,7 +241,7 @@ If your application already provides some defensive measures (e.g. using https:
 
 === 6. Service Versions
 
-Istio introduces the concept of a service version, which is a finer-grained way to subdivide service instances by versions (_v1_, _v2_) or environment (_staging_, _prod_). These variants are not necessarily different API versions: they could be iterative changes to the same service, deployed in different environments (prod, staging, dev, etc.). Common scenarios where this is used include A/B testing or canary rollouts. Istio’s https://istio.io/docs/concepts/traffic-management/rules-configuration.html[traffic routing rules^] can refer to service versions to provide additional control over traffic between services.
+Istio introduces the concept of a service version, which is a finer-grained way to subdivide service instances by versions (_v1_, _v2_) or environment (_staging_, _prod_). These variants are not necessarily different API versions: they could be iterative changes to the same service, deployed in different environments (prod, staging, dev, etc.). Common scenarios where this is used include A/B testing or canary rollouts. Istio’s https://istio.io/latest/docs/concepts/traffic-management/#routing-rules[traffic routing rules^] can refer to service versions to provide additional control over traffic between services.
 
 image::versions.png[Versions, 500]
 
