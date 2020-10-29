@@ -80,7 +80,7 @@ Let's create the _ServiceMeshMemberRoll_
 - Login to the openshift console link:{{CONSOLE_URL}}[OpenShift web console^]
 - Press the plus sign on the right top corner as shown in the picture.
 
-image::plussigntop_ocpconsole.png[Run yaml in console, 700]
+image::plus-icon.png[Run yaml in console, 700]
 
 - Select your namespace `{{ USER_ID }}-istio-system` on the top left; as shown in the picture and paste the below _ServiceMeshMemberRoll_ YAML code into the editor.
 
@@ -100,11 +100,9 @@ spec:
 <1> is the istio-system namespace which will hold the _ServiceMeshMemberRoll_ and a bunch of other service mesh related objects.
 <2> is the list of projects that will be part of this _ServiceMesh_; in our case that's the application spread in three different namespaces/projects.
 
-image::smmr_yaml_create.png[Run yaml in console, 700]
+Click **Create**. This should create the required _ServiceMeshMemberRoll_.
 
-- Click **Create**. This should create the required _ServiceMeshMemberRoll_
-
-Congratulations now we have successfully created a _ServiceMeshMemberRoll_ which will cause a new service mesh to be deployed into the `{{ USER_ID }}-istio-system` project. let's move on to deploy our application to our service mesh.
+Congratulations! Now we have successfully created a _ServiceMeshMemberRoll_ which will cause a new service mesh to be deployed into the `{{ USER_ID }}-istio-system` project. let's move on to deploy our application to our service mesh.
 
 #####  Deploying BookInfo App
 
@@ -115,22 +113,21 @@ Open a terminal via CodeReady Workspaces and run the following commands to deplo
 oc apply -n {{ USER_ID}}-bookinfo -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml
 ----
 
-And then create the _ingress gateway_ for Bookinfo:
+And then create the _ingress gateway_ for the bookinfo:
 
 [source,shell, role="copypaste"]
 ----
 oc apply -n {{ USER_ID}}-bookinfo -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml
 ----
 
-The above default ingress manages traffic for any incoming host, but we only want it to manage traffic destined to our own ingress, so change the host from '*' to your specific host with this command:
+The above default ingress manages traffic for any incoming host, but we only want it to manage traffic destined to our own ingress, so change the host from `*` to your specific host with this command:
 
 [source,sh,role="copypaste"]
 ----
 oc patch -n {{USER_ID}}-bookinfo virtualservice/bookinfo --type='json' -p '[{"op":"add","path":"/spec/hosts","value": ["istio-ingressgateway-{{USER_ID}}-istio-system.{{ROUTE_SUBDOMAIN}}"]}]'
 ----
 
-Finally, add default destination rules (we’ll alter this later to affect routing
-of requests):
+Finally, add default destination rules (we’ll alter this later to affect routing of requests):
 
 [source,shell, role="copypaste"]
 ----
