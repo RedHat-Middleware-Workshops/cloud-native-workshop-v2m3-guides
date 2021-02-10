@@ -1,7 +1,7 @@
 = Lab 2 - Service Visualization and Monitoring
 :experimental:
 
-In this lab you will visualize your service mesh using *Kiali*, *Prometheus*, *Grafana* and you will lean how to configure basic *Istio funtionalities* such as *VirtualService* and *A/B Testing*.
+In this lab you will visualize your service mesh using *Kiali*, *Prometheus*, *Grafana* and you will lean how to configure basic *Istio functionalities* such as *VirtualService* and *A/B Testing*.
 
 === 1. Generating application load
 
@@ -99,7 +99,7 @@ You should see the _OpenShift Login_ screen. Enter the username and password as 
 * Username: `{{ USER_ID }}`
 * Password: `{{ OPENSHIFT_USER_PASSWORD }}`
 
-You will land on the Jaeger query page:
+If you have Requested permissions to authorize access Jaeger, click on Allow selected permissions. You will land on the Jaeger query page:
 
 image::kiali-tracing-jaeger.png[kiali, 700]
 
