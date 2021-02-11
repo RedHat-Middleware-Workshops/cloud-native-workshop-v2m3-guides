@@ -274,7 +274,7 @@ Create the new VirtualService to direct traffic to the inventory service by runn
 oc create -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-default.yaml -n {{ USER_ID }}-inventory
 ----
 
-Now, you can test if the inventory service works correctly via accessing the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[CoolStore Inventory page^]. If you still see _Coolstore Catalog_ then reload the page to see _Coolstore Inventory_ with kbd:[CTRL+F5] (or kbd:[Command+Shift+R] on Mac OS).
+Now, you can test if the inventory service works correctly via accessing the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}[CoolStore Inventory page^]. If you still see _Coolstore Catalog_ then reload the page to see _Coolstore Inventory_ with kbd:[CTRL+F5].
 
 image::inventory-ui-gateway.png[fault-injection, 700]
 
@@ -388,7 +388,7 @@ Click on the "edge" (the line between `istio-ingressgateway` and `inventory`) an
 
 image::5sdelay.png[delay, 800]
 
-If the Inventory’s front page was set to correctly handle delays, we expect it to load within approximately 5 seconds. To see the web page response times, open the Developer Tools menu in IE, Chrome or Firefox (typically, key combination kbd:[CTRL+SHIFT+I] or kbd:[CMD+ALT+I] on a Mac), select the `Network` tab, and reload the inventory web page.
+If the Inventory’s front page was set to correctly handle delays, we expect it to load within approximately 5 seconds. To see the web page response times, open the Developer Tools menu in IE, Chrome or Firefox (typically, key combination kbd:[CTRL+SHIFT+I]), select the `Network` tab, and reload the inventory web page.
 
 You will see and feel that the webpage loads in about 5 seconds:
 
