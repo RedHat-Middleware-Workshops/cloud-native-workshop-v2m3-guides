@@ -110,14 +110,14 @@ Open a terminal via CodeReady Workspaces and run the following commands to deplo
 
 [source,shell, role="copypaste"]
 ----
-oc apply -n {{ USER_ID}}-bookinfo -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml
+oc apply -n {{ USER_ID}}-bookinfo -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml
 ----
 
 And then create the _ingress gateway_ for the bookinfo:
 
 [source,shell, role="copypaste"]
 ----
-oc apply -n {{ USER_ID}}-bookinfo -f /projects/cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml
+oc apply -n {{ USER_ID}}-bookinfo -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml
 ----
 
 The above default ingress manages traffic for any incoming host, but we only want it to manage traffic destined to our own ingress, so change the host from `*` to your specific host with this command:
@@ -131,7 +131,7 @@ Finally, add default destination rules (we’ll alter this later to affect routi
 
 [source,shell, role="copypaste"]
 ----
-oc apply -n {{ USER_ID}}-bookinfo -f /projects/cloud-native-workshop-v2m3-labs/istio/destination-rule-all.yaml
+oc apply -n {{ USER_ID}}-bookinfo -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/destination-rule-all.yaml
 ----
 
 List all available destination rules:
@@ -154,15 +154,15 @@ oc label deployment/reviews-v1 app.openshift.io/runtime=java --overwrite && \
 oc label deployment/reviews-v2 app.openshift.io/runtime=java --overwrite && \
 oc label deployment/reviews-v3 app.openshift.io/runtime=java --overwrite && \
 oc label deployment/ratings-v1 app.openshift.io/runtime=nodejs --overwrite && \
-oc label deployment details-v1 app.kubernetes.io/part-of=bookinfo --overwrite && \
-oc label deployment productpage-v1 app.kubernetes.io/part-of=bookinfo --overwrite && \
-oc label deployment ratings-v1 app.kubernetes.io/part-of=bookinfo --overwrite && \
-oc label deployment reviews-v1 app.kubernetes.io/part-of=bookinfo --overwrite && \
-oc label deployment reviews-v2 app.kubernetes.io/part-of=bookinfo --overwrite && \
-oc label deployment reviews-v3 app.kubernetes.io/part-of=bookinfo --overwrite && \
-oc annotate deployment productpage-v1 app.openshift.io/connects-to=reviews-v1,reviews-v2,reviews-v3,details-v1 && \
-oc annotate deployment reviews-v2 app.openshift.io/connects-to=ratings-v1 && \
-oc annotate deployment reviews-v3 app.openshift.io/connects-to=ratings-v1
+oc label deployment/details-v1 app.kubernetes.io/part-of=bookinfo --overwrite && \
+oc label deployment/productpage-v1 app.kubernetes.io/part-of=bookinfo --overwrite && \
+oc label deployment/ratings-v1 app.kubernetes.io/part-of=bookinfo --overwrite && \
+oc label deployment/reviews-v1 app.kubernetes.io/part-of=bookinfo --overwrite && \
+oc label deployment/reviews-v2 app.kubernetes.io/part-of=bookinfo --overwrite && \
+oc label deployment/reviews-v3 app.kubernetes.io/part-of=bookinfo --overwrite && \
+oc annotate deployment/productpage-v1 app.openshift.io/connects-to=reviews-v1,reviews-v2,reviews-v3,details-v1 && \
+oc annotate deployment/reviews-v2 app.openshift.io/connects-to=ratings-v1 && \
+oc annotate deployment/reviews-v3 app.openshift.io/connects-to=ratings-v1
 ----
 
 Let’s wait for our application to finish deploying. Go to the {{ CONSOLE_URL }}/topology/ns/{{ USER_ID }}-bookinfo[Topology View^] for the `{{USER_ID}}-bookinfo` project. You'll see the app components spinning up:
