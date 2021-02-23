@@ -470,7 +470,7 @@ Execute this to simulate a number of users attempting to access the gateway URL 
 siege --verbose --time=1M --concurrent=10 'http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}'
 ----
 
-This will run for 1 minute, and you'll likely errors like `[error] Failed to make an SSL connection: 5` which indicates that the circuit breaker is tripping and stopping the flood of requests from going to the service.
+This will run for 1 minute, and you'll likely encounter errors like `[error] Failed to make an SSL connection: 5` which indicates that the circuit breaker is tripping and stopping the flood of requests from going to the service.
 
 To see this, open the https://grafana-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}/d/LJ_uJAvmk/istio-service-dashboard?orgId=1&refresh=10s&var-service=inventory.{{ USER_ID }}-inventory.svc.cluster.local&var-srcns=All&var-srcwl=All&var-dstns=All&var-dstwl=All[Istio Service Dashboard^] in Grafana and ensure to see _Client Success Rate(non-5xx responses)_ of inventory service is no longer at 100%:
 
