@@ -1,7 +1,7 @@
 = Lab 3 - Advanced Service Mesh Development
 :experimental:
 
-In this lab, we will learn the advanced usecases of service mesh. The lab showcases features:
+In this lab, we will learn the advanced use cases of service mesh. The lab showcases features:
 
 * Fault Injection
 * Traffic Shifting
@@ -705,7 +705,7 @@ In order to generate a correct token, run next `curl` request in CodeReady Works
 
 [source,sh,role="copypaste"]
 ----
-export TOKEN=$( curl -X POST 'http://sso-{{ USER_ID }}-rhsso.{{ ROUTE_SUBDOMAIN }}/auth/realms/istio/protocol/openid-connect/token' \
+export TOKEN=$( curl -s -X POST 'http://sso-{{ USER_ID }}-rhsso.{{ ROUTE_SUBDOMAIN }}/auth/realms/istio/protocol/openid-connect/token' \
  -H "Content-Type: application/x-www-form-urlencoded" \
  -d "username=auth{{ USER_ID }}" \
  -d 'password={{ OPENSHIFT_USER_PASSWORD }}' \
@@ -717,7 +717,7 @@ Once you have generated the token, re-run the curl command below with the token 
 
 [source,sh,role="copypaste"]
 ----
-curl -H "Authorization: Bearer $TOKEN" http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}/services/products | jq
+curl -s -H "Authorization: Bearer $TOKEN" http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}/services/products | jq
 ----
 
 You should see the following expected output:
