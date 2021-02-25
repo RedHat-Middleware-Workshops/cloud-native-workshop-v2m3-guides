@@ -487,9 +487,9 @@ You can also see the Circuit Breaker triggering `HTTP 503` errors in the animati
 
 image::inventory-circuit-breaker-kiali.png[circuit-breaker, 700]
 
-In practice, these `503`s would trigger upstream fallbacks while the overloaded service is given a chance to recover.
+In practice, these `503` errors would trigger upstream fallbacks while the overloaded service is given a chance to recover.
 
-Before we move on the next step, clear existing destinationrule, virtural service and gateway via the following commands.
+Before we move on the next step, clear existing _destinationrule_, _virtural service_ and _gateway_ via the following commands.
 
 [source,sh,role="copypaste"]
 ----
@@ -531,7 +531,7 @@ Click on *From Catalog* in Topology view:
 
 image::create_project_fc.png[rhsso, 700]
 
-Type `ccn-sso` in search box and click on *CCN + Red Hat Single Sign-On 7.4 on OpenJDK + PostgreSQL* catalog. Then click on *Instantiate Template*:
+Type `ccn` in search box and click on *CCN + Red Hat Single Sign-On 7.4 on OpenJDK + PostgreSQL* catalog. Then click on *Instantiate Template*:
 
 image::catalog_rhsso.png[rhsso, 700]
 
