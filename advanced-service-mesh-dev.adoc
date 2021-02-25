@@ -655,31 +655,42 @@ oc patch -n {{ USER_ID }}-catalog svc/catalog-springboot -p '{"spec": {"ports":[
 
 Turning to back to Istio, let’s create a user-facing authentication policy using JSON Web Tokens (JWTs) and the https://openid.net/connect/[OIDC^] authenticaiton flow.
 
-In CodeReady, open the empty *ccn-auth-config.yml* file in _catalog/rules_ directory to copy the following policy.
+In CodeReady, open the empty *ccn-auth-config.yml* file in _catalog/rules_ directory to copy the following _RequestAuthentication_ and _AuthorizationPolicy_:
 
 [source,yaml,role="copypaste"]
 ----
-apiVersion: authentication.istio.io/v1alpha1
-kind: Policy
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
 metadata:
   name: auth-policy
   namespace: {{ USER_ID }}-catalog
 spec:
-  targets:
-  - name: catalog-springboot
-  origins:
-  - jwt:
-      issuer: http://sso-{{ USER_ID }}-rhsso.{{ ROUTE_SUBDOMAIN }}/auth/realms/istio
-      jwks_uri: http://sso-{{ USER_ID }}-rhsso.{{ ROUTE_SUBDOMAIN }}/auth/realms/istio/protocol/openid-connect/certs
-  principalBinding: USE_ORIGIN
+  selector:
+    matchLabels:
+      deploymentconfig: catalog-springboot
+  jwtRules:
+  - issuer: http://sso-{{ USER_ID }}-rhsso.apps.cluster-ae59.ae59.example.opentlc.com/auth/realms/istio
+    jwksUri: http://sso-{{ USER_ID }}-rhsso.apps.cluster-ae59.ae59.example.opentlc.com/auth/realms/istio/protocol/openid-connect/certs
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: auth-policy
+  namespace: {{ USER_ID }}-catalog
+spec:
+  selector:
+    matchLabels:
+      deploymentconfig: catalog-springboot
+  rules:
+  - from:
+    - source:
+        requestPrincipals: ["*"]
 ----
 
-The following fields are used above to create a Policy in Istio and are described here:
+The following fields are used above to create a _RequestAuthentication_ in Istio and are described here:
 
 * *issuer* - Identifies the issuer that issued the JWT. See https://tools.ietf.org/html/rfc7519#section-4.1.1[issuer^] usually a URL or an email address.
 * *jwksUri* - URL of the provider’s public key set to validate signature of the JWT.
-* *audiences* - The list of JWT https://tools.ietf.org/html/rfc7519#section-4.1.3[audiences^] that are allowed to access. A JWT containing any of these audiences will
-be accepted.
 
 Then execute the following oc command in CodeReady Workspaces Terminal to create this object:
 
@@ -695,7 +706,7 @@ Now you can’t access the catalog service without authentication of RH-SSO. You
 curl -i http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}
 ----
 
-You should get and `HTTP 401 Unauthorized` and `Origin authentication failed.` messages.
+You should get and `HTTP/1.1 403 Forbidden` and `RBAC: access denied` messages.
 
 The expected response is here because the user has not been identified with a valid JWT token in RH-SSO. It normally takes `5 ~ 10 seconds` to initialize the authentication policy in Istio Mixer. After this things go quickly as policies are cached for some period of time.
 
