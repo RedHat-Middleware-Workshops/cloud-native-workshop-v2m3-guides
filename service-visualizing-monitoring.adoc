@@ -285,14 +285,27 @@ The output can be a bit different:
  
 [source, yaml]
 ----
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  creationTimestamp: "2019-07-02T15:50:36Z"
+  creationTimestamp: "2021-03-02T21:41:57Z"
   generation: 1
+  managedFields:
+  - apiVersion: networking.istio.io/v1alpha3
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:spec:
+        .: {}
+        f:hosts: {}
+        f:http: {}
+    manager: kubectl-create
+    operation: Update
+    time: "2021-03-02T21:41:57Z"
   name: reviews
   namespace: {{ USER_ID }}-bookinfo
-  resourceVersion: "2899673"
+  resourceVersion: "4848293"
+  selfLink: /apis/networking.istio.io/v1beta1/namespaces/user2-bookinfo/virtualservices/reviews
+  uid: 75996b09-1a5c-41ab-a5aa-35861d6b8fa2
 spec:
   hosts:
   - reviews

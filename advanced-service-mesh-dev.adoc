@@ -662,20 +662,20 @@ In CodeReady, open the empty *ccn-auth-config.yml* file in _catalog/rules_ direc
 apiVersion: security.istio.io/v1beta1
 kind: RequestAuthentication
 metadata:
-  name: auth-policy
+  name: calalog-req-auth
   namespace: {{ USER_ID }}-catalog
 spec:
   selector:
     matchLabels:
       deploymentconfig: catalog-springboot
   jwtRules:
-  - issuer: http://sso-{{ USER_ID }}-rhsso.apps.cluster-ae59.ae59.example.opentlc.com/auth/realms/istio
-    jwksUri: http://sso-{{ USER_ID }}-rhsso.apps.cluster-ae59.ae59.example.opentlc.com/auth/realms/istio/protocol/openid-connect/certs
+  - issuer: http://sso-{{ USER_ID }}-rhsso.{{ ROUTE_SUBDOMAIN }}/auth/realms/istio
+    jwksUri: http://sso-{{ USER_ID }}-rhsso.{{ ROUTE_SUBDOMAIN }}/auth/realms/istio/protocol/openid-connect/certs
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
-  name: auth-policy
+  name: catalog-auth-policy
   namespace: {{ USER_ID }}-catalog
 spec:
   selector:
