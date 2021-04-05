@@ -1,3 +1,5 @@
+:imagesdir: images
+
 = Service Mesh and Identity
 :experimental:
 
