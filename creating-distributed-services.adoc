@@ -1,7 +1,6 @@
-:imagesdir: images
-
 = Creating Distributed Services
 :experimental:
+:imagesdir: images
 
 In this lab, we’ll install a sample application into the system. This application is included in Istio itself for demonstrating various aspects of it, but the application isn’t tied exclusively to Istio - it’s an ordinary microservice application that could be installed to any OpenShift instance with or without Istio.
 

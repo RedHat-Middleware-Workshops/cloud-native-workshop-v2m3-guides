@@ -1,7 +1,6 @@
-:imagesdir: images
-
 = Service Mesh and Identity
 :experimental:
+:imagesdir: images
 
 In this module, you will learn how to prevent cascading failures in a distributed environment, how to detect misbehaving services, and how to avoid having to implement resiliency and monitoring in your business logic. As we transition our applications towards a distributed architecture with microservices deployed across a distributed
 network, many new challenges await us.

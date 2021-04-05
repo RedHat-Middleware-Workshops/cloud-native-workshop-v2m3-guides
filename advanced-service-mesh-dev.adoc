@@ -1,7 +1,6 @@
-:imagesdir: images
-
 = Lab 3 - Advanced Service Mesh Development
 :experimental:
+:imagesdir: images
 
 In this lab, we will learn the advanced use cases of service mesh. The lab showcases features:
 
