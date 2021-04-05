@@ -1,5 +1,6 @@
 = Lab 2 - Service Visualization and Monitoring
 :experimental:
+:imagesdir: images
 
 In this lab you will visualize your service mesh using *Kiali*, *Prometheus*, *Grafana* and you will lean how to configure basic *Istio functionalities* such as *VirtualService* and *A/B Testing*.
 

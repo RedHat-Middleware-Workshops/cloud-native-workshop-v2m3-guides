@@ -1,5 +1,6 @@
 = Workshop Environment
 :experimental:
+:imagesdir: images
 
 == First Step: Confirm Your Username!
 
