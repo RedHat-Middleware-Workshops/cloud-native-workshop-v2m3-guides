@@ -528,11 +528,11 @@ Type the following name then click on *Create*:
 
 image::create_project_popup.png[rhsso, 500]
 
-Click on *From Catalog* in Topology view:
+Click the *Start building your application* in the Topology view:
 
-image::create_project_fc.png[rhsso, 700]
+image::start_build_app.png[create_new, 700]
 
-Type `ccn` in search box and click on *CCN + Red Hat Single Sign-On 7.4 on OpenJDK + PostgreSQL* catalog. Then click on *Instantiate Template*:
+In the search box, type in `ccn` and choose _CCN + Red Hat Single Sign-On 7.4 on OpenJDK + PostgreSQL_ and then click *Instantiate Template*.
 
 image::catalog_rhsso.png[rhsso, 700]
 
