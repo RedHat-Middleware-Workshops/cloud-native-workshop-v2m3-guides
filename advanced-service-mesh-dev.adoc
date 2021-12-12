@@ -258,7 +258,7 @@ spec:
         - destination:
             host: inventory
             port:
-              number: 8080
+              number: 80
 ----
 
 Delete the gateway to direct route catalog that was setup earlier with:
@@ -304,7 +304,7 @@ spec:
         - destination:
             host: inventory
             port:
-              number: 8080
+              number: 80
 ----
 
 Before creating a new *inventory-fault VirtualService*, we need to delete the existing inventory-default virtualService. Run the following command via CodeReady Workspaces Terminal:
@@ -359,7 +359,7 @@ spec:
         - destination:
             host: inventory
             port:
-              number: 8080
+              number: 80
 ----
 
 Delete the existing inventory-fault VirtualService in CodeReady Workspaces Terminal:
