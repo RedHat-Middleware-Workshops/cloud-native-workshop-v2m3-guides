@@ -85,6 +85,16 @@ Click on *productpage* service which will show you the details of the service, s
 
 image::kiali-services-productpage.png[kiali, 700]
 
+==== Istio Config
+
+Click on *Istio Config* menu in the left navigation. Here, you can see the listing of all Istio types.
+
+image::kiali-istio-config.png[kiali, 700]
+
+Click on *bookinfo* virtual service which will show you the details of the virtual service, such as YAML specification, overview, gateways, hosts and more:
+
+image::kiali-istio-config-bookinfo.png[kiali, 700]
+
 ==== Distributed Tracing
 
 Kiali also features integration with https://www.jaegertracing.io/[Jaeger^].  This lets you follow the path of a request through various microservices that make up an application (without having to update the app itself!).
