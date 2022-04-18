@@ -299,7 +299,7 @@ The output can be a bit different:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  creationTimestamp: "2021-03-02T21:41:57Z"
+  creationTimestamp: "2022-04-18T18:36:11Z"
   generation: 1
   managedFields:
   - apiVersion: networking.istio.io/v1alpha3
@@ -311,7 +311,7 @@ metadata:
         f:http: {}
     manager: kubectl-create
     operation: Update
-    time: "2021-03-02T21:41:57Z"
+    time: "2022-04-18T18:36:11Z"
   name: reviews
   namespace: {{ USER_ID }}-bookinfo
   resourceVersion: "4848293"
