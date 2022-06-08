@@ -9,7 +9,7 @@ In this lab, we will learn the advanced use cases of service mesh. The lab showc
 * Circuit Breaking
 * Rate Limiting
 
-These features are important for any distributed applications built on top of Kubernetes/Openshift. We use a different set of microservices that you will be building and deploying. Our applicaiton is called the _Coolstore microservice_ developed in prior labs (i.e Catalog, Inventory) that you developed and deployed to
+These features are important for any distributed applications built on top of Kubernetes/Openshift. We use a different set of microservices that you will be building and deploying. Our application is called the _Coolstore microservice_ developed in prior labs (i.e Catalog, Inventory) that you developed and deployed to
 OpenShift cluster in _Module 1_ or/and _Module 2_.
 
 [WARNING]
