@@ -110,7 +110,7 @@ To make sure you're using the right version of the project files, run this comma
 
 [source,sh,role="copypaste"]
 ----
-cd $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs && git checkout ocp-4.9
+cd $PROJECT_SOURCE/cloud-native-workshop-v2m3-labs && git checkout ocp-4.9
 ----
 
 [NOTE]
@@ -126,5 +126,5 @@ If you've completed other modules today (such as `cloud-native-workshop-v2m1-lab
 
 [source,sh,role="copypaste"]
 ----
-rm -rf $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m1-labs
+rm -rf $PROJECT_SOURCE/cloud-native-workshop-v2m1-labs
 ----

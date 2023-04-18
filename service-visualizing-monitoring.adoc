@@ -275,7 +275,7 @@ Open a new Terminal (while your other endless `for` loop continues to run) and e
 
 [source, shell, role="copypaste"]
 ----
-oc create -n {{ USER_ID}}-bookinfo -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/virtual-service-all-v1.yaml
+oc create -n {{ USER_ID}}-bookinfo -f $PROJECT_SOURCE/cloud-native-workshop-v2m3-labs/istio/virtual-service-all-v1.yaml
 ----
 
 You can see this default set of _virtual services_ with:
@@ -353,7 +353,7 @@ Let’s enable the ratings service for a test user named _jason_ by routing `pro
 
 [source, shell, role="copypaste"]
 ----
-oc apply -n {{ USER_ID}}-bookinfo -f $CHE_PROJECTS_ROOT/cloud-native-workshop-v2m3-labs/istio/virtual-service-reviews-jason-v2-v3.yaml
+oc apply -n {{ USER_ID}}-bookinfo -f $PROJECT_SOURCE/cloud-native-workshop-v2m3-labs/istio/virtual-service-reviews-jason-v2-v3.yaml
 ----
 
 [TIP]
