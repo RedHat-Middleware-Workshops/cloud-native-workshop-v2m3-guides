@@ -17,7 +17,7 @@ OpenShift cluster in _Module 1_ or/and _Module 2_.
 If you have already deployed the _inventory_ and _catalog_ microservices from Module 1, you can skip this step and move to section "1. Enabling automatic sidecar injection"
 ====
 
-**In case you haven’t done Module 1 or Module 2 today**, or you didn’t quite complete them, you should deploy the coolstore application and microservices by executing the following shell scripts in CodeReady Workspaces Terminal:
+**In case you haven’t done Module 1 or Module 2 today**, or you didn’t quite complete them, you should deploy the coolstore application and microservices by executing the following shell scripts in VS Code Terminal:
 
 The following script will deploy the inventory service:
 
@@ -153,7 +153,7 @@ catalog-springboot-2-x7cf6   2/2     Running   0          39m
 It may take a minute or two before the `inventory` and `catalog` services are recognized and brought into the mesh.
 ====
 
-Next, let's create a virtual service to send incoming traffic to the catalog. Open the empty `catalog-default.yaml` file in _catalog/rules_ directory to copy the following _VirtualService_ into the empty file using CodeReady Workspaces:
+Next, let's create a virtual service to send incoming traffic to the catalog. Open the empty `catalog-default.yaml` file in _catalog/rules_ directory to copy the following _VirtualService_ into the empty file using VS Code:
 
 [source,yaml, role="copypaste"]
 ----
@@ -181,7 +181,7 @@ spec:
               number: 8080
 ----
 
-Execute the following command in CodeReady Workspaces Terminal:
+Execute the following command in VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----
@@ -268,7 +268,7 @@ Delete the gateway to direct route catalog that was setup earlier with:
 oc delete -f $PROJECT_SOURCE/cloud-native-workshop-v2m3-labs/catalog/rules/catalog-default.yaml -n {{ USER_ID }}-catalog
 ----
 
-Create the new VirtualService to direct traffic to the inventory service by running the following command via CodeReady Workspaces Terminal:
+Create the new VirtualService to direct traffic to the inventory service by running the following command via VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----
@@ -307,7 +307,7 @@ spec:
               number: 80
 ----
 
-Before creating a new *inventory-fault VirtualService*, we need to delete the existing inventory-default virtualService. Run the following command via CodeReady Workspaces Terminal:
+Before creating a new *inventory-fault VirtualService*, we need to delete the existing inventory-default virtualService. Run the following command via VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----
@@ -362,7 +362,7 @@ spec:
               number: 80
 ----
 
-Delete the existing inventory-fault VirtualService in CodeReady Workspaces Terminal:
+Delete the existing inventory-fault VirtualService in VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----
@@ -403,7 +403,7 @@ oc delete virtualservice/inventory-fault-delay -n {{ USER_ID }}-inventory && \
 oc create -f $PROJECT_SOURCE/cloud-native-workshop-v2m3-labs/inventory/rules/inventory-default.yaml -n {{ USER_ID }}-inventory
 ----
 
-Also, close the tabs in your browser for the Inventory and Catalog services to avoid unnecessary load, and stop the endless `for` loop you started in the beginning of this lab in CodeReady by closing the Terminal window that was running it.
+Also, close the tabs in your browser for the Inventory and Catalog services to avoid unnecessary load, and stop the endless `for` loop you started in the beginning of this lab in VS Code by closing the Terminal window that was running it.
 
 === 3. Enable Circuit Breaker
 
@@ -450,7 +450,7 @@ spec:
         maxRequestsPerConnection: 1
 ----
 
-Run the following command via CodeReady Workspaces Terminal to then create the rule:
+Run the following command via VS Code Terminal to then create the rule:
 
 [source,sh,role="copypaste"]
 ----
@@ -464,7 +464,7 @@ parameter does.
 
 We'll use a utility called _siege_ to send multiple concurrent requests to our application, and witness the circuit breaker kicking in and opening the circuit.
 
-Execute this to simulate a number of users attempting to access the gateway URL simultaneously in CodeReady Workspaces Terminal.
+Execute this to simulate a number of users attempting to access the gateway URL simultaneously in VS Code Terminal.
 
 [source,sh,role="copypaste"]
 ----
@@ -546,7 +546,7 @@ Type the following varialbles then leave the others as default. Click on *Create
 
 image::catalog_rhsso_detail.png[rhsso, 700]
 
-Add the following labels in CodeReady Workspaces Terminal:
+Add the following labels in VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----
@@ -656,7 +656,7 @@ oc patch -n {{ USER_ID }}-catalog svc/catalog-springboot -p '{"spec": {"ports":[
 
 Turning to back to Istio, let’s create a user-facing authentication policy using JSON Web Tokens (JWTs) and the https://openid.net/connect/[OIDC^] authenticaiton flow.
 
-In CodeReady, open the empty *ccn-auth-config.yml* file in _catalog/rules_ directory to copy the following _RequestAuthentication_ and _AuthorizationPolicy_:
+In VS Code, open the empty *ccn-auth-config.yml* file in _catalog/rules_ directory to copy the following _RequestAuthentication_ and _AuthorizationPolicy_:
 
 [source,yaml,role="copypaste"]
 ----
@@ -693,14 +693,14 @@ The following fields are used above to create a _RequestAuthentication_ in Istio
 * *issuer* - Identifies the issuer that issued the JWT. See https://tools.ietf.org/html/rfc7519#section-4.1.1[issuer^] usually a URL or an email address.
 * *jwksUri* - URL of the provider’s public key set to validate signature of the JWT.
 
-Then execute the following oc command in CodeReady Workspaces Terminal to create this object:
+Then execute the following oc command in VS Code Terminal to create this object:
 
 [source,sh,role="copypaste"]
 ----
 oc create -f $PROJECT_SOURCE/cloud-native-workshop-v2m3-labs/catalog/rules/ccn-auth-config.yaml -n {{ USER_ID }}-catalog
 ----
 
-Now you can’t access the catalog service without authentication of RH-SSO. You confirm it using the following curl command in CodeReady Workspaces Terminal:
+Now you can’t access the catalog service without authentication of RH-SSO. You confirm it using the following curl command in VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----
@@ -713,7 +713,7 @@ The expected response is here because the user has not been identified with a va
 
 image::rhsso_call_catalog_noauth.png[sso, 900]
 
-In order to generate a correct token, run next `curl` request in CodeReady Workspaces Terminal. This command will store the output Authorization token from RH-SSO in an environment variable called *TOKEN*.
+In order to generate a correct token, run next `curl` request in VS Code Terminal. This command will store the output Authorization token from RH-SSO in an environment variable called *TOKEN*.
 
 [source,sh,role="copypaste"]
 ----
@@ -725,7 +725,7 @@ export TOKEN=$( curl -s -X POST 'http://sso-{{ USER_ID }}-rhsso.{{ ROUTE_SUBDOMA
  -d 'client_id=ccn-cli' | jq -r '.access_token')  && echo $TOKEN;
 ----
 
-Once you have generated the token, re-run the curl command below with the token in CodeReady Workspaces Terminal:
+Once you have generated the token, re-run the curl command below with the token in VS Code Terminal:
 
 [source,sh,role="copypaste"]
 ----

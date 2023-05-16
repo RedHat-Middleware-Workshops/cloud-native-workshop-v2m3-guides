@@ -8,7 +8,7 @@ In this lab you will visualize your service mesh using *Kiali*, *Prometheus*, *G
 
 To get a better idea of the power of metrics, let’s setup an endless loop that will continually access the application and generate load for about 30 minutes. We’ll open up a separate terminal just for this purpose.
 
-Open a new _CodeReady Workspaces Terminal_ and run the following command:
+Open a new _VS Code Terminal_ and run the following command:
 
 [source, shell, role="copypaste"]
 ----

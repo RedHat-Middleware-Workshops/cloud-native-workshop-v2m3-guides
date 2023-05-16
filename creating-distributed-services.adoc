@@ -42,15 +42,12 @@ image::openshift_landing.png[openshift_landing, 700]
 
 The project displayed on the landing page depends on which labs you will run today. If you will develop `Service Mesh and Identity` then you will see pre-created projects as shown in the above screeenshot.
 
-Although your CodeReady workspace is running on the Kubernetes cluster, it’s running with a default restricted _Service Account_ that prevents you from creating most resource types. If you’ve completed other modules, you’re probably already logged in, but let’s login again: click on *Login to OpenShift*:
+Although your VS Code is running on the Kubernetes cluster, it's running with a default restricted _Service Account_ that prevents you from creating most resource types. So we'll log in with your workshop user. Execute the following command in the VS Code terminal:
 
-[NOTE]
-====
-When you click on this, CodeReady Workspaces executes the following command:
-*oc login https://$KUBERNETES_SERVICE_HOST:$KUBERNETES_SERVICE_PORT --insecure-skip-tls-verify=true --username={{ USER_ID }} --password={{ OPENSHIFT_USER_PASSWORD }}*
-====
-
-image::cmd-login.png[login,700]
+[source,sh,role="copypaste"]
+----
+oc login -u {{ USER_ID }} -p {{ OPENSHIFT_USER_PASSWORD }} https://openshift.default.svc:443
+----
 
 You should see something like this (the project names may be different):
 
@@ -110,7 +107,7 @@ Congratulations! Now we have successfully created a _ServiceMeshMemberRoll_ whic
 
 #####  Deploying BookInfo App
 
-Open a terminal via CodeReady Workspaces and run the following commands to deploy the bookinfo app:
+Open a terminal via VS Code and run the following commands to deploy the bookinfo app:
 
 [source,shell, role="copypaste"]
 ----
