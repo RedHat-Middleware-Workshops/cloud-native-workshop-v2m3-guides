@@ -111,14 +111,14 @@ Open a terminal via VS Code and run the following commands to deploy the bookinf
 
 [source,shell, role="copypaste"]
 ----
-oc apply -n {{ USER_ID}}-bookinfo -f $PROJECT_SOURCE/cloud-native-workshop-v2m3-labs/istio/bookinfo.yaml
+oc apply -n {{ USER_ID}}-bookinfo -f $PROJECT_SOURCE/istio/bookinfo.yaml
 ----
 
 And then create the _ingress gateway_ for the bookinfo:
 
 [source,shell, role="copypaste"]
 ----
-oc apply -n {{ USER_ID}}-bookinfo -f $PROJECT_SOURCE/cloud-native-workshop-v2m3-labs/istio/bookinfo-gateway.yaml
+oc apply -n {{ USER_ID}}-bookinfo -f $PROJECT_SOURCE/istio/bookinfo-gateway.yaml
 ----
 
 The above default ingress manages traffic for any incoming host, but we only want it to manage traffic destined to our own ingress, so change the host from `*` to your specific host with this command:
@@ -132,7 +132,7 @@ Finally, add default destination rules (we’ll alter this later to affect routi
 
 [source,shell, role="copypaste"]
 ----
-oc apply -n {{ USER_ID}}-bookinfo -f $PROJECT_SOURCE/cloud-native-workshop-v2m3-labs/istio/destination-rule-all.yaml
+oc apply -n {{ USER_ID}}-bookinfo -f $PROJECT_SOURCE/istio/destination-rule-all.yaml
 ----
 
 List all available destination rules:
