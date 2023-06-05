@@ -65,8 +65,8 @@ You should see two pods running (one for the service, and one for its database):
 [source,console]
 ----
 NAME                         READY   STATUS    RESTARTS   AGE
-catalog-database-1-p5hcd     1/1     Running   0          6m4s
-catalog-springboot-1-jdrfs   1/1     Running   0          5m
+catalog-database-1-xnrmz     1/1     Running   0          2m13s
+catalog-springboot-1-sqbfq   1/1     Running   0          59s
 ----
 
 Do the same for inventory:
@@ -81,8 +81,8 @@ You should again see two pods running (one for the service, and one for its data
 [source,console]
 ----
 NAME                         READY   STATUS    RESTARTS   AGE
-inventory-1-87smf            1/1     Running   0          3m12s
-inventory-database-1-6tvxs   1/1     Running   0          5m16s
+inventory-1-hx4nk            1/1     Running   0          3m44s
+inventory-database-1-rh59m   1/1     Running   0          4m26s
 ----
 
 ==== Add sidecars
@@ -129,9 +129,9 @@ It should show:
 
 [source,console,role="copypaste"]
 ----
-NAME                         READY   STATUS    RESTARTS   AGE
-inventory-2-2p9bx            2/2     Running   0          65s
-inventory-database-2-4rzlh   2/2     Running   0          82s
+NAME                         READY   STATUS    RESTARTS      AGE
+inventory-2-nx8qp            2/2     Running   2 (33s ago)   40s
+inventory-database-2-jfw99   2/2     Running   0             62s
 ----
 
 Do the same for the catalog and confirm they also show the "2/2" pods running:
@@ -144,8 +144,8 @@ oc get pods -n {{USER_ID}}-catalog --field-selector="status.phase=Running"
 [source,console,role="copypaste"]
 ----
 NAME                         READY   STATUS    RESTARTS   AGE
-catalog-database-2-djmbd     2/2     Running   0          39m
-catalog-springboot-2-x7cf6   2/2     Running   0          39m
+catalog-database-2-8q9ws     2/2     Running   0          81s
+catalog-springboot-1-sqbfq   2/2     Running   0          2m52s
 ----
 
 [WARNING]
