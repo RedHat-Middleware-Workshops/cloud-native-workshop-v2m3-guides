@@ -41,11 +41,6 @@ Sounds fun, right? Let’s get started!
 
 === Getting Ready for the labs
 
-[NOTE]
-====
-If you’ve already created a workspace for the module then make sure to delete an existing workspace.
-====
-
 You will be using Visual Studio Code (VS Code) based on https://developers.redhat.com/products/openshift-dev-spaces/overview[Red Hat OpenShift Dev Spaces^]. **Changes to files are auto-saved every few seconds**, so you don't need to explicitly save changes.
 
 To get started, {{ DS_URL }}[access the Red Hat OpenShift Dev Spaces instance^] and select *Log in with OpenShift* button:
