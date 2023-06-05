@@ -12,7 +12,7 @@ Open a new _VS Code Terminal_ and run the following command:
 
 [source, shell, role="copypaste"]
 ----
-BOOK_URL=istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}
+export BOOK_URL=istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}
 
 for i in {1..1000} ; do curl -o /dev/null -s -w "%{http_code}\n" http://$BOOK_URL/productpage ; sleep 2 ; done
 ----
@@ -157,7 +157,7 @@ You should see a listing of each of the application’s services along with a co
 
 image::istio-prometheus-console.png[Prometheus console, 700]
 
-You can also graph the results over time by clicking on the _Graph_ tab (adjust the timeframe from 1 hour to 1 minute for example):
+You can also graph the results over time by clicking on the **Graph** tab (adjust the timeframe from 1 hour to 5 minute for example):
 
 image::istio-prometheus-graph.png[Prometheus graph, 700]
 
@@ -271,7 +271,9 @@ For our application, without an explicit default route set, Istio will route req
 
 Let’s create a default set of *virtual services* which will direct all traffic to the _reviews:v1_ service version.
 
-Open a new Terminal (while your other endless `for` loop continues to run) and execute this command to route all traffic to `v1`:
+Open a new Terminal by selecting `+` icon (while your other endless `for` loop continues to run) and execute this command to route all traffic to `v1`:
+
+image::new-terminal-servicemesh.png[Versions, 700]
 
 [source, shell, role="copypaste"]
 ----
@@ -299,24 +301,12 @@ The output can be a bit different:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  creationTimestamp: "2021-03-02T21:41:57Z"
+  creationTimestamp: "2023-06-05T18:20:20Z"
   generation: 1
-  managedFields:
-  - apiVersion: networking.istio.io/v1alpha3
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:spec:
-        .: {}
-        f:hosts: {}
-        f:http: {}
-    manager: kubectl-create
-    operation: Update
-    time: "2021-03-02T21:41:57Z"
   name: reviews
-  namespace: {{ USER_ID }}-bookinfo
-  resourceVersion: "4848293"
-  selfLink: /apis/networking.istio.io/v1beta1/namespaces/user2-bookinfo/virtualservices/reviews
-  uid: 75996b09-1a5c-41ab-a5aa-35861d6b8fa2
+  namespace: user1-bookinfo
+  resourceVersion: "11295380"
+  uid: ae6ddd77-1e0b-40e0-adce-92cc8a64d48f
 spec:
   hosts:
   - reviews
