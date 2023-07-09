@@ -301,12 +301,12 @@ The output can be a bit different:
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  creationTimestamp: "2023-06-05T18:20:20Z"
+  creationTimestamp: "2023-07-09T20:45:36Z"
   generation: 1
   name: reviews
   namespace: user1-bookinfo
-  resourceVersion: "11295380"
-  uid: ae6ddd77-1e0b-40e0-adce-92cc8a64d48f
+  resourceVersion: "1539858"
+  uid: 71881ee6-06ae-49c1-b4b7-f537898072ef
 spec:
   hosts:
   - reviews
