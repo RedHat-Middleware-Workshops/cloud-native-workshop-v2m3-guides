@@ -332,7 +332,7 @@ Back on the https://kiali-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN }}/conso
 Kiali "looks back" and records/displays the last minute of traffic, so if you're quick you may see some of the prior traffic flows from earlier in the lab. Within 1 minute the graph should clear up and only show what you are looking for!
 ====
 
-image::inventlry-vs-error-kiali.png[fault-injection,700]
+image::inventlry-vs-error-kiali.png[fault-injection,900]
 
 Let’s now add a 5 second delay for the `inventory` service.
 
@@ -383,7 +383,7 @@ Go to the *Kiali Graph* you opened earlier and you will see that the `green` tra
 You may still see "red" traffic from our previous fault injections, but those will disappear after the 1 minute time window (the default lookback period) of the graph elapses.
 ====
 
-image::inventlry-vs-delay-kiali.png[fault-injection,700]
+image::inventlry-vs-delay-kiali.png[fault-injection,900]
 
 Click on the "edge" (the line between `istio-ingressgateway` and `inventory`) and then scroll to the bottom of the right-side graph showing the _HTTP Request Response Time_. Hover over the black _average_ data point to confirm that the average response time is about 5000ms (5 seconds) as expected:
 
@@ -393,7 +393,7 @@ If the Inventory’s front page was set to correctly handle delays, we expect it
 
 You will see and feel that the webpage loads in about 5 seconds:
 
-image::inventory-webui-delay.png[Delay, 700]
+image::inventory-webui-delay.png[Delay, 900]
 
 Before we will move to the next step, clean up the fault injection and set the default virtual service once again using these commands in a Terminal:
 
