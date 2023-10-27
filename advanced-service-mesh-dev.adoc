@@ -668,7 +668,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      deploymentconfig: catalog-springboot
+      app.kubernetes.io/name: catalog-springboot
   jwtRules:
   - issuer: http://sso-{{ USER_ID }}-rhsso.{{ ROUTE_SUBDOMAIN }}/auth/realms/istio
     jwksUri: http://sso-{{ USER_ID }}-rhsso.{{ ROUTE_SUBDOMAIN }}/auth/realms/istio/protocol/openid-connect/certs
@@ -683,9 +683,14 @@ spec:
   - from:
     - source:
         requestPrincipals: ["*"]
+    when:
+        - key: 'request.auth.claims[iss]'
+          values:
+            - >-
+              http://sso-{{ USER_ID }}-rhsso.{{ ROUTE_SUBDOMAIN }}/auth/realms/istio
   selector:
     matchLabels:
-      deploymentconfig: catalog-springboot
+      app.kubernetes.io/name: catalog-springboot
 ----
 
 The following fields are used above to create a _RequestAuthentication_ in Istio and are described here:
