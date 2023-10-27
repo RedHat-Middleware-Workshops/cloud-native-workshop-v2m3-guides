@@ -114,6 +114,7 @@ Next, let's add sidecars to our services and wait for them to be re-deployed:
 oc patch dc/inventory -n {{USER_ID}}-inventory --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
 oc rollout latest dc/inventory -n {{USER_ID}}-inventory && \
 oc patch dc/catalog-springboot -n {{USER_ID}}-catalog --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
+oc rollout latest dc/catalog-springboot -n {{USER_ID}}-catalog && 
 oc rollout status -w dc/inventory -n {{USER_ID}}-inventory && \
 oc rollout status -w dc/catalog-springboot -n {{USER_ID}}-catalog
 ----
