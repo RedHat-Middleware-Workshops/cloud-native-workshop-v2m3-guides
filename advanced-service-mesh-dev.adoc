@@ -677,15 +677,15 @@ apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: catalog-auth-policy
-  namespace: {{ USER_ID }}-catalog
+  namespace: user1-catalog
 spec:
-  selector:
-    matchLabels:
-      deploymentconfig: catalog-springboot
   rules:
   - from:
     - source:
         requestPrincipals: ["*"]
+  selector:
+    matchLabels:
+      deploymentconfig: catalog-springboot
 ----
 
 The following fields are used above to create a _RequestAuthentication_ in Istio and are described here:
