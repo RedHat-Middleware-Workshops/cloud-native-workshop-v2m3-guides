@@ -181,6 +181,11 @@ or you can execute the following commands to wait for the deployment to complete
 
 Finally, access the http://istio-ingressgateway-{{ USER_ID }}-istio-system.{{ ROUTE_SUBDOMAIN}}/productpage[Bookinfo Product Page^]. It should look something like:
 
+[NOTE]
+====
+In case you can't access the product page, please check if your web browser (e.g., Chrome) redirects to the page using `HTTPS` protocol. You must access the page using `HTTP` protocol.
+====
+
 image::bookinfo.png[Bookinfo App, 700]
 
 Reload the page multiple times. The three different versions of the Reviews service show the star ratings differently - _v1_ shows no stars at all, _v2_ shows black stars, and _v3_ shows red stars:

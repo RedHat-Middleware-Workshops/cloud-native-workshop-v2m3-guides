@@ -94,9 +94,9 @@ Rather than manually adding the annotations necessary to inject istio sidecars, 
 First, do the databases and wait for them to be re-deployed:
 [source,sh,role="copypaste"]
 ----
-oc patch dc/inventory-database -n {{USER_ID}}-inventory --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
+oc patch deployment/inventory-database -n {{USER_ID}}-inventory --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
 oc patch dc/catalog-database -n {{USER_ID}}-catalog --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
-oc rollout status -w dc/inventory-database -n {{USER_ID}}-inventory && \
+oc rollout status -w deployment/inventory-database -n {{USER_ID}}-inventory && \
 oc rollout status -w dc/catalog-database -n {{USER_ID}}-catalog
 ----
 
@@ -111,11 +111,10 @@ Next, let's add sidecars to our services and wait for them to be re-deployed:
 
 [source,sh,role="copypaste"]
 ----
-oc patch dc/inventory -n {{USER_ID}}-inventory --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
-oc rollout latest dc/inventory -n {{USER_ID}}-inventory && \
+oc patch deployment/inventory -n {{USER_ID}}-inventory --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
 oc patch dc/catalog-springboot -n {{USER_ID}}-catalog --type='json' -p '[{"op":"add","path":"/spec/template/metadata/annotations", "value": {"sidecar.istio.io/inject": "'"true"'"}}]' && \
 oc rollout latest dc/catalog-springboot -n {{USER_ID}}-catalog && 
-oc rollout status -w dc/inventory -n {{USER_ID}}-inventory && \
+oc rollout status -w deployment/inventory -n {{USER_ID}}-inventory && \
 oc rollout status -w dc/catalog-springboot -n {{USER_ID}}-catalog
 ----
 
