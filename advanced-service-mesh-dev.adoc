@@ -677,7 +677,7 @@ apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: catalog-auth-policy
-  namespace: user1-catalog
+  namespace: {{ USER_ID }}-catalog
 spec:
   rules:
   - from:
